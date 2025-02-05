@@ -13,6 +13,11 @@ import {
  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
+interface MobileNavLinkProps {
+ href: string;
+ children: React.ReactNode;
+}
+
 const Navigation = () => {
  const [isOpen, setIsOpen] = useState(false);
 
@@ -49,7 +54,7 @@ const Navigation = () => {
    }
  };
 
- const MobileNavLink = ({ href, children }) => (
+ const MobileNavLink: React.FC<MobileNavLinkProps> = ({ href, children }) => (
    <Link 
      href={href} 
      className="block py-2 text-gray-300 hover:text-white"
