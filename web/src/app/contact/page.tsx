@@ -36,9 +36,8 @@ const ContactPage = () => {
       >
         <h1 className="text-4xl font-bold mb-4">Contact our team</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Got any questions about the product or scaling on our platform? We're here to help.
-          Chat to our friendly team 24/7 and get onboard in less than 5 minutes.
-        </p>
+          Got any questions about the product or scaling on our platform? We&apos;re here to help.<br/>Chat to our friendly team 24/7 and get onboard in less than 5 minutes.
+          </p>
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-12">

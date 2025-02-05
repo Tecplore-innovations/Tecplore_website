@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
+import Image from 'next/image';
 import VideoPlayer from '../components/VideoPlayer';
 import { ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -13,12 +14,9 @@ import {
 import { motion } from "framer-motion";
 import AnimatedWord from '@/components/Animated/AnimatedWord';
 import FeaturedProjects from '@/components/Home/FeaturedProjects';
-import Newsletter from '@/components/Home/Newsletter'
-
-
+import Newsletter from '@/components/Home/Newsletter';
 
 const HomePage = () => {
-
   const videos = [
     '/videos/BGV1.mp4',
     '/videos/BGV2.mp4',
@@ -66,26 +64,12 @@ const HomePage = () => {
     }
   ];
 
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState({ type: '', message: '' })
-  
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!email) {
-      setStatus({ type: 'error', message: 'Please enter your email address.' })
-      return
+  const scrollToNext = () => {
+    const nextSection = document.querySelector('.py-24');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
     }
-    // Here you would typically make an API call to your backend
-    setStatus({ type: 'success', message: 'Thank you for subscribing!' })
-    setEmail('')
-  }
-
-const scrollToNext = () => {
-  const nextSection = document.querySelector('.py-24')
-  if (nextSection) {
-    nextSection.scrollIntoView({ behavior: 'smooth' })
-  }
-}
+  };
 
   return (
     <main className="w-full">
@@ -123,20 +107,6 @@ const scrollToNext = () => {
                 transition={{ duration: 0.8, delay: 0.9 }}
                 className="flex gap-4 justify-center"
               >
-                {/* <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="text-black border-2 transition-colors"
-                >
-                  <Link href="/catalog">Explore Experiments</Link> <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="default" 
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 transition-colors"
-                >
-                  Custom Projects <ChevronRight className="ml-2 h-4 w-4" />
-                </Button> */}
               </motion.div>
             </div>
           </div>
@@ -172,102 +142,102 @@ const scrollToNext = () => {
 
       {/* Who We Are Section */}
       <section className="relative py-24 overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('/photos/whoweare.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        {/* Dark overlay with 50% opacity */}
-        <div className="absolute inset-0 bg-black/50"></div>
-      </div>
+        {/* Background Image with Overlay */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('/photos/whoweare.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-6xl font-bold leading-tight text-white"
-            >
-              Bespoke Solutions
-              <br />
-              That Transform
-              <br />
-              Visions Into Reality
-            </motion.h2>
-            
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6 text-gray-200"
-            >
-              <p className="text-xl">
-                Tecplore is a multidisciplinary design and fabrication firm specializing
-                in the engineering and construction of engaging objects and experiences
-                for science centers, museums, learning centers, and public spaces. Our
-                focus is creating interactive exhibits, educational installations, and
-                innovative experimental setups.
-              </p>
-              <p className="text-xl">
-                We bring innovative designs to life through careful engineering,
-                efficient management, and sophisticated fabrication. Our in-house team
-                of engineers, educators, and craftspeople work closely with
-                clients to develop meaningful experiences that inspire wonder,
-                facilitate curiosity, and make science accessible to everyone.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-8"
-            >
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <p className="text-gray-300 mb-2">We're In Business</p>
-                  <h3 className="text-4xl font-bold text-white">5+ Years</h3>
-                </div>
-                <div>
-                  <p className="text-gray-300 mb-2">Completed Successfully</p>
-                  <h3 className="text-4xl font-bold text-white">500+ Projects</h3>
-                </div>
-              </div>
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-6xl font-bold leading-tight text-white"
+              >
+                Bespoke Solutions
+                <br />
+                That Transform
+                <br />
+                Visions Into Reality
+              </motion.h2>
               
-              <button className="px-8 py-3 bg-[#B19777] text-white hover:bg-[#9a825f] transition-colors">
-                Contact a Specialist
-              </button>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="space-y-6 text-gray-200"
+              >
+                <p className="text-xl">
+                  Tecplore is a multidisciplinary design and fabrication firm specializing
+                  in the engineering and construction of engaging objects and experiences
+                  for science centers, museums, learning centers, and public spaces. Our
+                  focus is creating interactive exhibits, educational installations, and
+                  innovative experimental setups.
+                </p>
+                <p className="text-xl">
+                  We bring innovative designs to life through careful engineering,
+                  efficient management, and sophisticated fabrication. Our in-house team
+                  of engineers, educators, and craftspeople work closely with
+                  clients to develop meaningful experiences that inspire wonder,
+                  facilitate curiosity, and make science accessible to everyone.
+                </p>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="space-y-8"
+              >
+                <div className="grid grid-cols-2 gap-8">
+                  <div>
+                    <p className="text-gray-300 mb-2">We&apos;re In Business</p>
+                    <h3 className="text-4xl font-bold text-white">5+ Years</h3>
+                  </div>
+                  <div>
+                    <p className="text-gray-300 mb-2">Completed Successfully</p>
+                    <h3 className="text-4xl font-bold text-white">500+ Projects</h3>
+                  </div>
+                </div>
+                
+                <button className="px-8 py-3 bg-[#B19777] text-white hover:bg-[#9a825f] transition-colors">
+                  Contact a Specialist
+                </button>
+              </motion.div>
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="relative"
+            >
+              <div className="rounded-full overflow-hidden aspect-square bg-black/20 backdrop-blur-sm relative">
+                <Image 
+                  src="/photos/whoweare2.jpg" 
+                  alt="Team discussion"
+                  fill
+                  className="object-cover"
+                />
+              </div>
             </motion.div>
           </div>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <div className="rounded-full overflow-hidden aspect-square bg-black/20 backdrop-blur-sm">
-              <img 
-                src="/photos/whoweare2.jpg" 
-                alt="Team discussion" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* Featured Section */}
-        <FeaturedProjects />
+      <FeaturedProjects />
 
       {/* Services Grid Section */}
       <section className="py-24 bg-white">
@@ -276,11 +246,12 @@ const scrollToNext = () => {
             {services.map((service, index) => (
               <Card key={index} className="border-none shadow-none">
                 <CardContent className="p-0">
-                  <div className="relative overflow-hidden group">
-                    <img 
-                      src={service.image} 
+                  <div className="relative overflow-hidden group h-64">
+                    <Image 
+                      src={service.image}
                       alt={service.title}
-                      className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-4 right-4">
                       <ArrowUpRight className="w-6 h-6 text-white" />
@@ -314,10 +285,11 @@ const scrollToNext = () => {
               </Button>
             </div>
             <div className="relative h-96">
-              <img 
-                src="/api/placeholder/800/600" 
-                alt="Industrial facility" 
-                className="w-full h-full object-cover"
+              <Image 
+                src="/api/placeholder/800/600"
+                alt="Industrial facility"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -357,7 +329,7 @@ const scrollToNext = () => {
       </section>
 
       {/* Contact Section */}
-        <Newsletter />
+      <Newsletter />
     </main>
   );
 };

@@ -16,12 +16,16 @@ const AnimatedWord = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    // Moving words array length reference outside the interval
+    // to make the dependency more explicit
+    const wordCount = words.length;
+    
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % wordCount);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [words.length]); // Add words.length as a dependency
 
   return (
     <span className="inline-block min-w-[280px]">

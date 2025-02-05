@@ -63,7 +63,7 @@ const ProcessDetail = () => {
       {/* Process Steps */}
       <div className="container mx-auto px-4 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <div key={step.number} className="flex gap-8">
               <div className="flex-none">
                 <span className="text-4xl font-bold text-black/20">{step.number}</span>

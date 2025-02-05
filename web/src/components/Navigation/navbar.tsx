@@ -77,7 +77,7 @@ const Navigation = () => {
                   <li>
                     <NavigationMenuLink asChild>
                       <Link href="/museums-parks" className="block p-3 hover:bg-gray-100 rounded-md">
-                      Children's Museums & Parks
+                      Children&apos;s Museums & Parks
                       </Link>
                     </NavigationMenuLink>
                   </li>

@@ -46,7 +46,7 @@ const Newsletter = () => {
             className="space-y-8"
           >
             <h2 className="text-6xl font-bold mb-8 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Let's Build Your Future
+              Let&apos;s Build Your Future
             </h2>
             <p className="text-xl mb-8 text-gray-300 leading-relaxed">
               Connect with our experts to discuss your industrial needs and discover 

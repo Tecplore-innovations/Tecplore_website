@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function FeaturedProjects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -33,6 +34,7 @@ export default function FeaturedProjects() {
       client: "Green Tech Institute"
     }
   ];
+
   return (
     <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -56,11 +58,15 @@ export default function FeaturedProjects() {
             transition={{ duration: 0.6 }}
             className="relative aspect-[4/3] bg-gray-100"
           >
-            <img
-              src={projects[activeIndex].image}
-              alt={projects[activeIndex].title}
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={projects[activeIndex].image}
+                alt={projects[activeIndex].title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">
               <div className="text-white">
                 <div className="text-sm font-medium mb-2">{projects[activeIndex].category}</div>

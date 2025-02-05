@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,11 +107,14 @@ const Footer = () => {
                     className="w-full justify-start bg-white text-black hover:bg-gray-100"
                   >
                     <Globe className="mr-2 h-4 w-4" />
-                    <img 
-                      src={getFlagUrl(languages.find(lang => lang.name === selectedLanguage)?.countryCode || 'us')}
-                      alt={selectedLanguage}
-                      className="w-5 h-4 object-cover mr-2"
-                    />
+                    <div className="relative w-5 h-4 mr-2">
+                      <Image 
+                        src={getFlagUrl(languages.find(lang => lang.name === selectedLanguage)?.countryCode || 'us')}
+                        alt={selectedLanguage}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     {selectedLanguage}
                   </Button>
                 </DropdownMenuTrigger>
@@ -121,11 +125,14 @@ const Footer = () => {
                       onClick={() => setSelectedLanguage(language.name)}
                       className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
                     >
-                      <img 
-                        src={getFlagUrl(language.countryCode)}
-                        alt={language.name}
-                        className="w-5 h-4 object-cover"
-                      />
+                      <div className="relative w-5 h-4">
+                        <Image 
+                          src={getFlagUrl(language.countryCode)}
+                          alt={language.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                       {language.name}
                     </DropdownMenuItem>
                   ))}
