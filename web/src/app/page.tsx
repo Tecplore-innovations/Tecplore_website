@@ -3,8 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import VideoPlayer from '../components/VideoPlayer';
-import { ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import {  ChevronDown } from 'lucide-react';
+// import { Button } from "@/components/ui/button";
 import { Card, CardContent} from "@/components/ui/card";
 import {
   HoverCard,
@@ -25,23 +25,23 @@ const HomePage = () => {
     '/videos/BGV6.mp4',
   ];
 
-  const services = [
-    {
-      title: "Process Solutions",
-      description: "Innovative solutions for industrial manufacturing processes",
-      image: "/api/placeholder/600/400"
-    },
-    {
-      title: "Building Solutions",
-      description: "Complete solutions for industrial buildings and infrastructure",
-      image: "/api/placeholder/600/400"
-    },
-    {
-      title: "Digital Solutions",
-      description: "Smart digital technologies for industry 4.0",
-      image: "/api/placeholder/600/400"
-    }
-  ];
+  // const services = [
+  //   {
+  //     title: "Process Solutions",
+  //     description: "Innovative solutions for industrial manufacturing processes",
+  //     image: "/api/placeholder/600/400"
+  //   },
+  //   {
+  //     title: "Building Solutions",
+  //     description: "Complete solutions for industrial buildings and infrastructure",
+  //     image: "/api/placeholder/600/400"
+  //   },
+  //   {
+  //     title: "Digital Solutions",
+  //     description: "Smart digital technologies for industry 4.0",
+  //     image: "/api/placeholder/600/400"
+  //   }
+  // ];
 
   const news = [
     {
@@ -240,7 +240,7 @@ const HomePage = () => {
       <FeaturedProjects />
 
       {/* Services Grid Section */}
-      <section className="py-24 bg-white">
+      {/* <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-12">
             {services.map((service, index) => (
@@ -264,10 +264,10 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Large Feature Section */}
-      <section className="py-24 bg-gray-100">
+      {/* <section className="py-24 bg-gray-100">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
@@ -294,7 +294,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* News Section */}
       <section className="py-24 bg-white">
