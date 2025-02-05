@@ -7,3 +7,14 @@ export interface EditorProps {
   placeholder?: string;
   editable?: boolean;
 }
+
+export interface Blog {
+  id?: string;
+  title: string;
+  content: string;
+  description: string;
+  coverImage?: string;
+  published?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

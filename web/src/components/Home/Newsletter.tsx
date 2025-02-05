@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowRight, Mail, Check, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 
-const ContactSection = () => {
+const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribeStatus, setSubscribeStatus] = useState(null);
@@ -49,12 +50,13 @@ const ContactSection = () => {
               Connect with our experts to discuss your industrial needs and discover 
               how we can help transform your operations.
             </p>
+            
             <Button 
               variant="outline" 
               size="lg"
-              className="text-white border-2 border-white hover:bg-white hover:text-black transition-all duration-300 hover:scale-105"
+              className="text-black border-2 border-white hover:bg-white hover:text-black transition-all duration-300 hover:scale-105"
             >
-              Contact Us <ArrowRight className="ml-2 h-4 w-4" />
+              <Link href="/contact">Contact Us</Link> <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
 
@@ -156,4 +158,4 @@ const ContactSection = () => {
   );
 };
 
-export default ContactSection;
+export default Newsletter;

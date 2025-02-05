@@ -7,7 +7,7 @@ import { ChevronLeft, Download, Share2, Building2, Users2, Ruler, Weight, Clock,
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { Exhibit } from '../page';
+import { Exhibit } from '../types';
 
 interface ProductDetailProps {
   product: Exhibit | undefined;

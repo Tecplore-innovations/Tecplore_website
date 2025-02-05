@@ -7,7 +7,7 @@ import { Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import type { Exhibit } from '../page';
+import type { Exhibit } from '../types';
 
 interface CatalogGridProps {
   exhibits: Exhibit[];

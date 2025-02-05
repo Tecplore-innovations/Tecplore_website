@@ -22,7 +22,7 @@ const Navigation = () => {
           <NavigationMenuList className="space-x-2">
             <NavigationMenuItem>
               <NavigationMenuTrigger className="text-white hover:text-gray-300 bg-transparent">
-                Catalog
+                Highlights
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4">
@@ -77,7 +77,7 @@ const Navigation = () => {
                   <li>
                     <NavigationMenuLink asChild>
                       <Link href="/museums-parks" className="block p-3 hover:bg-gray-100 rounded-md">
-                        Children's Museums & Parks
+                      Children's Museums & Parks
                       </Link>
                     </NavigationMenuLink>
                   </li>
