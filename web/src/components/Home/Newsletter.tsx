@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -9,12 +9,14 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowRight, Mail, Check, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from "framer-motion";
 
-const Newsletter = () => {
-  const [email, setEmail] = useState('');
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [subscribeStatus, setSubscribeStatus] = useState(null);
+type SubscribeStatus = 'success' | null;
 
-  const handleSubscribe = (e) => {
+const Newsletter = () => {
+  const [email, setEmail] = useState<string>('');
+  const [isSubscribing, setIsSubscribing] = useState<boolean>(false);
+  const [subscribeStatus, setSubscribeStatus] = useState<SubscribeStatus>(null);
+
+  const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubscribing(true);
 
@@ -125,7 +127,7 @@ const Newsletter = () => {
                             type="email"
                             placeholder="Enter your email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             required
                             className="bg-gray-950/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-blue-500 transition-colors"
                           />
