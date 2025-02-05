@@ -1,159 +1,245 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ArrowRight, Mail, Check, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { PhoneCall, Mail, MessageSquare, MapPin } from 'lucide-react';
 
-const Contact = () => {
-  const [email, setEmail] = useState('');
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [subscribeStatus, setSubscribeStatus] = useState(null);
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+};
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    setIsSubscribing(true);
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubscribing(false);
-      setSubscribeStatus('success');
-      setEmail('');
-
-      // Reset status after 5 seconds
-      setTimeout(() => {
-        setSubscribeStatus(null);
-      }, 5000);
-    }, 1500);
-  };
-
+const ContactPage = () => {
   return (
-    <section className="py-32 bg-gradient-to-b from-black to-gray-900 text-white">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-16 items-start">
-          {/* Left Column */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <h2 className="text-6xl font-bold mb-8 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Let's Build Your Future
-            </h2>
-            <p className="text-xl mb-8 text-gray-300 leading-relaxed">
-              Connect with our experts to discuss your industrial needs and discover 
-              how we can help transform your operations.
-            </p>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="text-white border-2 border-white hover:bg-white hover:text-black transition-all duration-300 hover:scale-105"
+    <motion.div 
+      className="max-w-6xl mx-auto px-4 py-12"
+      initial="initial"
+      animate="animate"
+      variants={staggerContainer}
+    >
+      {/* Main Header */}
+      <motion.div 
+        className="text-center mb-12"
+        variants={fadeInUp}
+      >
+        <h1 className="text-4xl font-bold mb-4">Contact our team</h1>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Got any questions about the product or scaling on our platform? We're here to help.
+          Chat to our friendly team 24/7 and get onboard in less than 5 minutes.
+        </p>
+      </motion.div>
+
+      <div className="grid lg:grid-cols-2 gap-12">
+        {/* Contact Form */}
+        <motion.div variants={fadeInUp}>
+          <form className="space-y-6">
+            <motion.div 
+              className="grid grid-cols-2 gap-4"
+              variants={fadeInUp}
             >
-              Contact Us <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+              <div>
+                <label className="block text-sm font-medium mb-2">First name</label>
+                <Input placeholder="First name" className="w-full" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Last name</label>
+                <Input placeholder="Last name" className="w-full" />
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <label className="block text-sm font-medium mb-2">Email</label>
+              <Input type="email" placeholder="you@company.com" className="w-full" />
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <label className="block text-sm font-medium mb-2">Phone number</label>
+              <div className="flex">
+                <select className="w-24 rounded-l-md border border-r-0 border-input bg-background pl-2 pr-1 text-sm h-9 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0">
+                  <option value="+61">
+                    🇦🇺 +61
+                  </option>
+                  <option value="+55">
+                    🇧🇷 +55
+                  </option>
+                  <option value="+1">
+                    🇨🇦 +1
+                  </option>
+                  <option value="+41">
+                    🇨🇭 +41
+                  </option>
+                  <option value="+86">
+                    🇨🇳 +86
+                  </option>
+                  <option value="+49">
+                    🇩🇪 +49
+                  </option>
+                  <option value="+34">
+                    🇪🇸 +34
+                  </option>
+                  <option value="+33">
+                    🇫🇷 +33
+                  </option>
+                  <option value="+44">
+                    🇬🇧 +44
+                  </option>
+                  <option value="+91">
+                    🇮🇳 +91
+                  </option>
+                  <option value="+39">
+                    🇮🇹 +39
+                  </option>
+                  <option value="+81">
+                    🇯🇵 +81
+                  </option>
+                  <option value="+82">
+                    🇰🇷 +82
+                  </option>
+                  <option value="+52">
+                    🇲🇽 +52
+                  </option>
+                  <option value="+31">
+                    🇳🇱 +31
+                  </option>
+                  <option value="+64">
+                    🇳🇿 +64
+                  </option>
+                  <option value="+7">
+                    🇷🇺 +7
+                  </option>
+                  <option value="+65">
+                    🇸🇬 +65
+                  </option>
+                  <option value="+46">
+                    🇸🇪 +46
+                  </option>
+                  <option value="+1">
+                    🇺🇸 +1
+                  </option>
+                </select>
+                <Input 
+                  type="tel" 
+                  placeholder="+1 (555) 000-0000" 
+                  className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <label className="block text-sm font-medium mb-2">Message</label>
+              <Textarea 
+                placeholder="Leave us a message..."
+                className="min-h-[150px]"
+              />
+            </motion.div>
+
+            <motion.div variants={fadeInUp} className="space-y-4">
+              <label className="block text-sm font-medium mb-2">Services</label>
+              <div className="grid grid-cols-2 gap-4">
+                {['Existing Products', 'Custom Product', 
+                  'Strategy & consulting', 'Other'].map((service) => (
+                  <label key={service} className="flex items-center space-x-2">
+                    <input type="checkbox" className="rounded border-gray-300" />
+                    <span className="text-sm">{service}</span>
+                  </label>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div 
+              variants={fadeInUp}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+            >
+              <Button className="w-full bg-black text-white hover:bg-gray-800">
+                Send message
+              </Button>
+            </motion.div>
+          </form>
+        </motion.div>
+
+        {/* Contact Information */}
+        <motion.div className="space-y-8" variants={staggerContainer}>
+          <motion.div variants={fadeInUp} whileHover={{ scale: 1.02 }}>
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-xl font-semibold mb-4">Chat with us</h2>
+                <p className="text-gray-600 mb-4">
+                  Speak to our friendly team via live chat.
+                </p>
+                <div className="space-y-4">
+                  <motion.div whileHover={{ x: 5 }}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Start a live chat
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ x: 5 }}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Mail className="mr-2 h-4 w-4" />
+                      Shoot us an email
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ x: 5 }}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Message us on X
+                    </Button>
+                  </motion.div>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
 
-          {/* Right Column */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="space-y-10"
-          >
-            {/* Contact Info Card */}
-            <Card className="bg-gray-900/50 border-gray-800 p-6 backdrop-blur-sm">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-200">Headquarters</h3>
-                  <p className="text-gray-400">Coming soon in India<br /></p>
-                </div>
-                <Separator className="bg-gray-800" />
-                <div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-200">Contact</h3>
-                  <p className="text-gray-400">
-                    +91 234 567 8900<br />
-                    info@tecplore.com
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            {/* Newsletter Subscription Card */}
-            <Card className="bg-gray-900/50 border-gray-800 p-6 backdrop-blur-sm">
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <Mail className="h-5 w-5 text-blue-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-200">Newsletter</h3>
-                </div>
-
-                <form onSubmit={handleSubscribe} className="space-y-6">
-                  <AnimatePresence mode="wait">
-                    {subscribeStatus === 'success' ? (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        className="bg-green-500/10 text-green-400 p-4 rounded-lg flex items-center gap-3"
-                      >
-                        <Check className="h-5 w-5" />
-                        <div className="space-y-1">
-                          <p className="font-medium">Successfully subscribed!</p>
-                          <p className="text-sm text-green-500/80">
-                            Check your inbox for a confirmation email.
-                          </p>
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="space-y-4"
-                      >
-                        <div className="flex gap-3">
-                          <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="bg-gray-950/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-blue-500 transition-colors"
-                          />
-                          <Button 
-                            type="submit"
-                            disabled={isSubscribing}
-                            className="bg-blue-600 hover:bg-blue-500 text-white min-w-[120px] transition-all duration-300 hover:scale-105 disabled:hover:scale-100"
-                          >
-                            {isSubscribing ? (
-                              <Loader2 className="h-5 w-5 animate-spin" />
-                            ) : (
-                              'Subscribe'
-                            )}
-                          </Button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  <p className="text-sm text-gray-400">
-                    Join our newsletter to receive the latest updates, industry insights, 
-                    and exclusive offers. You can unsubscribe at any time.
-                  </p>
-                </form>
-              </div>
+          <motion.div variants={fadeInUp} whileHover={{ scale: 1.02 }}>
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-xl font-semibold mb-4">Call us</h2>
+                <p className="text-gray-600 mb-4">
+                  Call our team Mon-Fri from 8am to 5pm.
+                </p>
+                <motion.div whileHover={{ x: 5 }}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <PhoneCall className="mr-2 h-4 w-4" />
+                    9876540000
+                  </Button>
+                </motion.div>
+              </CardContent>
             </Card>
           </motion.div>
-        </div>
+
+          <motion.div variants={fadeInUp} whileHover={{ scale: 1.02 }}>
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-xl font-semibold mb-4">Visit us</h2>
+                <p className="text-gray-600 mb-4">
+                  Chat to us in person at our Melbourne HQ.
+                </p>
+                <motion.div whileHover={{ x: 5 }}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    Coming soon in India
+                  </Button>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.div>
   );
 };
 
-export default Contact;
+export default ContactPage;

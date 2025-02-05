@@ -2,12 +2,9 @@
 
 import React, { useState } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
-import { ArrowRight, ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
   HoverCard,
   HoverCardContent,
