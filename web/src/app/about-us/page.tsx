@@ -7,6 +7,8 @@ interface TeamMember {
   imageUrl: string;
 }
 
+const companyName = 'Tecplore';
+
 const AboutPage = () => {
   const stats = [
     { value: "98%", label: "Project Delivery Rate" },
@@ -17,42 +19,42 @@ const AboutPage = () => {
 
   const teamMembers: TeamMember[] = [
     {
-      name: "James Carter",
+      name: "Coming Soon",
       role: "CEO & Founder",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Sophia Lee",
+      name: "Coming Soon",
       role: "COO",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Emily Roberts",
+      name: "Coming Soon",
       role: "CTO",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Liam Johnson",
+      name: "Coming Soon",
       role: "Full-Stack Developer",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Nia Patel",
+      name: "Coming Soon",
       role: "UI/UX Designer",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Aisha Khan",
+      name: "Coming Soon",
       role: "Lead Software Engineer",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Chloe Adams",
+      name: "Coming Soon",
       role: "Cybersecurity Specialist",
       imageUrl: "/api/placeholder/400/400"
     },
     {
-      name: "Ethan Blake",
+      name: "Coming Soon",
       role: "Network Administrator",
       imageUrl: "/api/placeholder/400/400"
     }
@@ -78,7 +80,7 @@ const AboutPage = () => {
               <span className="text-gray-400">Simplify</span> Technology.
             </h1>
             <p className="text-xl max-w-2xl text-gray-300">
-              At Logic, we transform ideas into reality with cutting-edge tech solutions
+              At {companyName}, we transform ideas into reality with cutting-edge tech solutions
               tailored to your needs.
             </p>
           </div>
@@ -114,12 +116,12 @@ const AboutPage = () => {
                 <div className="lg:w-1/4">
                   <div className="text-sm text-gray-500 uppercase tracking-wider mb-2">Who We Are</div>
                   <h2 className="text-4xl font-bold">
-                    Meet Tecplore: Where Technology Meets Vision Through Innovation and Collaboration
+                    Meet {companyName}: Where Technology Meets Vision Through Innovation and Collaboration
                   </h2>
                 </div>
                 <div className="lg:w-3/4">
                   <p className="text-gray-600 mb-16 text-lg">
-                    Tecplore is a forward-thinking technology company dedicated to delivering exceptional
+                  {companyName} is a forward-thinking technology company dedicated to delivering exceptional
                     IT services, software development, and consulting to businesses worldwide. Founded
                     in 2015, we&apos;ve grown from a small startup into a trusted partner for clients across
                     various industries, including healthcare, finance, and education.
@@ -201,7 +203,7 @@ const AboutPage = () => {
           {/* CEO Quote */}
           <div className="mt-24 max-w-3xl mx-auto text-center">
             <blockquote className="text-xl text-gray-300 mb-8">
-            &quot;At Logic, our goal is simple: to empower businesses with innovative technology
+            &quot;At Tecplore, our goal is simple: to empower businesses with innovative technology
               that drives growth and success. We aim to be a trusted partner, delivering
               solutions that not only meet today&apos;s needs but also prepare our clients for
               the opportunities of tomorrow.&quot;
@@ -210,13 +212,13 @@ const AboutPage = () => {
               <div className="relative w-12 h-12 mr-4">
                 <Image
                   src="/api/placeholder/48/48"
-                  alt="James Carter"
+                  alt="Coming Soon"
                   fill
                   className="rounded-full object-cover"
                 />
               </div>
               <div className="text-left">
-                <div className="font-semibold">James Carter</div>
+                <div className="font-semibold">To Be Announced</div>
                 <div className="text-sm text-gray-400">CEO & Founder</div>
               </div>
             </div>

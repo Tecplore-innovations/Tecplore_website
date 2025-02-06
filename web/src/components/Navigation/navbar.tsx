@@ -273,6 +273,11 @@ const Navigation = () => {
                  variants={containerVariants}
                  className="space-y-4"
                >
+                {/* About Us */}
+                <motion.div variants={itemVariants}>
+                   <MobileNavLink href="/about-us">About us</MobileNavLink>
+                 </motion.div>
+
                  {/* Highlights */}
                  <motion.div variants={itemVariants} className="text-white">
                    <h3 className="font-semibold mb-2">Highlights</h3>
