@@ -80,7 +80,7 @@ const HomePage = () => {
                 </div>
               </motion.div>
 
-              <motion.p
+              {/* <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -88,7 +88,7 @@ const HomePage = () => {
               >
                 Discover our collection of meticulously engineered science experiments 
                 designed to inspire learning and innovation
-              </motion.p>
+              </motion.p> */}
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -154,14 +154,10 @@ const HomePage = () => {
                 transition={{ duration: 0.6 }}
                 className="text-6xl font-bold leading-tight text-white"
               >
-                Bespoke Solutions
-                <br />
-                That Transform
-                <br />
-                Visions Into Reality
+                Be it an institute, makerspace or Cafe enable unique experience fostering maker spirit and DIY attitude. Build Science temperament among the next generation through hands-on activities.
               </motion.h2>
               
-              <motion.div 
+              {/* <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -181,7 +177,7 @@ const HomePage = () => {
                   clients to develop meaningful experiences that inspire wonder,
                   facilitate curiosity, and make science accessible to everyone.
                 </p>
-              </motion.div>
+              </motion.div> */}
 
               <motion.div 
                 initial={{ opacity: 0 }}

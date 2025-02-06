@@ -87,6 +87,14 @@ const Navigation = () => {
        <div className="hidden md:flex justify-center flex-1">
          <NavigationMenu>
            <NavigationMenuList className="space-x-2">
+           <NavigationMenuItem>
+               <NavigationMenuLink asChild>
+                 <Link href="/about-us" className="text-white hover:text-gray-300 px-4 py-2">
+                   About us
+                 </Link>
+               </NavigationMenuLink>
+             </NavigationMenuItem>
+
              <NavigationMenuItem>
                <NavigationMenuTrigger className="text-white hover:text-gray-300 bg-transparent">
                  Highlights

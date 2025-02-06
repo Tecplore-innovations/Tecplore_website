@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function FeaturedProjects() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -36,87 +34,98 @@ export default function FeaturedProjects() {
   ];
 
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <h2 className="text-5xl font-bold mb-6">Featured Projects</h2>
-          <p className="text-xl text-gray-600 max-w-2xl">
-            Discover our innovative science exhibits that make learning engaging and memorable. 
-            Each project is custom-designed to meet specific educational objectives.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative aspect-[4/3] bg-gray-100"
-          >
-            <div className="relative w-full h-full">
-              <Image
-                src={projects[activeIndex].image}
-                alt={projects[activeIndex].title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">
-              <div className="text-white">
-                <div className="text-sm font-medium mb-2">{projects[activeIndex].category}</div>
-                <h3 className="text-2xl font-bold mb-2">{projects[activeIndex].title}</h3>
-                <p className="text-gray-300">Client: {projects[activeIndex].client}</p>
+        {/* Main Image and Content Section */}
+        <div className="relative mb-12">
+          <div className="aspect-[16/9] w-full relative overflow-hidden rounded-2xl">
+            <Image
+              src={projects[activeIndex].image}
+              alt={projects[activeIndex].title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            
+            {/* Image Overlay Content */}
+            <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="max-w-3xl">
+                <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-full mb-4">
+                  {projects[activeIndex].category}
+                </span>
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  {projects[activeIndex].title}
+                </h2>
+                <p className="text-gray-200 text-lg mb-6">
+                  Client: {projects[activeIndex].client}
+                </p>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-8 flex flex-col justify-center"
-          >
-            <div className="space-y-6">
-              {projects.map((project, index) => (
-                <Card 
-                  key={index}
-                  className={`transition-colors cursor-pointer hover:bg-gray-50 ${
-                    activeIndex === index ? 'border-2 border-blue-600' : ''
-                  }`}
-                  onClick={() => setActiveIndex(index)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="text-sm text-gray-500 mb-2">{project.category}</div>
-                        <h4 className="text-lg font-semibold mb-3">{project.title}</h4>
-                        <p className="text-gray-600">{project.description}</p>
-                      </div>
-                      <ChevronRight className={`w-5 h-5 mt-1 transition-colors ${
-                        activeIndex === index ? 'text-blue-600' : 'text-gray-400'
-                      }`} />
+        {/* Project Navigation Cards */}
+        <div className="relative">
+          {/* Shadow Overlays for Scroll Indication */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10" />
+          
+          {/* Scrollable Cards */}
+          <div className="flex gap-4 overflow-x-auto pb-6 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+            {projects.map((project, index) => (
+              <div
+                key={index}
+                onClick={() => setActiveIndex(index)}
+                className="flex-none w-[400px] snap-start cursor-pointer"
+              >
+                <div className={`p-6 rounded-xl transition-all duration-300 ${
+                  activeIndex === index 
+                    ? 'bg-blue-50 border-2 border-blue-600 shadow-lg' 
+                    : 'bg-gray-50 border border-gray-200 hover:border-blue-300'
+                }`}>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className={`inline-block px-2.5 py-0.5 text-sm font-medium rounded-full mb-3 ${
+                        activeIndex === index 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-gray-200 text-gray-700'
+                      }`}>
+                        {project.category}
+                      </span>
+                      <h3 className={`text-xl font-semibold mb-3 ${
+                        activeIndex === index ? 'text-blue-900' : 'text-gray-900'
+                      }`}>
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-600 line-clamp-3 text-sm">
+                        {project.description}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    <ChevronRight className={`w-5 h-5 mt-1 flex-shrink-0 ${
+                      activeIndex === index ? 'text-blue-600' : 'text-gray-400'
+                    }`} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="w-fit border-2 border-black hover:bg-black hover:text-white transition-colors"
-            >
-              <Link href="/catalog">View All Projects</Link> <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          </motion.div>
+        {/* View All Button */}
+        <div className="flex justify-center mt-12">
+          <Button 
+            variant="outline" 
+            size="lg"
+            className="group border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
+          >
+            <Link href="/catalog" className="flex items-center">
+              View All Projects
+              <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
-  )
+  );
 }
