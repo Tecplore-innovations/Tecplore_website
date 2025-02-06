@@ -65,9 +65,8 @@ const AboutPage = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20">
-            {/* Hexagonal pattern overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-80" />
+          <div className="w-full h-full bg-[url('/photos/aboutus/hero2.jpg')] bg-cover bg-center" style={{ opacity: 0.2 }}>
+            <div className="absolute inset-0 bg-black bg-opacity-10" />
           </div>
         </div>
 
@@ -121,10 +120,12 @@ const AboutPage = () => {
                 </div>
                 <div className="lg:w-3/4">
                   <p className="text-gray-600 mb-16 text-lg">
-                  {companyName} is a forward-thinking technology company dedicated to delivering exceptional
-                    IT services, software development, and consulting to businesses worldwide. Founded
-                    in 2015, we&apos;ve grown from a small startup into a trusted partner for clients across
-                    various industries, including healthcare, finance, and education.
+                  At {companyName}, we&apos;ve created an innovative learning environment that combines cutting-edge technology with hands-on experimentation. 
+                  Our space features interactive electronics projects, DIY activities, real-world science hands-on experiments where students engage in real-world projects. 
+                  Expert mentors guide learners through practical experiments in physics, chemistry, and engineering, fostering scientific thinking and problem-solving skills. 
+                  The collaborative atmosphere encourages peer learning and creative exploration, while regular workshops introduce new concepts through hands-on activities. 
+                  Students develop technical skills by working with Arduino boards, programming robots, and creating digital solutions for real-world challenges. 
+                  This immersive approach builds confidence in technology usage and nurtures an innovative mindset essential for future success in STEM fields.
                   </p>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -140,15 +141,13 @@ const AboutPage = () => {
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-black">Our Mission</h3>
                       <p className="text-gray-600">
-                        To empower businesses and individuals by providing innovative, reliable, and
-                        user-friendly technology solutions that drive growth and success.
+                        We empower the next generation through immersive STEM education by transforming traditional learning into hands-on experiences that spark innovation and scientific discovery.
                       </p>
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-black">Our Values</h3>
                       <p className="text-gray-600">
-                        We prioritize creativity, integrity, collaboration, and excellence, delivering
-                        solutions that exceed expectations and foster lasting partnerships.
+                        We cultivate curiosity, creativity, and critical thinking by providing state-of-the-art tools and expert mentorship in an inclusive environment where every learner can explore, experiment, and excel.
                       </p>
                     </div>
                   </div>
