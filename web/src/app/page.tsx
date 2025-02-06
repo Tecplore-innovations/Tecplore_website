@@ -17,32 +17,21 @@ import FeaturedProjects from '@/components/Home/FeaturedProjects';
 import Newsletter from '@/components/Home/Newsletter';
 
 const HomePage = () => {
-  const videos = [
-    '/videos/BGV1.mp4',
-    '/videos/BGV2.mp4',
-    '/videos/BGV4.mp4',
-    '/videos/BGV5.mp4',
-    '/videos/BGV6.mp4',
-  ];
-
-  // const services = [
-  //   {
-  //     title: "Process Solutions",
-  //     description: "Innovative solutions for industrial manufacturing processes",
-  //     image: "/api/placeholder/600/400"
-  //   },
-  //   {
-  //     title: "Building Solutions",
-  //     description: "Complete solutions for industrial buildings and infrastructure",
-  //     image: "/api/placeholder/600/400"
-  //   },
-  //   {
-  //     title: "Digital Solutions",
-  //     description: "Smart digital technologies for industry 4.0",
-  //     image: "/api/placeholder/600/400"
-  //   }
+  // const videos = [
+  //   '/videos/BGV1.mp4',
+  //   '/videos/BGV2.mp4',
+  //   '/videos/BGV4.mp4',
+  //   '/videos/BGV5.mp4',
+  //   '/videos/BGV6.mp4',
   // ];
-
+  const videos = [
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV1-PKSHVobblZE7VFBgCYqwuBBKLKQrsB.mp4',
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV2-ISCVNsjAbwaGWSNlyFzWUFTuWhlSCM.mp4',
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV3-RscwAh2sWKQZBp3PvZ5u2BlBOpry8f.mp4',
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV4-TqUWNjSFyboIphwqA9yRS0EsTJRYVK.mp4',
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV5-LNsdwNddSwJKXueikk4zJ2UkEHujGi.mp4',
+    'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV6-Ne8MUie91AmNTQDGIvqsSXs8m2SSdN.mp4'
+  ]
   const news = [
     {
       date: "2025-01-15",
