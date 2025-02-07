@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 
 const WhoWeAreSection = () => {
@@ -7,11 +8,14 @@ const WhoWeAreSection = () => {
       <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
         {/* Image Section */}
         <div className="w-full md:w-1/3 flex-shrink-0">
-          <div className="aspect-square rounded-full overflow-hidden bg-gray-100">
-            <img 
+          <div className="aspect-square rounded-full overflow-hidden bg-gray-100 relative">
+            <Image 
               src="/photos/whoweare2.jpg" 
-              alt="Educational Innovation" 
-              className="w-full h-full object-cover"
+              alt="Educational Innovation"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
             />
           </div>
         </div>
