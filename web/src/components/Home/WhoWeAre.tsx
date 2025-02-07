@@ -9,7 +9,7 @@ const WhoWeAreSection = () => {
         <div className="w-full md:w-1/3 flex-shrink-0">
           <div className="aspect-square rounded-full overflow-hidden bg-gray-100">
             <img 
-              src="/photos/whoaeare.jpg" 
+              src="/photos/whoweare2.jpg" 
               alt="Educational Innovation" 
               className="w-full h-full object-cover"
             />
