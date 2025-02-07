@@ -117,7 +117,7 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
           onValueChange={setExperienceYears}
           max={10}
           step={1}
-          defaultValue={[5]}
+          defaultValue={[10]}
           className="w-full"
         />
         <div className="mt-2 text-sm text-gray-600">
@@ -142,7 +142,7 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
 const CareersPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [experienceYears, setExperienceYears] = useState<number[]>([0]);
+  const [experienceYears, setExperienceYears] = useState<number[]>([10]);
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
 
   const filteredPositions = useMemo(() => {
