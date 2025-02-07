@@ -98,14 +98,14 @@ const ModernSlider = () => {
                   />
                   {/* Text Overlay */}
                   <div className="absolute bottom-8 left-8">
-                    <motion.div 
+                  <motion.div 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="bg-white/90 backdrop-blur-sm px-6 py-4 rounded-lg shadow-lg"
+                      className="bg-white/90 backdrop-blur-sm px-3 py-2 md:px-6 md:py-4 rounded-lg shadow-lg"
                     >
-                      <p className="text-sm font-medium text-blue-600 mb-1">{slide.category}</p>
-                      <h3 className="text-2xl font-light text-gray-900">{slide.title}</h3>
+                      <p className="text-xs md:text-sm font-medium text-blue-600 mb-0.5 md:mb-1">{slide.category}</p>
+                      <h3 className="text-lg md:text-2xl font-light text-gray-900">{slide.title}</h3>
                     </motion.div>
                   </div>
                 </div>
