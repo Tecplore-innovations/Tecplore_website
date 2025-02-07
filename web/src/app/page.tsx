@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import Image from 'next/image';
 import VideoPlayer from '../components/VideoPlayer';
 import { ChevronDown } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,8 +13,17 @@ import { motion } from "framer-motion";
 import AnimatedWord from '@/components/Animated/AnimatedWord';
 import FeaturedProjects from '@/components/Home/FeaturedProjects';
 import Newsletter from '@/components/Home/Newsletter';
+import WhoWeAreSection from '@/components/Home/WhoWeAre';
 
 const HomePage = () => {
+
+  // const videos = [
+  //   '/videos/BGV1.mp4',
+  //   '/videos/BGV2.mp4',
+  //   '/videos/BGV3.mp4',
+  //   '/videos/BGV4.mp4',
+  //   '/videos/BGV5.mp4',
+  // ];
   const videos = [
     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV1-PKSHVobblZE7VFBgCYqwuBBKLKQrsB.mp4',
     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV2-ISCVNsjAbwaGWSNlyFzWUFTuWhlSCM.mp4',
@@ -95,72 +103,7 @@ const HomePage = () => {
       </section>
 
       {/* Who We Are Section */}
-      <section className="relative py-12 md:py-24 overflow-hidden">
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url('/photos/whoweare.jpg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          <div className="absolute inset-0 bg-black/50"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-            <div className="space-y-6 md:space-y-8">
-              <motion.h5 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-2xl md:text-4xl lg:text-6xl font-bold leading-tight text-white"
-              >
-                Be it an institute, makerspace or Cafe enable unique experience fostering maker spirit and DIY attitude. Build Science temperament among the next generation through hands-on activities.
-              </motion.h5>
-              
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="space-y-6 md:space-y-8"
-              >
-                <div className="grid grid-cols-2 gap-4 md:gap-8">
-                  <div>
-                    <p className="text-gray-300 mb-2 text-sm md:text-base">We&apos;re In Business</p>
-                    <h3 className="text-2xl md:text-4xl font-bold text-white">5+ Years</h3>
-                  </div>
-                  <div>
-                    <p className="text-gray-300 mb-2 text-sm md:text-base">Completed Successfully</p>
-                    <h3 className="text-2xl md:text-4xl font-bold text-white">500+ Projects</h3>
-                  </div>
-                </div>
-                
-                <button className="w-full md:w-auto px-6 md:px-8 py-3 bg-[#B19777] text-white hover:bg-[#9a825f] transition-colors">
-                  Contact a Specialist
-                </button>
-              </motion.div>
-            </div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-              className="relative mt-8 md:mt-0"
-            >
-              <div className="rounded-full overflow-hidden aspect-square bg-black/20 backdrop-blur-sm relative">
-                <Image 
-                  src="/photos/whoweare2.jpg" 
-                  alt="Team discussion"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <WhoWeAreSection />
 
       {/* Featured Section */}
       <FeaturedProjects />
