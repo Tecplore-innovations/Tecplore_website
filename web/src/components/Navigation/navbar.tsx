@@ -104,10 +104,10 @@ const Navigation = () => {
                    <li className="row-span-3">
                      <NavigationMenuLink asChild>
                        <Link
-                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                         className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                          href="/catalog"
                        >
-                         <div className="mb-2 mt-4 text-lg font-medium text-black">
+                         <div className="text-sm font-medium leading-none">
                            Browse All
                          </div>
                          <p className="text-sm leading-tight text-muted-foreground">
