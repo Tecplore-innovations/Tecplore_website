@@ -30,23 +30,31 @@ const WhoWeAreSection = () => {
 
             {/* Stats Section */}
             <div className="grid grid-cols-2 sm:flex gap-4 sm:gap-8 pt-4 sm:pt-8">
-              <Card className="bg-white border border-gray-200 p-4 sm:p-6 rounded-xl shadow-sm sm:min-w-[160px] md:min-w-[180px]">
-                <div>
-                  <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">92%</div>
-                  <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
-                    Student Engagement Rate
-                  </div>
+            <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-3xl shadow-sm sm:min-w-[160px] md:min-w-[180px] overflow-hidden">
+              <div className="absolute top-1/2 right-0 w-32 h-32 bg-blue-300/40 rounded-full blur-2xl transform translate-x-8 -translate-y-12"></div>
+              <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-purple-300/40 rounded-full blur-2xl transform -translate-x-16 translate-y-12"></div>
+              <div className="relative z-10">
+                <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">
+                  92%
                 </div>
-              </Card>
+                <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+                  Student Engagement Rate
+                </div>
+              </div>
+            </Card>
               
-              <Card className="bg-white border border-gray-200 p-4 sm:p-6 rounded-xl shadow-sm sm:min-w-[160px] md:min-w-[180px]">
-                <div>
-                  <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">80%</div>
-                  <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
-                    Improved Learning Outcomes
-                  </div>
+            <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-3xl shadow-sm sm:min-w-[160px] md:min-w-[180px] overflow-hidden">
+              <div className="absolute top-1/2 right-0 w-32 h-32 bg-red-200/40 rounded-full blur-2xl transform translate-x-8 -translate-y-12"></div>
+              <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-orange-200/40 rounded-full blur-2xl transform -translate-x-16 translate-y-12"></div>
+              <div className="relative z-10">
+                <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">
+                  80%
                 </div>
-              </Card>
+                <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+                  Improved Learning Outcomes
+                </div>
+              </div>
+            </Card>
             </div>
           </div>
         </div>

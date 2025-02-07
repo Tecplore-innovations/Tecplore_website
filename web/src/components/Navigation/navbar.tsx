@@ -246,6 +246,14 @@ const Navigation = () => {
 
              <NavigationMenuItem>
                <NavigationMenuLink asChild>
+                 <Link href="/careers" className="text-white hover:text-gray-300 px-4 py-2">
+                   Careers
+                 </Link>
+               </NavigationMenuLink>
+             </NavigationMenuItem>
+
+             <NavigationMenuItem>
+               <NavigationMenuLink asChild>
                  <Link href="/contact" className="text-white hover:text-gray-300 px-4 py-2">
                    Contact
                  </Link>
@@ -302,6 +310,11 @@ const Navigation = () => {
                    <MobileNavLink href="/product-development">Product Development</MobileNavLink>
                  </motion.div>
 
+                 {/* Careers */}
+                 <motion.div variants={itemVariants}>
+                   <MobileNavLink href="/careers">Careers</MobileNavLink>
+                 </motion.div>
+                 
                  {/* Contact */}
                  <motion.div variants={itemVariants}>
                    <MobileNavLink href="/contact">Contact</MobileNavLink>

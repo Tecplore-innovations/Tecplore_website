@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,24 +50,46 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold">Tecplore</h3>
+            <Link href="/" className="inline-block">
+              <h3 className="text-2xl font-bold">Tecplore</h3>
+            </Link>
             <p className="text-gray-400">
               Inspiring the next generation through interactive science and technology
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300">
+              <a 
+                href="#" 
+                className="hover:text-blue-400 transition-colors duration-300"
+                aria-label="Facebook"
+              >
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300">
+              <a 
+                href="#" 
+                className="hover:text-blue-400 transition-colors duration-300"
+                aria-label="Twitter"
+              >
                 <TwitterIcon className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300">
+              <a 
+                href="#" 
+                className="hover:text-blue-400 transition-colors duration-300"
+                aria-label="Instagram"
+              >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300">
+              <a 
+                href="#" 
+                className="hover:text-blue-400 transition-colors duration-300"
+                aria-label="LinkedIn"
+              >
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-blue-400 transition-colors duration-300">
+              <a 
+                href="#" 
+                className="hover:text-blue-400 transition-colors duration-300"
+                aria-label="YouTube"
+              >
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -76,11 +99,31 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-semibold text-lg">Educational Resources</h4>
             <ul className="space-y-2">
-              <li><a href="/interactive-exhibits" className="text-gray-400 hover:text-white transition-colors duration-300">Interactive Exhibits</a></li>
-              <li><a href="/stem-programs" className="text-gray-400 hover:text-white transition-colors duration-300">STEM Programs</a></li>
-              <li><a href="/virtual-labs" className="text-gray-400 hover:text-white transition-colors duration-300">Virtual Labs</a></li>
-              <li><a href="/teacher-resources" className="text-gray-400 hover:text-white transition-colors duration-300">Teacher Resources</a></li>
-              <li><a href="/curriculum" className="text-gray-400 hover:text-white transition-colors duration-300">Curriculum Integration</a></li>
+              <li>
+                <Link href="/interactive-exhibits" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Interactive Exhibits
+                </Link>
+              </li>
+              <li>
+                <Link href="/stem-programs" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  STEM Programs
+                </Link>
+              </li>
+              <li>
+                <Link href="/virtual-labs" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Virtual Labs
+                </Link>
+              </li>
+              <li>
+                <Link href="/teacher-resources" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Teacher Resources
+                </Link>
+              </li>
+              <li>
+                <Link href="/curriculum" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Curriculum Integration
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -88,11 +131,36 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="font-semibold text-lg">Company</h4>
             <ul className="space-y-2">
-              <li><a href="/about-us" className="text-gray-400 hover:text-white transition-colors duration-300">About Us</a></li>
-              <li><a href="/research" className="text-gray-400 hover:text-white transition-colors duration-300">Research & Innovation</a></li>
-              <li><a href="/partners" className="text-gray-400 hover:text-white transition-colors duration-300">Educational Partners</a></li>
-              <li><a href="/contact" className="text-gray-400 hover:text-white transition-colors duration-300">Contact</a></li>
-              <li><a href="/careers" className="text-gray-400 hover:text-white transition-colors duration-300">Join Our Team</a></li>
+              <li>
+                <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/careers" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Join Our Team
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal-notice" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Legal Notice
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-conditions" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Terms & Conditions
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -162,6 +230,7 @@ const Footer = () => {
             size="icon"
             className="rounded-full hover:bg-gray-800"
             onClick={scrollToTop}
+            aria-label="Scroll to top"
           >
             <ChevronUp className="h-4 w-4" />
           </Button>

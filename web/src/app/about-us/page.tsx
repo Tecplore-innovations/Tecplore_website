@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
+import { Card } from '@/components/ui/card';
 
 interface TeamMember {
   name: string;
@@ -23,6 +24,13 @@ const fadeIn: Variants = {
     }
   }
 };
+
+const colorCombinations = [
+  { primary: 'bg-blue-300/40', secondary: 'bg-purple-300/40' },   // Blue & Purple
+  { primary: 'bg-emerald-300/40', secondary: 'bg-teal-300/40' },  // Emerald & Teal
+  { primary: 'bg-pink-300/40', secondary: 'bg-indigo-300/40' },   // Pink & Indigo
+  { primary: 'bg-amber-300/40', secondary: 'bg-rose-300/40' }     // Amber & Rose
+];
 
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
@@ -207,7 +215,7 @@ const AboutPage = () => {
                 >
                   <div className="text-sm text-gray-500 uppercase tracking-wider mb-2">Who We Are</div>
                   <h2 className="text-4xl font-bold">
-                    Meet {companyName}: Where Technology Meets Vision Through Innovation and Collaboration
+                    Meet {companyName}: Where Learning Meets Vision Through Innovation and Technology
                   </h2>
                 </motion.div>
                 <div className="lg:w-3/4">
@@ -240,12 +248,18 @@ const AboutPage = () => {
                         whileHover={{ scale: 1.05 }}
                         className="cursor-pointer"
                       >
-                        <div className="text-4xl font-bold text-black mb-2">{stat.value}</div>
-                        <div className="text-sm text-gray-600">{stat.label}</div>
+                        <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-3xl shadow-sm overflow-hidden">
+                          <div className={`absolute top-1/2 right-0 w-32 h-32 ${colorCombinations[index].primary} rounded-full blur-2xl transform translate-x-8 -translate-y-12`}></div>
+                          <div className={`absolute bottom-0 left-1/2 w-32 h-32 ${colorCombinations[index].secondary} rounded-full blur-2xl transform -translate-x-16 translate-y-12`}></div>
+                          <div className="relative z-10">
+                            <div className="text-4xl font-bold text-black mb-2">{stat.value}</div>
+                            <div className="text-sm text-gray-600">{stat.label}</div>
+                          </div>
+                        </Card>
                       </motion.div>
                     ))}
                   </motion.div>
-
+                  
                   <motion.div 
                     className="mt-16 grid grid-cols-2 gap-8"
                     variants={staggerContainer}
