@@ -29,15 +29,26 @@ const ContactPage = () => {
       animate="animate"
       variants={staggerContainer}
     >
-      {/* Main Header */}
-      <motion.div 
-        className="text-center mb-12"
+       {/* Hero Section */}
+       <motion.div 
+        className="bg-black text-white py-20 -mx-4 mb-12"
         variants={fadeInUp}
       >
-        <h1 className="text-4xl font-bold mb-4">Contact our team</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Got any questions about the product or scaling on our platform? We&apos;re here to help.<br/>Chat to our friendly team 24/7 and get onboard in less than 5 minutes.
-          </p>
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <motion.h1 
+            className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300"
+            variants={fadeInUp}
+          >
+            Contact our team
+          </motion.h1>
+          <motion.p 
+            className="text-gray-300 text-lg max-w-2xl mx-auto"
+            variants={fadeInUp}
+          >
+            Got any questions about the product or scaling on our platform? We&apos;re here to help.
+            <br/>Chat to our friendly team 24/7 and get onboard in less than 5 minutes.
+          </motion.p>
+        </div>
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-12">
