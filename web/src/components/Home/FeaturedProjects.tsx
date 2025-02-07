@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ModernSlider = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -40,30 +41,44 @@ const ModernSlider = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Left Section - Featured Projects */}
-          <div className="lg:w-1/3">
+          <motion.div 
+            className="lg:w-1/3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <h2 className="text-4xl font-bold mb-4">Featured Projects</h2>
             <div className="h-px w-16 bg-gray-300 mb-6"></div>
             
             {/* Project Information */}
             <div className="mt-8">
-              <h3 className="text-2xl font-light mb-3">{slides[activeSlide].title}</h3>
-              <p className="text-gray-600 mb-8 line-clamp-4">
-                {slides[activeSlide].description}
-              </p>
+              <motion.div
+                key={activeSlide}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className="text-2xl font-light mb-3">{slides[activeSlide].title}</h3>
+                <p className="text-gray-600 mb-8 line-clamp-4">
+                  {slides[activeSlide].description}
+                </p>
+              </motion.div>
               
               {/* CTA Button */}
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="group border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
-              >
-                <Link href="/catalog" className="flex items-center">
-                  View All Projects
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="group border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
+                >
+                  <Link href="/catalog" className="flex items-center">
+                    View All Projects
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Section - Image Slider */}
           <div className="lg:w-2/3 relative">
@@ -83,10 +98,15 @@ const ModernSlider = () => {
                   />
                   {/* Text Overlay */}
                   <div className="absolute bottom-8 left-8">
-                    <div className="bg-white/90 backdrop-blur-sm px-6 py-4 rounded-lg shadow-lg">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="bg-white/90 backdrop-blur-sm px-6 py-4 rounded-lg shadow-lg"
+                    >
                       <p className="text-sm font-medium text-blue-600 mb-1">{slide.category}</p>
                       <h3 className="text-2xl font-light text-gray-900">{slide.title}</h3>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               ))}
@@ -94,22 +114,26 @@ const ModernSlider = () => {
 
             {/* Navigation */}
             <div className="absolute bottom-8 right-8 flex items-center gap-6">
-              <div className="text-white text-sm font-medium">
+              <div className="text-gray-800 text-sm font-medium">
                 {String(activeSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
               </div>
               <div className="flex gap-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={prevSlide}
                   className="w-10 h-10 border-2 border-gray-800 rounded-full flex items-center justify-center text-gray-800 bg-white/80 hover:bg-gray-800 hover:text-white transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={nextSlide}
                   className="w-10 h-10 border-2 border-gray-800 rounded-full flex items-center justify-center text-gray-800 bg-white/80 hover:bg-gray-800 hover:text-white transition-colors"
                 >
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
