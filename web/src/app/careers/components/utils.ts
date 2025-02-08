@@ -1,3 +1,5 @@
+{/* app/careers/components/util.ts */}
+
 import { Position, FilterOption } from './types';
 
 export const getExperienceRange = (years: number): string => {

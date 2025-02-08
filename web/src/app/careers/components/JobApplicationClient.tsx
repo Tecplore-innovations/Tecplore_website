@@ -1,5 +1,7 @@
 'use client';
 
+{/* app/careers/components/JobApplicationClient.tsx */}
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -83,7 +85,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
         initial="hidden"
         animate="visible"
         variants={fadeIn}
-        className="min-h-screen bg-black p-6"
+        className="min-h-screen bg-white p-6"
       >
         <div className="max-w-3xl mx-auto mt-16">
           <motion.div
@@ -119,7 +121,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
       initial="hidden"
       animate="visible"
       variants={fadeIn}
-      className="min-h-screen bg-black text-white"
+      className="min-h-screen min-h-screen bg-white text-gray-900"
     >
       <div className="max-w-7xl mx-auto px-6 py-12">
         <motion.div
@@ -129,7 +131,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
           <Button
             onClick={handleBack}
             variant="ghost"
-            className="mb-8 text-gray-400"
+            className="mb-8 text-gray-600"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -152,7 +154,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
             
             <motion.div 
               variants={fadeIn}
-              className="flex flex-wrap gap-4 mb-8 text-gray-400"
+              className="flex flex-wrap gap-4 mb-8 text-gray-600"
             >
               <div className="flex items-center">
                 <Building2 className="w-4 h-4 mr-2" />
@@ -174,16 +176,16 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
 
             <motion.div 
               variants={fadeIn}
-              className="space-y-6 bg-white/5 p-6 rounded-lg"
+              className="space-y-6 bg-gray-50 p-6 rounded-lg p-6 rounded-lg"
             >
               <div>
                 <h2 className="text-xl font-semibold mb-3">Job Description</h2>
-                <p className="text-gray-400">{position.description}</p>
+                <p className="text-gray-600">{position.description}</p>
               </div>
               
               <div>
                 <h2 className="text-xl font-semibold mb-3">Requirements</h2>
-                <ul className="list-disc list-inside text-gray-400 space-y-2">
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
                   <li>{position.experienceRequired}+ years of experience</li>
                   <li>Expertise in {position.tags.join(', ')}</li>
                   <li>Strong communication and collaboration skills</li>
@@ -216,7 +218,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.3 }}
-            className="bg-white/5 p-6 rounded-lg"
+            className="bg-gray-50 p-6 rounded-lg p-6 rounded-lg"
           >
             <h2 className="text-2xl font-bold mb-6">Apply for this position</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -232,7 +234,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.fullName}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/5 border-white/20 text-white mt-2"
+                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
                   />
                 </div>
 
@@ -245,7 +247,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/5 border-white/20 text-white mt-2"
+                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
                   />
                 </div>
 
@@ -258,7 +260,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="bg-white/5 border-white/20 text-white mt-2"
+                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
                   />
                 </div>
 
@@ -269,7 +271,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     name="coverLetter"
                     value={formData.coverLetter}
                     onChange={handleInputChange}
-                    className="bg-white/5 border-white/20 text-white mt-2 h-32"
+                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2 h-32"
                     placeholder="Tell us why you're interested in this position..."
                   />
                 </div>

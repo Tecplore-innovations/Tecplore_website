@@ -1,3 +1,6 @@
+'use client';
+{/* app/careers/components/FilterComponents.tsx */}
+
 import React from 'react';
 import { 
   Select,
@@ -29,7 +32,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
       defaultValue={selectedValues[0]}
       onValueChange={handleValueChange}
     >
-      <SelectTrigger className="w-[180px] bg-white/5 border-white/20 text-white">
+      <SelectTrigger className="w-[180px] bg-white/5 border-black/20 text-black">
         <SelectValue placeholder={title} />
         {selectedValues.length > 0 && (
           <span className="ml-2 bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full text-xs">
@@ -37,17 +40,17 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
           </span>
         )}
       </SelectTrigger>
-      <SelectContent className="bg-gray-900 border-white/20">
+      <SelectContent className="bg-white border-black/20">
         <SelectGroup>
-          <SelectLabel className="text-gray-400">{title}</SelectLabel>
+          <SelectLabel className="text-black">{title}</SelectLabel>
           {options.map((option) => (
             <SelectItem 
               key={option.label} 
               value={option.label}
-              className="text-white hover:bg-white/10 flex justify-between"
+              className="text-black hover:bg-black/10 flex justify-between"
             >
               <span>{option.label}</span>
-              <span className="text-gray-400 ml-2">({option.count})</span>
+              <span className="text-black ml-2">({option.count})</span>
             </SelectItem>
           ))}
         </SelectGroup>

@@ -1,4 +1,4 @@
-// app/careers/application/[id]/page.tsx
+{/* app/careers/application/[id]/page.tsx */}
 import { Metadata } from 'next';
 import { positions } from '../../components/constants';
 import { notFound } from 'next/navigation';

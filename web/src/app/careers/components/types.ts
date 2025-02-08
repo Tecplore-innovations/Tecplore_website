@@ -1,3 +1,5 @@
+{/* app/careers/components/types.ts */}
+
 export interface Position {
   id: number;
   title: string;

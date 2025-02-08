@@ -1,5 +1,7 @@
 "use client";
 
+{/* app/careers/page.tsx */}
+
 import React, { useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,13 +27,13 @@ const FeaturedJobCard: React.FC<FeaturedJobCardProps> = ({ position, onApply }) 
     className="group relative overflow-hidden"
   >
     <div className="absolute inset-0 bg-gradient-to-br from-purple-800/20 to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    <div className="relative p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-purple-500 transition-all duration-300">
+    <div className="relative p-6 backdrop-blur-sm rounded-xl border bg-white border border-gray-200 hover:border-purple-500 transition-all duration-300">
       <div className="absolute top-4 right-4">
         {position.isNew && (
           <motion.span
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="inline-flex items-center px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm"
+            className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 text-purple-600 text-sm"
           >
             New
           </motion.span>
@@ -46,16 +48,16 @@ const FeaturedJobCard: React.FC<FeaturedJobCardProps> = ({ position, onApply }) 
           {position.title.charAt(0)}
         </motion.div>
         <div className="flex-1 min-w-0"> {/* Added min-w-0 for text truncation */}
-          <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors truncate">
+          <h3 className="text-xl font-semibold text-black transition-colors truncate">
             {position.title}
           </h3>
-          <p className="mt-2 text-gray-400 truncate">{position.department}</p>
+          <p className="mt-2 text-gray-700 truncate">{position.department}</p>
           <div className="mt-4 flex items-center gap-4 flex-wrap">
-            <div className="flex items-center text-gray-400 truncate">
+            <div className="flex items-center text-gray-700 truncate">
               <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
               <span className="truncate">{position.location}</span>
             </div>
-            <div className="text-gray-400 truncate">{position.salary}</div>
+            <div className="text-gray-700 truncate">{position.salary}</div>
           </div>
         </div>
       </div>
@@ -67,7 +69,7 @@ const FeaturedJobCard: React.FC<FeaturedJobCardProps> = ({ position, onApply }) 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-sm truncate max-w-full"
+              className="px-3 py-1 rounded-full bg-white/5 text-gray-700 text-sm truncate max-w-full"
             >
               {tag}
             </motion.span>
@@ -128,7 +130,7 @@ function CareersPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-black text-white">
+    <div className="relative min-h-screen bg-white text-gray-900">
       <AnimatePresence mode="wait">
         {showApplication && selectedPosition ? (
           <motion.div
@@ -270,7 +272,7 @@ function CareersPage() {
                 >
                   <div>
                     <h2 className="text-2xl sm:text-3xl font-bold">Featured Opportunities</h2>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-gray-700 mt-2">
                       {filteredPositions.length} positions found
                     </p>
                   </div>
@@ -317,7 +319,7 @@ function CareersPage() {
                           className={`
                             ${currentPage === i + 1 
                               ? "bg-purple-500 text-white hover:bg-purple-600" 
-                              : "border-white/20 text-gray-400 hover:bg-gray-800 hover:text-white"
+                              : "border-white/20 text-gray-700 hover:bg-gray-800 hover:text-white"
                             }
                             min-w-8
                           `}

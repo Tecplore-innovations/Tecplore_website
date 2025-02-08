@@ -1,3 +1,5 @@
+{/* app/careers/components/constants.ts */}
+
 import { Position } from './types';
 
 export const positions: Position[] = [
