@@ -93,7 +93,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         <Button 
           variant="outline" 
           onClick={handleClearAll}
-          className="text-gray-400 border-white/20 text-black hover:border-purple-500"
+          className="text-gray-400 border-black/20 text-black hover:border-purple-500"
         >
           <FilterX className="w-4 h-4 mr-2" />
           Clear all
