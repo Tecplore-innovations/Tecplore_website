@@ -1,357 +1,341 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Bookmark, Share2, ChevronDown, ChevronUp } from 'lucide-react';
-
-import { Position, SelectedFilters } from './components/types';
+import { Search, MapPin } from 'lucide-react';
+import { Position } from './components/types';
 import { positions, PAGE_SIZE } from './components/constants';
 import { generateFilterOptions, filterPositions } from './components/utils';
 import { FilterBar } from './components/FilterComponents';
+import JobApplicationClient from './components/JobApplicationClient';
 
-const CareersPage: React.FC = () => {
-  const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isMobileDetailsOpen, setIsMobileDetailsOpen] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-    Experience: [],
-    'Work site': [],
-    Profession: [],
-    Discipline: [],
-    'Role type': [],
-    'Employment type': []
-  });
-  
-  // Generate filter options based on positions data
-  const filterOptions = useMemo(() => generateFilterOptions(positions), []);
+interface FeaturedJobCardProps {
+  position: Position;
+  onApply: (position: Position) => void;
+}
 
-  // Filtered and paginated data
-  const filteredAndPaginatedData = useMemo(() => {
-    const filtered = filterPositions(positions, searchQuery, selectedFilters);
-    
-    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-    const start = (currentPage - 1) * PAGE_SIZE;
-    const paginatedPositions = filtered.slice(start, start + PAGE_SIZE);
-  
-    return {
-      filteredPositions: filtered,
-      paginatedPositions,
-      totalPages,
-      startIndex: start + 1,
-      endIndex: Math.min(start + PAGE_SIZE, filtered.length)
-    };
-  }, [searchQuery, selectedFilters, currentPage]);
-
-  const handleFilterChange = (category: string, values: string[]) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [category]: values
-    }));
-    setCurrentPage(1);
-  };
-
-  const clearFilters = () => {
-    setSelectedFilters({
-      Experience: [],
-      'Work site': [],
-      Profession: [],
-      Discipline: [],
-      'Role type': [],
-      'Employment type': []
-    });
-    setSearchQuery('');
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8">
-            <span className="text-gray-800 bg-gradient-to-r from-gray-300 to-gray-100 bg-clip-text text-transparent">
-              Tecplore
-            </span>{" "}
-            <span className="text-gray-300">
-              Careers
-            </span>
-          </h1>
-
-          {/* Filter Bar */}
-          <FilterBar
-            filterOptions={filterOptions}
-            selectedFilters={selectedFilters}
-            handleFilterChange={handleFilterChange}
-            clearFilters={clearFilters}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
+const FeaturedJobCard: React.FC<FeaturedJobCardProps> = ({ position, onApply }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    whileHover={{ scale: 1.02 }}
+    transition={{ duration: 0.3 }}
+    className="group relative overflow-hidden"
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-purple-800/20 to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <div className="relative p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-purple-500 transition-all duration-300">
+      <div className="absolute top-4 right-4">
+        {position.isNew && (
+          <motion.span
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="inline-flex items-center px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm"
+          >
+            New
+          </motion.span>
+        )}
+      </div>
+      <div className="flex items-start gap-4">
+        <motion.div
+          whileHover={{ rotate: 360 }}
+          transition={{ duration: 0.5 }}
+          className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold"
+        >
+          {position.title.charAt(0)}
+        </motion.div>
+        <div className="flex-1 min-w-0"> {/* Added min-w-0 for text truncation */}
+          <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors truncate">
+            {position.title}
+          </h3>
+          <p className="mt-2 text-gray-400 truncate">{position.department}</p>
+          <div className="mt-4 flex items-center gap-4 flex-wrap">
+            <div className="flex items-center text-gray-400 truncate">
+              <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
+              <span className="truncate">{position.location}</span>
+            </div>
+            <div className="text-gray-400 truncate">{position.salary}</div>
+          </div>
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Jobs List */}
-          <div className="flex-1">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-600 text-sm">
-                Showing {filteredAndPaginatedData.startIndex}-{filteredAndPaginatedData.endIndex} of {filteredAndPaginatedData.filteredPositions.length} results
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {filteredAndPaginatedData.paginatedPositions.map((position) => (
-                <div
-                  key={position.id}
-                  onClick={() => {
-                    setSelectedPosition(position);
-                    setIsMobileDetailsOpen(true);
-                  }}
-                  className={`p-4 sm:p-6 border rounded-lg cursor-pointer transition-colors ${
-                    selectedPosition?.id === position.id
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-600'
-                  }`}
-                >
-                  <div className="flex justify-between">
-                    <div>
-                      <h3 className="text-base sm:text-xl font-semibold text-gray-900">{position.title}</h3>
-                      <div className="mt-2 text-gray-600 text-sm">
-                        <p>{position.location}</p>
-                        <p className="mt-1">{position.workSite}</p>
-                      </div>
-                      <p className="mt-2 text-gray-500 text-xs">{position.datePosted}</p>
-                    </div>
-                    <Button variant="ghost" className="h-8 w-8 p-1">
-                      <Bookmark className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              
-              {/* Pagination */}
-              {filteredAndPaginatedData.totalPages > 1 && (
-                <div className="flex justify-center gap-2 mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-4 hidden sm:block"
-                  >
-                    Previous
-                  </Button>
-                  {Array.from({ length: filteredAndPaginatedData.totalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      onClick={() => handlePageChange(page)}
-                      className="px-4 hidden sm:block"
-                    >
-                      {page}
-                    </Button>
-                  ))}
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === filteredAndPaginatedData.totalPages}
-                    className="px-4 hidden sm:block"
-                  >
-                    Next
-                  </Button>
-                  
-                  {/* Mobile Pagination */}
-                  <div className="flex sm:hidden items-center gap-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="px-2"
-                    >
-                      Prev
-                    </Button>
-                    <span className="text-sm">
-                      Page {currentPage} of {filteredAndPaginatedData.totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === filteredAndPaginatedData.totalPages}
-                      className="px-2"
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Job Details Panel - Mobile & Desktop */}
-          {selectedPosition && (
-            <>
-              {/* Desktop Details Panel */}
-              <div className="hidden md:block w-1/2 bg-white border rounded-lg p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{selectedPosition.title}</h2>
-                    <p className="text-gray-600 mt-2">{selectedPosition.location}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
-                    <Button variant="outline">
-                      <Bookmark className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                  </div>
-                </div>
-
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-6">
-                  Apply
-                </Button>
-
-                <div className="space-y-6">
-                  {/* Job Details Grid */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-gray-600">Date posted</p>
-                      <p className="font-medium">{selectedPosition.datePosted}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">Job number</p>
-                      <p className="font-medium">{selectedPosition.jobNumber}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">Work site</p>
-                      <p className="font-medium">{selectedPosition.workSite}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">Discipline</p>
-                      <p className="font-medium">{selectedPosition.discipline}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">Role type</p>
-                      <p className="font-medium">{selectedPosition.roleType}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600">Salary</p>
-                      <p className="font-medium">{selectedPosition.salary}</p>
-                    </div>
-                  </div>
-
-                  {/* Job Description */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-xl font-semibold mb-4">Overview</h3>
-                    <p className="text-gray-600">{selectedPosition.description}</p>
-                  </div>
-
-                  {/* Required Skills */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-xl font-semibold mb-4">Required Skills</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedPosition.tags.map((tag, index) => (
-                        <Badge key={index} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mobile Details Panel */}
-              <div className="fixed inset-x-0 bottom-0 md:hidden bg-white border-t rounded-t-lg shadow-2xl z-50">
-                <div className="p-4">
-                  <div 
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => setIsMobileDetailsOpen(!isMobileDetailsOpen)}
-                  >
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">{selectedPosition.title}</h2>
-                      <p className="text-gray-600 text-sm">{selectedPosition.location}</p>
-                    </div>
-                    {isMobileDetailsOpen ? <ChevronDown /> : <ChevronUp />}
-                  </div>
-
-                  {isMobileDetailsOpen && (
-                    <div className="mt-4 space-y-4">
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                        Apply
-                      </Button>
-
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-600">Date posted</p>
-                          <p className="font-medium">{selectedPosition.datePosted}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Job number</p>
-                          <p className="font-medium">{selectedPosition.jobNumber}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Work site</p>
-                          <p className="font-medium">{selectedPosition.workSite}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Discipline</p>
-                          <p className="font-medium">{selectedPosition.discipline}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Role type</p>
-                          <p className="font-medium">{selectedPosition.roleType}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Salary</p>
-                          <p className="font-medium">{selectedPosition.salary}</p>
-                        </div>
-                      </div>
-
-                      <div className="border-t pt-4">
-                        <h3 className="text-base font-semibold mb-2">Overview</h3>
-                        <p className="text-gray-600 text-sm">{selectedPosition.description}</p>
-                      </div>
-
-                      <div className="border-t pt-4">
-                        <h3 className="text-base font-semibold mb-2">Required Skills</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedPosition.tags.map((tag, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between gap-2">
-                        <Button variant="outline" className="flex-1">
-                          <Share2 className="h-4 w-4 mr-2" />
-                          Share
-                        </Button>
-                        <Button variant="outline" className="flex-1">
-                          <Bookmark className="h-4 w-4 mr-2" />
-                          Save
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
+      <div className="mt-6 flex items-center justify-between flex-wrap gap-4">
+        <div className="flex gap-2 flex-wrap">
+          {position.tags.slice(0, 3).map((tag: string, index: number) => (
+            <motion.span
+              key={tag}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-sm truncate max-w-full"
+            >
+              {tag}
+            </motion.span>
+          ))}
         </div>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button
+            className="bg-purple-500 hover:bg-purple-600 text-white whitespace-nowrap"
+            onClick={() => onApply(position)}
+          >
+            Apply Now
+          </Button>
+        </motion.div>
       </div>
     </div>
+  </motion.div>
+);
+
+function CareersPage() {
+  const handleSearch = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCurrentPage(1);
+  }, []);
+
+  const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showApplication, setShowApplication] = useState<boolean>(false);
+
+  const filteredPositions = useMemo(() => {
+    return filterPositions(positions, searchKeyword, selectedFilters);
+  }, [searchKeyword, selectedFilters]);
+
+  const filterOptions = useMemo(() => {
+    const searchFiltered = searchKeyword.trim()
+      ? filterPositions(positions, searchKeyword, {})
+      : positions;
+
+    return generateFilterOptions(
+      positions,
+      searchFiltered,
+      selectedFilters
+    );
+  }, [searchKeyword, selectedFilters]);
+
+  const handleFilterChange = useCallback((category: string, value: string[]) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [category]: value
+    }));
+    setCurrentPage(1);
+  }, []);
+
+  const handleApply = useCallback((position: Position) => {
+    setSelectedPosition(position);
+    setShowApplication(true);
+  }, []);
+
+  return (
+    <div className="relative min-h-screen bg-black text-white">
+      <AnimatePresence mode="wait">
+        {showApplication && selectedPosition ? (
+          <motion.div
+            key="application"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            className="w-full h-full"
+          >
+            <JobApplicationClient 
+              position={selectedPosition}
+              onBack={() => {
+                setShowApplication(false);
+                setSelectedPosition(null);
+              }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="main-content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col w-full"
+          >
+            {/* Hero Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="relative pt-16 pb-24 overflow-hidden"
+            >
+              {/* Background Elements */}
+              <div className="absolute inset-0 z-0">
+                <Image 
+                  src="/photos/career1.jpg" 
+                  alt="background" 
+                  layout="fill"
+                  objectFit="cover"
+                  priority
+                  className="absolute inset-0 w-full h-full"
+                />
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 0.8, 0.5],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+                />
+              </div>
+
+              {/* Content Container */}
+              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="max-w-3xl"
+                >
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight break-words"
+                  >
+                    Your Tecplore
+                    <br />
+                    Career Starts
+                    <motion.span
+                      animate={{ 
+                        color: ['#A855F7', '#F472B6', '#A855F7'],
+                      }}
+                      transition={{ 
+                        duration: 3,
+                        repeat: Infinity,
+                      }}
+                      className="text-purple-400"
+                    >
+                      {' '}Here +
+                    </motion.span>
+                  </motion.h1>
+
+                  {/* Search Section */}
+                  <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    onSubmit={handleSearch}
+                    className="mt-12 w-full"
+                  >
+                    <div className="relative max-w-2xl bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 z-10" />
+                      <input
+                        type="text"
+                        placeholder="Search by title or keyword"
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 text-white placeholder-gray-100 focus:border-purple-500 focus:ring-purple-500 focus:ring-offset-0 bg-transparent border-0"
+                      />
+                    </div>
+                  </motion.form>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Filter Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="relative z-10 py-6 border-b border-white/10"
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <FilterBar
+                  filterOptions={filterOptions}
+                  selectedFilters={selectedFilters}
+                  handleFilterChange={handleFilterChange}
+                  clearFilters={() => {
+                    setSelectedFilters({});
+                    setSearchKeyword('');
+                    setCurrentPage(1);
+                  }}
+                  searchQuery={searchKeyword}
+                  setSearchQuery={setSearchKeyword}
+                />
+              </div>
+            </motion.div>
+
+            {/* Content Section */}
+            <div className="relative z-10 py-12 sm:py-24 flex-grow">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-between items-center mb-12 flex-wrap gap-4"
+                >
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold">Featured Opportunities</h2>
+                    <p className="text-gray-400 mt-2">
+                      {filteredPositions.length} positions found
+                    </p>
+                  </div>
+                </motion.div>
+
+                <AnimatePresence mode="wait">
+                  <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredPositions
+                      .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                      .map((position: Position, index: number) => (
+                        <motion.div
+                          key={position.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <FeaturedJobCard
+                            position={position}
+                            onApply={handleApply}
+                          />
+                        </motion.div>
+                      ))}
+                  </div>
+                </AnimatePresence>
+
+                {/* Pagination */}
+                {filteredPositions.length > PAGE_SIZE && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 }}
+                    className="mt-12 flex justify-center gap-2 flex-wrap"
+                  >
+                    {Array.from({ length: Math.ceil(filteredPositions.length / PAGE_SIZE) }).map((_, i) => (
+                      <motion.div
+                        key={i}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Button
+                          variant={currentPage === i + 1 ? "default" : "outline"}
+                          onClick={() => setCurrentPage(i + 1)}
+                          className={`
+                            ${currentPage === i + 1 
+                              ? "bg-purple-500 text-white hover:bg-purple-600" 
+                              : "border-white/20 text-gray-400 hover:bg-gray-800 hover:text-white"
+                            }
+                            min-w-8
+                          `}
+                        >
+                          {i + 1}
+                        </Button>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
-};
+}
 
 export default CareersPage;
