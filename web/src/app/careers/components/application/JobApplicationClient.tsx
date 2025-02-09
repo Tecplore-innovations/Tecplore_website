@@ -1,7 +1,5 @@
 'use client';
 
-{/* app/careers/components/JobApplicationClient.tsx */}
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -10,13 +8,22 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, MapPin, Building2, Calendar, Clock, Upload } from 'lucide-react';
-import { Position } from '../components/types';
 import { useRouter } from 'next/navigation';
+import { JobApplicationProps } from '../../types';
 
-interface JobApplicationClientProps {
-  position: Position;
-  onBack?: () => void;
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  coverLetter: string;
 }
+
+const initialFormData: FormData = {
+  fullName: '',
+  email: '',
+  phone: '',
+  coverLetter: '',
+};
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -31,19 +38,16 @@ const staggerChildren = {
   }
 };
 
-const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, onBack }) => {
+const JobApplicationClient: React.FC<JobApplicationProps> = ({ position, onBack }) => {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    coverLetter: '',
-  });
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [resume, setResume] = useState<File | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -61,14 +65,25 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!resume) {
       setError('Please upload your resume');
       return;
     }
-    console.log('Form submitted:', { ...formData, resume });
-    setSubmitted(true);
+  
+    try {
+      // Here you would typically send the data to your API
+      console.log('Form submitted:', { ...formData, resume });
+      setSubmitted(true);
+    } catch (error: unknown) {
+      // Properly type and handle the error
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'Failed to submit application. Please try again.';
+      setError(errorMessage);
+    }
   };
 
   const handleBack = () => {
@@ -121,7 +136,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
       initial="hidden"
       animate="visible"
       variants={fadeIn}
-      className="min-h-screen min-h-screen bg-white text-gray-900"
+      className="min-h-screen bg-white text-gray-900"
     >
       <div className="max-w-7xl mx-auto px-6 py-12">
         <motion.div
@@ -170,13 +185,13 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
               </div>
               <div className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                {position.type}
+                {position.employmentType}
               </div>
             </motion.div>
 
             <motion.div 
               variants={fadeIn}
-              className="space-y-6 bg-gray-50 p-6 rounded-lg p-6 rounded-lg"
+              className="space-y-6 bg-gray-50 p-6 rounded-lg"
             >
               <div>
                 <h2 className="text-xl font-semibold mb-3">Job Description</h2>
@@ -218,7 +233,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
             initial="hidden"
             animate="visible"
             transition={{ delay: 0.3 }}
-            className="bg-gray-50 p-6 rounded-lg p-6 rounded-lg"
+            className="bg-gray-50 p-6 rounded-lg"
           >
             <h2 className="text-2xl font-bold mb-6">Apply for this position</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -234,7 +249,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.fullName}
                     onChange={handleInputChange}
                     required
-                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
+                    className="bg-white border-gray-200 text-black mt-2"
                   />
                 </div>
 
@@ -247,7 +262,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
+                    className="bg-white border-gray-200 text-black mt-2"
                   />
                 </div>
 
@@ -260,7 +275,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2"
+                    className="bg-white border-gray-200 text-black mt-2"
                   />
                 </div>
 
@@ -271,7 +286,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                     name="coverLetter"
                     value={formData.coverLetter}
                     onChange={handleInputChange}
-                    className="bg-gray-50 p-6 rounded-lg border-black/20 text-black mt-2 h-32"
+                    className="bg-white border-gray-200 text-black mt-2 h-32"
                     placeholder="Tell us why you're interested in this position..."
                   />
                 </div>
@@ -290,7 +305,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                       type="button"
                       variant="outline"
                       onClick={() => document.getElementById('resume')?.click()}
-                      className="w-full border-dashed border-2 border-white/20 hover:border-purple-500 bg-transparent"
+                      className="w-full border-dashed border-2 border-gray-200 hover:border-purple-500 bg-transparent"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       {resume ? resume.name : 'Upload Resume'}
@@ -313,7 +328,7 @@ const JobApplicationClient: React.FC<JobApplicationClientProps> = ({ position, o
                 >
                   <Button
                     type="submit"
-                    className="w-full bg-purple-500 hover:bg-purple-600"
+                    className="w-full bg-purple-500 hover:bg-purple-600 text-white"
                   >
                     Submit Application
                   </Button>
