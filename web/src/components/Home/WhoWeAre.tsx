@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -83,16 +83,24 @@ const WhoWeAre: React.FC = () => {
   });
 
   // Transform values based on scroll progress
+  // const titleOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.3]);
 
   // Component for underlined words with hover effect
   const HoverWord: React.FC<HoverWordProps> = ({ children, color, image, alt }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    
     return (
-      <TooltipProvider delayDuration={100}>
-        <Tooltip>
+      <TooltipProvider delayDuration={0}>
+        <Tooltip open={isOpen} onOpenChange={setIsOpen}>
           <TooltipTrigger asChild>
             <span 
               className={`${color} inline-block relative underline underline-offset-4 decoration-2 cursor-pointer transition-all duration-300 hover:opacity-80`}
+              onClick={() => setIsOpen(prev => !prev)}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                setIsOpen(prev => !prev);
+              }}
             >
               {children}
             </span>
@@ -214,7 +222,7 @@ const WhoWeAre: React.FC = () => {
           </div>
           
           {/* Second heading with animated lines */}
-          <div className="text-3xl md:text-5xl lg:text-7xl font-medium leading-tight text-gray-800">
+          <div className="text-2xl md:text-4xl lg:text-6xl font-medium leading-tight text-gray-800">
             {/* Line 4 */}
             <div className="overflow-hidden mb-0 sm:mb-0" ref={line4Ref}>
               <motion.div
