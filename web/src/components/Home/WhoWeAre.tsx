@@ -214,7 +214,7 @@ const WhoWeAre: React.FC = () => {
                   color="text-green-600"
                   image="/photos/whoweare/experience.jpg"
                   alt=""
-                >experience</HoverWord> fostering maker spirit and
+                >experience</HoverWord> fostering maker
               </motion.div>
             </div>
             
@@ -228,7 +228,7 @@ const WhoWeAre: React.FC = () => {
                   transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
                 }}
                 initial={{ opacity: 0, y: 50 }}
-              >
+              > spirit and&nbsp;
                 <HoverWord 
                   id="diy"
                   color="text-red-600"
