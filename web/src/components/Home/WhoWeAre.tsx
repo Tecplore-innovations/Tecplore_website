@@ -1,66 +1,269 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { Card } from '@/components/ui/card';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
-const WhoWeAreSection = () => {
+// Define interfaces for type safety
+interface HoverWordProps {
+  children: React.ReactNode;
+  color: string;
+  image: string;
+  alt: string;
+}
+
+interface BackgroundPatternProps {
+  url: string;
+  opacity?: number;
+}
+
+// Separate component for the background pattern
+const BackgroundPattern: React.FC<BackgroundPatternProps> = ({ url, opacity = 0.8 }) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-24">
-      <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
-        {/* Image Section */}
-        <div className="w-full md:w-1/3 flex-shrink-0">
-          <div className="aspect-square rounded-full overflow-hidden bg-gray-100 relative">
-            <Image 
-              src="/photos/whoweare2.jpg" 
-              alt="Educational Innovation"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
-              priority
-            />
+    <div 
+      className="absolute inset-0 z-0" 
+      style={{ 
+        backgroundImage: `url("${url}")`, 
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto',
+        opacity
+      }}
+    />
+  );
+};
+
+// Main component
+const WhoWeAre: React.FC = () => {
+  // For scroll-triggered animations
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Create refs for each text line
+  const [line1Ref, line1InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [line2Ref, line2InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [line3Ref, line3InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [line4Ref, line4InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [line5Ref, line5InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [line6Ref, line6InView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  const [titleRef, titleInView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
+
+  // Transform values based on scroll progress
+  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.3]);
+
+  // Component for underlined words with hover effect
+  const HoverWord: React.FC<HoverWordProps> = ({ children, color, image, alt }) => {
+    return (
+      <TooltipProvider delayDuration={100}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span 
+              className={`${color} inline-block relative underline underline-offset-4 decoration-2 cursor-pointer transition-all duration-300 hover:opacity-80`}
+            >
+              {children}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" align="center" className="w-64 sm:w-72 p-0 border-none shadow-2xl rounded-lg overflow-hidden z-50">
+            <div className="relative h-36 sm:h-48 w-full">
+              <Image
+                src={image}
+                alt={alt}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
+                className="object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                <p className="text-white font-medium text-sm">{alt}</p>
+              </div>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
+
+  return (
+    <section 
+      ref={containerRef}
+      className="relative w-full min-h-[75vh] md:min-h-screen py-12 md:py-32 flex items-center" 
+      aria-labelledby="who-we-are-heading"
+    >
+      {/* Pattern background */}
+      <BackgroundPattern url="/patterns/webb.png" />
+      
+      {/* Scroll progress overlay */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-b from-blue-50/10 to-green-50/10 z-1"
+        style={{ opacity: backgroundOpacity }}
+      />
+
+      {/* Grid container */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-16 items-start">
+        {/* WHO WE ARE section - left column */}
+        <div className="md:col-span-3 md:sticky top-24 self-start mb-2 md:mb-0">
+          <div ref={titleRef}>
+            <motion.div 
+              className="inline-block border border-gray-300 bg-white/80 backdrop-blur-sm rounded-lg px-5 py-3 text-sm font-medium tracking-wider shadow-sm transition-all duration-300 hover:shadow-md"
+              animate={{
+                opacity: titleInView ? 1 : 0,
+                x: titleInView ? 0 : -20,
+                transition: { duration: 0.5 }
+              }}
+              initial={{ opacity: 0, x: -20 }}
+            >
+              <h1 id="who-we-are-heading" className="uppercase">Who We Are</h1>
+            </motion.div>
           </div>
         </div>
-
-        {/* Content Section */}
-        <div className="w-full md:w-2/3">
-          <div className="space-y-6 md:space-y-8">
-            {/* Main Text */}
-            <p className="text-3xl md:text-4xl font-medium leading-tight">
-              Be it an institute, makerspace or Cafe enable unique experience fostering maker spirit and DIY attitude. <span className="text-gray-400">Build Science temperament among the next generation through hands-on activities.</span>
-            </p>
-
-            {/* Stats Section */}
-            <div className="grid grid-cols-2 sm:flex gap-4 sm:gap-8 pt-4 sm:pt-8">
-            <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-3xl shadow-sm sm:min-w-[160px] md:min-w-[180px] overflow-hidden">
-              <div className="absolute top-1/2 right-0 w-32 h-32 bg-blue-300/40 rounded-full blur-2xl transform translate-x-8 -translate-y-12"></div>
-              <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-purple-300/40 rounded-full blur-2xl transform -translate-x-16 translate-y-12"></div>
-              <div className="relative z-10">
-                <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">
-                  92%
-                </div>
-                <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
-                  Student Engagement Rate
-                </div>
-              </div>
-            </Card>
-              
-            <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-3xl shadow-sm sm:min-w-[160px] md:min-w-[180px] overflow-hidden">
-              <div className="absolute top-1/2 right-0 w-32 h-32 bg-red-200/40 rounded-full blur-2xl transform translate-x-8 -translate-y-12"></div>
-              <div className="absolute bottom-0 left-1/2 w-32 h-32 bg-orange-200/40 rounded-full blur-2xl transform -translate-x-16 translate-y-12"></div>
-              <div className="relative z-10">
-                <div className="text-4xl sm:text-6xl md:text-7xl font-bold text-black tracking-wide">
-                  80%
-                </div>
-                <div className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
-                  Improved Learning Outcomes
-                </div>
-              </div>
-            </Card>
+        
+        {/* Content section - right column */}
+        <div className="md:col-span-9 text-left space-y-6 md:space-y-12">
+          {/* First heading with animated lines */}
+          <div className="text-3xl md:text-5xl lg:text-7xl font-medium leading-tight lg:leading-[1.1]">
+            {/* Line 1 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line1Ref}>
+              <motion.div
+                className="inline-block py-0.5 md:py-1"
+                animate={{
+                  opacity: line1InView ? 1 : 0,
+                  y: line1InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                Be it an Institute, <HoverWord 
+                  color="text-blue-600"
+                  image="/photos/whoweare/makerspace.jpg"
+                  alt="Makerspace environment"
+                >Makerspace</HoverWord>
+              </motion.div>
+            </div>
+            
+            {/* Line 2 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line2Ref}>
+              <motion.div
+                className="inline-block py-0"
+                animate={{
+                  opacity: line2InView ? 1 : 0,
+                  y: line2InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                or Cafe, enable unique <HoverWord 
+                  color="text-green-600"
+                  image="/photos/whoweare/experience.jpg"
+                  alt="Hands-on experience"
+                >experience</HoverWord>
+              </motion.div>
+            </div>
+            
+            {/* Line 3 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line3Ref}>
+              <motion.div
+                className="inline-block py-1"
+                animate={{
+                  opacity: line3InView ? 1 : 0,
+                  y: line3InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                fostering maker spirit and <HoverWord 
+                  color="text-blue-600"
+                  image="/photos/whoweare/diy.jpg"
+                  alt="DIY projects"
+                >DIY</HoverWord> attitude.
+              </motion.div>
+            </div>
+          </div>
+          
+          {/* Second heading with animated lines */}
+          <div className="text-3xl md:text-5xl lg:text-7xl font-medium leading-tight text-gray-800">
+            {/* Line 4 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line4Ref}>
+              <motion.div
+                className="inline-block py-1"
+                animate={{
+                  opacity: line4InView ? 1 : 0,
+                  y: line4InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                Build Science temperament
+              </motion.div>
+            </div>
+            
+            {/* Line 5 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line5Ref}>
+              <motion.div
+                className="inline-block py-1"
+                animate={{
+                  opacity: line5InView ? 1 : 0,
+                  y: line5InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                among the next generation
+              </motion.div>
+            </div>
+            
+            {/* Line 6 */}
+            <div className="overflow-hidden mb-0 sm:mb-0" ref={line6Ref}>
+              <motion.div
+                className="inline-block py-1"
+                animate={{
+                  opacity: line6InView ? 1 : 0,
+                  y: line6InView ? 0 : 50,
+                  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.3 }
+                }}
+                initial={{ opacity: 0, y: 50 }}
+              >
+                through hands-on activities.
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default WhoWeAreSection;
+export default WhoWeAre;

@@ -5,12 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const AnimatedWord = () => {
   const words = [
-    "Innovation",
-    "Excellence",
-    "Discovery",
-    "Creativity",
-    "Exploration",
-    "Leadership"
+    "Making",
+    "Solving",
+    "Breaking",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -49,7 +49,7 @@ const HomePage = () => {
               className="text-white text-4xl md:text-7xl font-bold mx-auto max-w-5xl mb-4"
             >
               <div className="break-words">
-                <span>Engineering Science Through</span>
+                <span>Learn Science Through</span>
                 <div className="mt-2">
                   <AnimatedWord />
                 </div>
