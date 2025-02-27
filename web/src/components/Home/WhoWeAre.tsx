@@ -15,6 +15,7 @@ interface HoverWordProps {
   color: string;
   image: string;
   alt: string;
+  id: string;
 }
 
 interface BackgroundPatternProps {
@@ -45,6 +46,9 @@ const WhoWeAre: React.FC = () => {
     target: containerRef,
     offset: ["start end", "end start"]
   });
+
+  // State to track which tooltip is open (if any)
+  const [openTooltip, setOpenTooltip] = useState<string | null>(null);
 
   // Create refs for each text line
   const [line1Ref, line1InView] = useInView({
@@ -87,19 +91,30 @@ const WhoWeAre: React.FC = () => {
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.3]);
 
   // Component for underlined words with hover effect
-  const HoverWord: React.FC<HoverWordProps> = ({ children, color, image, alt }) => {
-    const [isOpen, setIsOpen] = useState(false);
+  const HoverWord: React.FC<HoverWordProps> = ({ children, color, image, alt, id }) => {
+    const isOpen = openTooltip === id;
+    
+    const handleToggle = () => {
+      if (isOpen) {
+        setOpenTooltip(null);
+      } else {
+        setOpenTooltip(id);
+      }
+    };
     
     return (
       <TooltipProvider delayDuration={0}>
-        <Tooltip open={isOpen} onOpenChange={setIsOpen}>
+        <Tooltip open={isOpen} onOpenChange={(open) => {
+          if (!open) setOpenTooltip(null);
+          else setOpenTooltip(id);
+        }}>
           <TooltipTrigger asChild>
             <span 
               className={`${color} inline-block relative underline underline-offset-4 decoration-2 cursor-pointer transition-all duration-300 hover:opacity-80`}
-              onClick={() => setIsOpen(prev => !prev)}
+              onClick={handleToggle}
               onTouchEnd={(e) => {
                 e.preventDefault();
-                setIsOpen(prev => !prev);
+                handleToggle();
               }}
             >
               {children}
@@ -175,6 +190,7 @@ const WhoWeAre: React.FC = () => {
                 initial={{ opacity: 0, y: 50 }}
               >
                 Be it an Institute, <HoverWord 
+                  id="makerspace"
                   color="text-blue-600"
                   image="/photos/whoweare/makerspace.jpg"
                   alt=""
@@ -194,10 +210,11 @@ const WhoWeAre: React.FC = () => {
                 initial={{ opacity: 0, y: 50 }}
               >
                 or Cafe, enable unique <HoverWord 
+                  id="experience"
                   color="text-green-600"
                   image="/photos/whoweare/experience.jpg"
                   alt=""
-                >experience</HoverWord>
+                >experience</HoverWord> fostering maker spirit and
               </motion.div>
             </div>
             
@@ -212,8 +229,9 @@ const WhoWeAre: React.FC = () => {
                 }}
                 initial={{ opacity: 0, y: 50 }}
               >
-                fostering maker spirit and <HoverWord 
-                  color="text-blue-600"
+                <HoverWord 
+                  id="diy"
+                  color="text-red-600"
                   image="/photos/whoweare/diy.jpg"
                   alt=""
                 >DIY</HoverWord> attitude.
@@ -222,11 +240,11 @@ const WhoWeAre: React.FC = () => {
           </div>
           
           {/* Second heading with animated lines */}
-          <div className="text-2xl md:text-4xl lg:text-6xl font-medium leading-tight text-gray-800">
+          <div className="text-3xl md:text-5xl lg:text-7xl font-medium leading-tight lg:leading-[1.1] text-gray-800">
             {/* Line 4 */}
             <div className="overflow-hidden mb-0 sm:mb-0" ref={line4Ref}>
               <motion.div
-                className="inline-block py-1"
+                className="inline-block py-0"
                 animate={{
                   opacity: line4InView ? 1 : 0,
                   y: line4InView ? 0 : 50,
@@ -241,7 +259,7 @@ const WhoWeAre: React.FC = () => {
             {/* Line 5 */}
             <div className="overflow-hidden mb-0 sm:mb-0" ref={line5Ref}>
               <motion.div
-                className="inline-block py-1"
+                className="inline-block py-0"
                 animate={{
                   opacity: line5InView ? 1 : 0,
                   y: line5InView ? 0 : 50,
@@ -256,7 +274,7 @@ const WhoWeAre: React.FC = () => {
             {/* Line 6 */}
             <div className="overflow-hidden mb-0 sm:mb-0" ref={line6Ref}>
               <motion.div
-                className="inline-block py-1"
+                className="inline-block py-0"
                 animate={{
                   opacity: line6InView ? 1 : 0,
                   y: line6InView ? 0 : 50,
