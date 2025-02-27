@@ -169,7 +169,7 @@ const WhoWeAre: React.FC = () => {
                 Be it an Institute, <HoverWord 
                   color="text-blue-600"
                   image="/photos/whoweare/makerspace.jpg"
-                  alt="Makerspace environment"
+                  alt=""
                 >Makerspace</HoverWord>
               </motion.div>
             </div>
@@ -188,7 +188,7 @@ const WhoWeAre: React.FC = () => {
                 or Cafe, enable unique <HoverWord 
                   color="text-green-600"
                   image="/photos/whoweare/experience.jpg"
-                  alt="Hands-on experience"
+                  alt=""
                 >experience</HoverWord>
               </motion.div>
             </div>
@@ -207,7 +207,7 @@ const WhoWeAre: React.FC = () => {
                 fostering maker spirit and <HoverWord 
                   color="text-blue-600"
                   image="/photos/whoweare/diy.jpg"
-                  alt="DIY projects"
+                  alt=""
                 >DIY</HoverWord> attitude.
               </motion.div>
             </div>
