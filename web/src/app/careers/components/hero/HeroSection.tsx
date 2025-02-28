@@ -1,31 +1,42 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { HeroProps } from '../../types';
 import HeroElements from './HeroElements';
-import SearchBar from './SearchBar';
+import SearchBar, { SearchBarProps } from './SearchBar';
 
-const HeroSection: React.FC<HeroProps> = ({
-  title,
-  searchValue,
-  onSearchChange,
-  onSearchSubmit
-}) => {
+export interface HeroProps {
+  title: string;
+  searchValue: string;
+  onSearchChange: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  onSearchSubmit: ((e: React.FormEvent) => void) | undefined;
+}
+
+const HeroSection = (props: HeroProps): React.ReactElement => {
+  const { title, searchValue, onSearchChange, onSearchSubmit } = props;
+
+  // Create a properly typed SearchBarProps object
+  const searchBarProps: SearchBarProps = {
+    value: searchValue,
+    onChange: onSearchChange,
+    onSubmit: onSearchSubmit
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative pt-16 pb-24 overflow-hidden"
+      className="relative pt-16 md:pt-20 pb-24 overflow-hidden"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <Image 
           src="/photos/career1.jpg" 
-          alt="background" 
-          layout="fill"
-          objectFit="cover"
+          alt="Background image showing career-related theme" 
+          fill
           priority
-          className="absolute inset-0 w-full h-full"
+          sizes="100vw"
+          className="object-cover"
+          quality={90}
         />
         <motion.div
           animate={{
@@ -37,7 +48,7 @@ const HeroSection: React.FC<HeroProps> = ({
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-purple-500/20 rounded-full blur-3xl"
         />
       </div>
 
@@ -54,7 +65,7 @@ const HeroSection: React.FC<HeroProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight break-words"
+            className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight break-words text-white"
           >
             {title}
             <motion.span
@@ -71,11 +82,7 @@ const HeroSection: React.FC<HeroProps> = ({
             </motion.span>
           </motion.h1>
 
-          <SearchBar 
-            value={searchValue}
-            onChange={onSearchChange}
-            onSubmit={onSearchSubmit}
-          />
+          <SearchBar {...searchBarProps} />
         </motion.div>
       </div>
     </motion.div>

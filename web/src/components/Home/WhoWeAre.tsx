@@ -120,7 +120,7 @@ const WhoWeAre: React.FC = () => {
               {children}
             </span>
           </TooltipTrigger>
-          <TooltipContent side="top" align="center" className="w-64 sm:w-72 p-0 border-none shadow-2xl rounded-lg overflow-hidden z-50">
+          <TooltipContent side="top" align="center" className="w-64 sm:w-72 p-0 border-none shadow-2xl rounded-none overflow-hidden z-50">
             <div className="relative h-36 sm:h-48 w-full">
               <Image
                 src={image}
@@ -161,7 +161,7 @@ const WhoWeAre: React.FC = () => {
         <div className="md:col-span-3 md:sticky top-24 self-start mb-2 md:mb-0">
           <div ref={titleRef}>
             <motion.div 
-              className="inline-block border border-gray-300 bg-white/80 backdrop-blur-sm rounded-lg px-5 py-3 text-sm font-medium tracking-wider shadow-sm transition-all duration-300 hover:shadow-md"
+              className="inline-block border border-gray-300 bg-white/80 backdrop-blur-sm rounded-none px-5 py-3 text-sm font-medium tracking-wider shadow-sm transition-all duration-300 hover:shadow-md"
               animate={{
                 opacity: titleInView ? 1 : 0,
                 x: titleInView ? 0 : -20,

@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+// Explicit type definition using React.FC with no props
 const HeroElements: React.FC = () => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Floating Sphere - Adjusted positioning and size for mobile */}
+      {/* Floating Sphere - Optimized for all screen sizes */}
       <motion.div
         animate={{
           y: [0, -20, 0],
@@ -16,12 +17,13 @@ const HeroElements: React.FC = () => {
           ease: "easeInOut"
         }}
         className="absolute left-[20%] top-1/4 sm:left-1/4 sm:top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        aria-hidden="true"
       >
-        <div className="w-16 h-16 sm:w-32 sm:h-32 rounded-full bg-gradient-to-b from-purple-500 to-pink-500 opacity-80 blur-sm" />
-        <div className="absolute inset-0 w-16 h-16 sm:w-32 sm:h-32 rounded-full bg-purple-500/30 animate-pulse blur-xl" />
+        <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-b from-purple-500 to-pink-500 opacity-80 blur-sm" />
+        <div className="absolute inset-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-purple-500/30 animate-pulse blur-xl" />
       </motion.div>
 
-      {/* Circular Badge - Hidden on mobile, visible from sm breakpoint */}
+      {/* Circular Badge - Responsive visibility */}
       <motion.div
         animate={{
           rotate: 360
@@ -32,6 +34,7 @@ const HeroElements: React.FC = () => {
           ease: "linear"
         }}
         className="hidden sm:block absolute right-1/4 top-1/3 transform -translate-y-1/2"
+        aria-hidden="true"
       >
         <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-purple-500/30 flex items-center justify-center">
           <div className="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 border-purple-500/20 flex items-center justify-center">
@@ -40,9 +43,8 @@ const HeroElements: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Stats Badge and Social Links Container - Reorganized for mobile */}
+      {/* Stats Badge - Responsive design */}
       <div className="absolute top-2 sm:top-8 right-2 sm:right-1/4 flex flex-col gap-2 items-end pointer-events-auto">
-        {/* Stats Badge */}
         <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -59,8 +61,8 @@ const HeroElements: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Additional Decorative Elements - Hidden on mobile */}
-      <div className="hidden sm:block absolute bottom-1/4 right-1/3">
+      {/* Additional Decorative Elements - Screen size optimized */}
+      <div className="hidden sm:block absolute bottom-1/4 right-1/3" aria-hidden="true">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -75,8 +77,8 @@ const HeroElements: React.FC = () => {
         />
       </div>
 
-      {/* Mobile-only decorative element - Adjusted position */}
-      <div className="block sm:hidden absolute bottom-1/4 right-2">
+      {/* Mobile-only decorative element */}
+      <div className="block sm:hidden absolute bottom-1/4 right-2" aria-hidden="true">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -91,19 +93,20 @@ const HeroElements: React.FC = () => {
         />
       </div>
 
-      {/* Abstract Background Shapes */}
+      {/* Abstract Background Shapes - Improved responsiveness */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
         className="absolute inset-0 z-0"
+        aria-hidden="true"
       >
-        <div className="absolute top-1/4 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-gradient-to-l from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/3 w-32 h-32 sm:w-64 sm:h-64 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-32 h-32 sm:w-64 sm:h-64 bg-gradient-to-l from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
       </motion.div>
 
       {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_24px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_24px]" aria-hidden="true" />
     </div>
   );
 };
