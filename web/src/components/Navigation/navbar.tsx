@@ -80,9 +80,6 @@ const Navigation = () => {
                  <Link href="/process" className="text-gray-700 hover:text-black text-sm">
                    Process
                  </Link>
-                 <Link href="/projects" className="text-gray-700 hover:text-black text-sm">
-                   Projects
-                 </Link>
                  <Link href="/careers" className="text-gray-700 hover:text-black text-sm">
                    Careers
                  </Link>
@@ -132,9 +129,6 @@ const Navigation = () => {
                  </motion.div>
                  <motion.div variants={itemVariants}>
                    <MobileNavLink href="/process">Process</MobileNavLink>
-                 </motion.div>
-                 <motion.div variants={itemVariants}>
-                   <MobileNavLink href="/projects">Projects</MobileNavLink>
                  </motion.div>
                  <motion.div variants={itemVariants}>
                    <MobileNavLink href="/careers">Careers</MobileNavLink>
