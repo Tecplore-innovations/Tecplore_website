@@ -309,7 +309,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
       </Sheet>
       
       {/* Filter Dropdowns using ShadUI DropdownMenu - Hidden on mobile */}
-      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block sticky top-16 bg-white z-10">
+      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block top-16 bg-white z-10">
         <div className="flex justify-between items-center">
           <div className="flex space-x-4 overflow-x-auto">
             {/* Category Dropdown - Using ShadUI */}
