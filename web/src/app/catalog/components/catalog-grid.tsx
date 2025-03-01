@@ -2,7 +2,7 @@
 
 {/* app/catalog/components/catalog-grid.tsx */}
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, ChevronDown, Menu } from 'lucide-react';
@@ -22,7 +22,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
-import type { CatalogGridProps, FilterSections, FilterSectionProps } from '../types';
+import type { 
+  CatalogGridProps, 
+  FilterSections, 
+  FilterSectionProps, 
+  PriceRange, 
+  AvailabilityOption 
+} from '../types';
 import VideoBackground from './video-background';
 
 export function CatalogGrid({ exhibits }: CatalogGridProps) {
@@ -44,39 +50,42 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
   }, [exhibits]);
 
   // Define price ranges with proper typing
-  const priceRanges: Array<{ id: string; label: string }> = [
+  const priceRanges = useMemo<PriceRange[]>(() => [
     { id: 'free', label: 'Free' },
     { id: 'paid', label: 'Paid' },
     { id: 'premium', label: 'Premium' }
-  ];
+  ], []);
 
   // Define availability options
-  const availabilityOptions = [
+  const availabilityOptions = useMemo<AvailabilityOption[]>(() => [
     { id: 'in-stock', label: 'In Stock' },
     { id: 'pre-order', label: 'Pre-order' },
     { id: 'coming-soon', label: 'Coming Soon' }
-  ];
+  ], []);
 
-  // Filter exhibits with proper type checking
+  // Filter exhibits with proper type checking and performance optimization
   const filteredExhibits = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase().trim();
+    
     return exhibits.filter(exhibit => {
-      const searchLower = searchQuery.toLowerCase().trim();
+      // Search match check
       const matchesSearch = searchLower === '' || [
         exhibit.title,
         exhibit.description,
         exhibit.category
       ].some(field => field?.toLowerCase().includes(searchLower));
       
+      // Category match check
       const matchesCategory = !selectedCategory || exhibit.category === selectedCategory;
       
-      // Handle potentially undefined price with optional chaining and fallbacks
+      // Price range match check with improved null/undefined handling
       const matchesPriceRange = !selectedPriceRange || (
         (selectedPriceRange === 'free' && (exhibit.price === 0 || exhibit.price === undefined)) ||
-        (selectedPriceRange === 'paid' && exhibit.price !== undefined && exhibit.price > 0) ||
+        (selectedPriceRange === 'paid' && exhibit.price !== undefined && exhibit.price > 0 && exhibit.price <= 100) ||
         (selectedPriceRange === 'premium' && exhibit.price !== undefined && exhibit.price > 100)
       );
       
-      // Handle potentially undefined availability
+      // Availability match check with improved null handling
       const matchesAvailability = !selectedAvailability || 
         exhibit.availability === selectedAvailability;
       
@@ -84,13 +93,16 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
     });
   }, [exhibits, searchQuery, selectedCategory, selectedPriceRange, selectedAvailability]);
 
-  // Filter Section Component with proper typing
-  const FilterSection: React.FC<FilterSectionProps> = ({ title, children, sectionKey }) => (
+  // Callback for handling section open state changes
+  const handleSectionOpenChange = useCallback((sectionKey: keyof FilterSections, isOpen: boolean) => {
+    setOpenSections(prev => ({ ...prev, [sectionKey]: isOpen }));
+  }, []);
+
+  // Filter Section Component with proper typing - memoized for performance
+  const FilterSection: React.FC<FilterSectionProps> = useCallback(({ title, children, sectionKey }) => (
     <Collapsible
       open={openSections[sectionKey]}
-      onOpenChange={(isOpen: boolean) => 
-        setOpenSections(prev => ({ ...prev, [sectionKey]: isOpen }))
-      }
+      onOpenChange={(isOpen: boolean) => handleSectionOpenChange(sectionKey, isOpen)}
       className="border-b border-gray-200 py-4"
     >
       <div className="px-4">
@@ -109,10 +121,10 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
         </div>
       </CollapsibleContent>
     </Collapsible>
-  );
+  ), [openSections, handleSectionOpenChange]);
 
-  // Filter Content Component
-  const FilterContent: React.FC = () => (
+  // Memoize FilterContent to prevent unnecessary re-renders
+  const FilterContent = useCallback(() => (
     <div className="py-2">
       <FilterSection title="Categories" sectionKey="categories">
         {categories.map(category => (
@@ -131,6 +143,9 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
             <span className="text-gray-700">{category}</span>
           </label>
         ))}
+        {categories.length === 0 && (
+          <p className="text-sm text-gray-500">No categories available</p>
+        )}
       </FilterSection>
 
       <FilterSection title="Price Range" sectionKey="price">
@@ -192,24 +207,28 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
         </div>
       </FilterSection>
     </div>
-  );
+  ), [FilterSection, categories, priceRanges, availabilityOptions, selectedCategory, selectedPriceRange, selectedAvailability]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle search input changes
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-  };
+  }, []);
   
   // Handling clear filters
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchQuery('');
     setSelectedCategory('');
     setSelectedPriceRange('');
     setSelectedAvailability('');
-  };
+  }, []);
   
+  // Get availability label by ID
+  const getAvailabilityLabel = useCallback((id: string): string => {
+    return availabilityOptions.find(a => a.id === id)?.label || id;
+  }, [availabilityOptions]);
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* Add a spacer to account for the floating navigation bar - KEY FIX */}
-      
       {/* Header with TECPLORE branding */}
       <div className="w-full text-center py-8 px-4 relative text-white">
         {/* Video background with fallback image */}
@@ -221,41 +240,45 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
         <div className="h-16"></div>
         <h1 className="text-3xl font-bold mb-2 relative z-10">BROWSE PROJECTS</h1>
         <p className="max-w-md mx-auto text-center mb-6 relative z-10">
-          We create a unique, custom projects and experiences for next
-          generation kids to learn STEM concepts in ease.
+          We create unique, custom projects and experiences for next
+          generation kids to learn STEM concepts with ease.
         </p>
         
         {/* Search Bar - Centered */}
         <div className="max-w-md mx-auto mb-8 relative z-10">
           <div className="relative flex items-center border border-gray-300 rounded-md text-black bg-white shadow-sm">
-            <Search className="ml-3 text-gray-400 h-4 w-4" />
+            <Search className="ml-3 text-gray-400 h-4 w-4" aria-hidden="true" />
             <Input
               type="text"
               placeholder="Search Products ..."
               value={searchQuery}
               onChange={handleSearchChange}
               className="border-0 pl-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+              aria-label="Search products"
             />
           </div>
         </div>
       </div>
 
-      {/* Mobile Filter Button - Only visible on small screens - Now with proper z-index */}
+      {/* Mobile Filter Button - Only visible on small screens */}
       <div className="md:hidden border-t border-gray-200 py-3 px-4 sticky top-16 bg-white z-20">
         <Button 
           variant="outline" 
           size="sm" 
           className="w-full flex items-center justify-between"
           onClick={() => setIsMobileFilterOpen(true)}
+          aria-label="Open filters"
+          aria-expanded={isMobileFilterOpen}
+          aria-controls="mobile-filter-panel"
         >
           <span>Filters {selectedCategory || selectedPriceRange || selectedAvailability ? '(Active)' : ''}</span>
-          <Menu className="h-4 w-4" />
+          <Menu className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
       
       {/* Mobile Filter Sheet */}
       <Sheet open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
-        <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
+        <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0" id="mobile-filter-panel">
           <SheetHeader className="px-4 py-4 border-b">
             <SheetTitle>Filters</SheetTitle>
           </SheetHeader>
@@ -286,7 +309,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
       </Sheet>
       
       {/* Filter Dropdowns using ShadUI DropdownMenu - Hidden on mobile */}
-      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block top-16 bg-white z-10">
+      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block sticky top-16 bg-white z-10">
         <div className="flex justify-between items-center">
           <div className="flex space-x-4 overflow-x-auto">
             {/* Category Dropdown - Using ShadUI */}
@@ -398,7 +421,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
               >
                 <Link
                   href={`/catalog/${exhibit.id}`}
-                  className="block h-full overflow-hidden hover:shadow-md transition-shadow duration-200"
+                  className="block h-full overflow-hidden border border-gray-100 rounded-md hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden w-full">
                     <Image
@@ -407,6 +430,8 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className="object-cover transition-transform duration-300 hover:scale-105"
+                      priority={false}
+                      loading="lazy"
                     />
                   </div>
                   <div className="p-3">
@@ -432,7 +457,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
                               ? 'bg-blue-100 text-blue-800'
                               : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          {availabilityOptions.find(a => a.id === exhibit.availability)?.label || exhibit.availability}
+                          {getAvailabilityLabel(exhibit.availability)}
                         </span>
                       )}
                     </div>

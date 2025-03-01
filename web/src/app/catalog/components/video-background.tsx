@@ -25,72 +25,83 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
   overlayOpacity = 40 // Default 40% opacity
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoError, setVideoError] = useState<boolean>(false);
+  // Start with showing the fallback image until video is confirmed to be playing
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const videoElement = videoRef.current;
     
-    // Function to handle video errors
+    if (!videoElement) {
+      return; // Exit if no video element
+    }
+    
+    // Reset state when component mounts or video source changes
+    setIsVideoPlaying(false);
+    
+    // Safe error handler that won't throw its own errors
     const handleVideoError = () => {
-      console.warn('Video playback error, falling back to image');
-      setVideoError(true);
+      console.log('Video failed to load or play, showing fallback image');
+      setIsVideoPlaying(false);
     };
-
-    // Function to handle when video playback fails
-    const handleVideoPlayError = (error: any) => {
-      console.warn('Autoplay prevented or video playback error:', error);
-      setVideoError(true);
+    
+    // Only set video playing when we're sure it's actually playing
+    const handlePlaying = () => {
+      console.log('Video is now playing');
+      setIsVideoPlaying(true);
     };
-
-    if (videoElement) {
-      // Listen for any video errors
-      videoElement.addEventListener('error', handleVideoError);
-      
-      // Check if video source is valid
-      if (!videoSrc) {
-        setVideoError(true);
-      } else {
-        // Try to play the video when it's ready
-        videoElement.addEventListener('canplay', () => {
-          videoElement.play().catch(handleVideoPlayError);
+    
+    // Add event listeners
+    videoElement.addEventListener('playing', handlePlaying);
+    videoElement.addEventListener('error', handleVideoError);
+    
+    // Try to play the video - handle any errors silently
+    const attemptPlay = () => {
+      if (videoElement) {
+        videoElement.play().catch(() => {
+          // If play fails, we'll just use the fallback image
+          // No need to log anything as the error event will fire
         });
       }
-    }
-
+    };
+    
+    // Load the video then try to play it
+    videoElement.load();
+    attemptPlay();
+    
+    // Cleanup
     return () => {
       if (videoElement) {
+        videoElement.removeEventListener('playing', handlePlaying);
         videoElement.removeEventListener('error', handleVideoError);
+        videoElement.pause();
       }
     };
   }, [videoSrc]);
 
   return (
-    <div className="absolute inset-0 z-0">
-      {!videoError ? (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          loop
-          muted
-          playsInline
-          autoPlay
-        >
-          <source src={videoSrc} type="video/mp4" />
-          {/* This fallback text will trigger the image fallback via useEffect */}
-          Your browser does not support the video tag.
-        </video>
-      ) : (
-        <div 
-          className="absolute inset-0"
-          style={{ 
-            backgroundImage: `url('${fallbackImageSrc}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          aria-label="Background fallback image"
-        />
-      )}
-      {/* Add overlay for better text visibility */}
+    <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* Video background - Simple structure with no extra error handling */}
+      <video
+        ref={videoRef}
+        className={`absolute inset-0 w-full h-full object-cover ${isVideoPlaying ? 'block' : 'hidden'}`}
+        loop
+        muted
+        playsInline
+        src={videoSrc}
+      />
+
+      {/* Fallback image background */}
+      <div 
+        className={`absolute inset-0 ${isVideoPlaying ? 'hidden' : 'block'}`}
+        style={{ 
+          backgroundImage: `url('${fallbackImageSrc}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+        aria-label="Background fallback image"
+      />
+      
+      {/* Overlay for text contrast */}
       <div 
         className="absolute inset-0 bg-black" 
         style={{ opacity: overlayOpacity / 100 }}
