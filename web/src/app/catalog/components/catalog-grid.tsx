@@ -421,7 +421,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
               >
                 <Link
                   href={`/catalog/${exhibit.id}`}
-                  className="block h-full overflow-hidden border border-gray-100 rounded-md hover:shadow-md transition-shadow duration-200"
+                  className="block h-full overflow-hidden hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden w-full">
                     <Image
