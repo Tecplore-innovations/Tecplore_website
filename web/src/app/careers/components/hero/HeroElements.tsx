@@ -43,24 +43,6 @@ const HeroElements: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Stats Badge - Responsive design */}
-      <div className="absolute top-2 sm:top-8 right-2 sm:right-1/4 flex flex-col gap-2 items-end pointer-events-auto">
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="bg-black/30 backdrop-blur-md rounded-full py-1 sm:py-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2"
-        >
-          <div className="flex -space-x-1 sm:-space-x-2">
-            <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-purple-500" />
-            <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-pink-500" />
-          </div>
-          <span className="text-white text-[10px] sm:text-sm font-medium truncate max-w-[120px] sm:max-w-none">
-            50k+ talents found their dream job
-          </span>
-        </motion.div>
-      </div>
-
       {/* Additional Decorative Elements - Screen size optimized */}
       <div className="hidden sm:block absolute bottom-1/4 right-1/3" aria-hidden="true">
         <motion.div

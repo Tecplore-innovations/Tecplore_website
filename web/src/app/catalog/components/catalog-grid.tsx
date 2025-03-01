@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CatalogGridProps, FilterSections, FilterSectionProps } from '../types';
+import VideoBackground from './video-background';
 
 export function CatalogGrid({ exhibits }: CatalogGridProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -207,17 +208,26 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
   
   return (
     <div className="flex flex-col min-h-screen bg-white">
+      {/* Add a spacer to account for the floating navigation bar - KEY FIX */}
+      
       {/* Header with TECPLORE branding */}
-      <div className="w-full text-center py-8 px-4">
-        <h1 className="text-3xl font-bold mb-2">BROWSE PROJECTS</h1>
-        <p className="max-w-md mx-auto text-center mb-6">
+      <div className="w-full text-center py-8 px-4 relative text-white">
+        {/* Video background with fallback image */}
+        <VideoBackground 
+          videoSrc="/videos/nst4.mp4" 
+          fallbackImageSrc="/photos/catalog/bg.jpg" 
+        />
+        
+        <div className="h-16"></div>
+        <h1 className="text-3xl font-bold mb-2 relative z-10">BROWSE PROJECTS</h1>
+        <p className="max-w-md mx-auto text-center mb-6 relative z-10">
           We create a unique, custom projects and experiences for next
-          <br />generation kids to learn STEM concepts in ease.
+          generation kids to learn STEM concepts in ease.
         </p>
         
         {/* Search Bar - Centered */}
-        <div className="max-w-md mx-auto mb-8">
-          <div className="relative flex items-center border border-gray-300 rounded-md">
+        <div className="max-w-md mx-auto mb-8 relative z-10">
+          <div className="relative flex items-center border border-gray-300 rounded-md text-black bg-white shadow-sm">
             <Search className="ml-3 text-gray-400 h-4 w-4" />
             <Input
               type="text"
@@ -230,8 +240,8 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
         </div>
       </div>
 
-      {/* Mobile Filter Button - Only visible on small screens */}
-      <div className="md:hidden border-t border-gray-200 py-3 px-4 sticky top-0 bg-white z-10">
+      {/* Mobile Filter Button - Only visible on small screens - Now with proper z-index */}
+      <div className="md:hidden border-t border-gray-200 py-3 px-4 sticky top-16 bg-white z-20">
         <Button 
           variant="outline" 
           size="sm" 
@@ -276,7 +286,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
       </Sheet>
       
       {/* Filter Dropdowns using ShadUI DropdownMenu - Hidden on mobile */}
-      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block">
+      <div className="border-t border-b border-gray-200 py-3 px-4 hidden md:block top-16 bg-white z-10">
         <div className="flex justify-between items-center">
           <div className="flex space-x-4 overflow-x-auto">
             {/* Category Dropdown - Using ShadUI */}
@@ -371,7 +381,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 w-full px-2 sm:px-4 mt-6">
+      <div className="flex-1 w-full px-2 sm:px-4 mt-6 pb-8">
         <AnimatePresence mode="wait">
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
@@ -388,7 +398,7 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
               >
                 <Link
                   href={`/catalog/${exhibit.id}`}
-                  className="block h-full"
+                  className="block h-full overflow-hidden hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden w-full">
                     <Image
@@ -396,16 +406,36 @@ export function CatalogGrid({ exhibits }: CatalogGridProps) {
                       alt={exhibit.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
-                  <div className="mt-3">
+                  <div className="p-3">
                     <h3 className="font-medium text-gray-900 border-b border-gray-200 pb-1">
                       {exhibit.title}
                     </h3>
                     <p className="text-sm text-gray-500 border-b border-gray-200 pb-1 pt-1">
                       {exhibit.category}
                     </p>
+                    <div className="mt-2 flex justify-between items-center">
+                      <span className="text-sm font-medium">
+                        {exhibit.price !== undefined 
+                          ? exhibit.price > 0 
+                            ? `$${exhibit.price.toFixed(2)}` 
+                            : 'Free'
+                          : 'Contact for pricing'}
+                      </span>
+                      {exhibit.availability && (
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          exhibit.availability === 'in-stock' 
+                            ? 'bg-green-100 text-green-800' 
+                            : exhibit.availability === 'pre-order'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {availabilityOptions.find(a => a.id === exhibit.availability)?.label || exhibit.availability}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </Link>
               </motion.div>

@@ -778,6 +778,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Add a spacer to account for the floating navigation bar - KEY FIX */}
+      <div className="h-16"></div>
         <ProductHeader />
         <MediaGallery />
         <ProductOverview />
