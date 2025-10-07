@@ -1,33 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 
 interface VideoPlayerProps {
   videos: string[];
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videos }) => {
+const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(({ videos }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [playError, setPlayError] = useState<boolean>(false);
 
-  // Set isClient to true after component mounts (client-side)
+  // Expose videoRef to parent via forwarded ref
+  useImperativeHandle(ref, () => videoRef.current as HTMLVideoElement);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Function to handle video end
   const handleVideoEnd = () => {
     setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
   };
 
-  // Function to handle video loading
   const handleVideoLoaded = () => {
     setIsLoading(false);
     setPlayError(false);
   };
 
-  // Function to attempt playing video
   const attemptPlay = async () => {
     if (videoRef.current) {
       try {
@@ -40,7 +39,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videos }) => {
     }
   };
 
-  // Effect to update video source when currentVideoIndex changes
   useEffect(() => {
     if (videoRef.current && isClient) {
       setIsLoading(true);
@@ -50,15 +48,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videos }) => {
     }
   }, [currentVideoIndex, videos, isClient]);
 
-  // Disable right-click and context menu on the video element
   const disableRightClick = (event: React.MouseEvent<HTMLVideoElement>) => {
     event.preventDefault();
   };
 
-  // Render loading or error state if needed
-  if (!isClient) {
-    return null;
-  }
+  if (!isClient) return null;
 
   return (
     <div className="relative w-full h-full">
@@ -67,20 +61,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videos }) => {
           <div className="animate-pulse text-white">Loading...</div>
         </div>
       )}
-      
+
       {playError && (
-        <div className="absolute inset-0 bg-cover bg-center"
-             style={{ backgroundImage: 'url(/fallback-image.jpg)' }}>
-          {/* Fallback content */}
-        </div>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/fallback-image.jpg)' }}
+        />
       )}
-      
+
       <video
         ref={videoRef}
         autoPlay
         muted
-        playsInline // Add playsInline for better mobile support
-        loop={videos.length === 1} // Loop if only one video
+        playsInline
+        loop={videos.length === 1}
         onEnded={handleVideoEnd}
         onLoadedData={handleVideoLoaded}
         onError={() => setPlayError(true)}
@@ -89,11 +83,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videos }) => {
         controls={false}
       >
         <source src={videos[currentVideoIndex]} type="video/mp4" />
-        <source src={videos[currentVideoIndex]} type="video/webm" /> {/* Add WebM support */}
+        <source src={videos[currentVideoIndex]} type="video/webm" />
         Your browser does not support the video tag.
       </video>
     </div>
   );
-};
+});
 
+VideoPlayer.displayName = 'VideoPlayer';
 export default VideoPlayer;

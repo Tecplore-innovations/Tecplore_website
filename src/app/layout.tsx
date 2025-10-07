@@ -31,7 +31,7 @@ export default function RootLayout({
       <body 
         className={`${sourceSans.variable} antialiased font-sourceSans min-h-screen flex flex-col`}
       >
-          <NavBar />
+         {/* <NavBar />  */}
           <main className="flex-grow">
             {children}
           </main>

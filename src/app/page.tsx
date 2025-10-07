@@ -1,6 +1,5 @@
 "use client";
-
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import { ChevronDown } from 'lucide-react';
 import { motion } from "framer-motion";
@@ -12,28 +11,52 @@ import News from '@/components/Home/News';
 
 const HomePage = () => {
 
-  const videos = [
-    '/videos/BGV1.mp4',
-    '/videos/BGV2.mp4',
-    '/videos/BGV3.mp4',
-    '/videos/BGV4.mp4',
-    '/videos/BGV5.mp4',
-  ];
-  // const videos = [
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV1-PKSHVobblZE7VFBgCYqwuBBKLKQrsB.mp4',
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV2-ISCVNsjAbwaGWSNlyFzWUFTuWhlSCM.mp4',
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV3-RscwAh2sWKQZBp3PvZ5u2BlBOpry8f.mp4',
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV4-TqUWNjSFyboIphwqA9yRS0EsTJRYVK.mp4',
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV5-LNsdwNddSwJKXueikk4zJ2UkEHujGi.mp4',
-  //   'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV6-Ne8MUie91AmNTQDGIvqsSXs8m2SSdN.mp4'
-  // ];
+ // const videos = [
+ //   '/videos/BGV1.mp4',
+ //   '/videos/BGV2.mp4',
+ //   '/videos/BGV3.mp4',
+ //   '/videos/BGV4.mp4',
+ //   '/videos/BGV5.mp4',
+//  ];
+   const videos = [
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV1-PKSHVobblZE7VFBgCYqwuBBKLKQrsB.mp4',
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV2-ISCVNsjAbwaGWSNlyFzWUFTuWhlSCM.mp4',
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV3-RscwAh2sWKQZBp3PvZ5u2BlBOpry8f.mp4',
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV4-TqUWNjSFyboIphwqA9yRS0EsTJRYVK.mp4',
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV5-LNsdwNddSwJKXueikk4zJ2UkEHujGi.mp4',
+     'https://bnncn1eg7vp85k7u.public.blob.vercel-storage.com/BGV6-Ne8MUie91AmNTQDGIvqsSXs8m2SSdN.mp4'
+   ];
 
+   {/*
   const scrollToNext = () => {
     const nextSection = document.querySelector('.py-24');
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  */}
+
+
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+      // Pause/play video based on tab visibility
+      useEffect(() => {
+        const handleVisibility = () => {
+          if (!videoRef.current) return;
+          if (document.hidden) {
+            videoRef.current.pause();
+          } else {
+            videoRef.current.play().catch(() => console.warn('Video play blocked.'));
+          }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+        return () => document.removeEventListener('visibilitychange', handleVisibility);
+      }, []);
+
+
+      
+
 
   return (
     <main className="w-full overflow-x-hidden">
@@ -45,7 +68,7 @@ const HomePage = () => {
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 15 }}
               className="text-white text-4xl md:text-7xl font-bold mx-auto max-w-5xl mb-4"
             >
               <div className="break-words">
@@ -57,6 +80,7 @@ const HomePage = () => {
             </motion.div>
           </div>
 
+          {/*
           <motion.div 
             onClick={scrollToNext}
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
@@ -73,6 +97,9 @@ const HomePage = () => {
               <ChevronDown className="w-6 h-6" />
             </motion.div>
           </motion.div>
+
+            */}
+
         </div>
       </section>
 
@@ -82,11 +109,15 @@ const HomePage = () => {
       {/* Featured Section */}
       <FeaturedProjects />
 
-      {/* News Section */}
+      {/* News Section 
+
       <News />
 
-      {/* Contact Section */}
+      */}
+
+      {/* Contact Section 
       <Newsletter />
+      */}
     </main>
   );
 };
