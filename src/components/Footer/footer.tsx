@@ -45,7 +45,7 @@ const Footer = () => {
   };
 
   return (
- <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white pt-16 pb-8 relative">
+ <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white pt-10 pb-5 relative">
 
 
       <div className="container mx-auto px-4">
@@ -78,13 +78,15 @@ const Footer = () => {
               </a>
               */}
               <a
-                href="#"
+                href="https://www.instagram.com/tecplore_edu/?igsh=YzljYTk1ODg3Zg%3D%3D#"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors duration-300"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a
+              <a         
                   href="https://www.linkedin.com/company/tecplore"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -94,6 +96,7 @@ const Footer = () => {
                   <Linkedin className="h-5 w-5" />
                 </a>
 
+                {/*
               <a
                 href="#"
                 className="hover:text-blue-400 transition-colors duration-300"
@@ -101,6 +104,7 @@ const Footer = () => {
               >
                 <Youtube className="h-5 w-5" />
               </a>
+              */}
             </div>
           </div>
 
@@ -116,6 +120,7 @@ const Footer = () => {
                   Interactive Exhibits
                 </Link>
               </li>
+              {/*
               <li>
                 <Link
                   href="/stem-programs"
@@ -124,14 +129,8 @@ const Footer = () => {
                   STEM Programs
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/virtual-labs"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Virtual Labs
-                </Link>
-              </li>
+             */}
+             
               <li>
                 <Link
                   href="/teacher-resources"
@@ -142,10 +141,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/curriculum"
+                  href="/maker-space"
                   className="text-gray-400 hover:text-white transition-colors duration-300"
                 >
-                  Curriculum Integration
+                  Setup Maker Space
                 </Link>
               </li>
             </ul>
@@ -163,6 +162,16 @@ const Footer = () => {
                   About Us
                 </Link>
               </li>
+
+               <li>
+                <Link
+                  href="/careers"
+                  className="text-gray-400 hover:text-white transition-colors duration-300"
+                >
+                  Join Our Team
+                </Link>
+              </li>
+
               <li>
                 <Link
                   href="/contact"
@@ -171,14 +180,9 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/careers"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Join Our Team
-                </Link>
-              </li>
+             
+             
+             {/*
               <li>
                 <Link
                   href="/legal-notice"
@@ -203,6 +207,9 @@ const Footer = () => {
                   Terms & Conditions
                 </Link>
               </li>
+
+              */}
+
             </ul>
           </div>
 
@@ -236,9 +243,9 @@ const Footer = () => {
             <div className="space-y-3">
               <h4 className="font-semibold text-lg">Contact Us</h4>
               <div className="text-gray-400 space-y-2">
-                <p>Email: education@tecplore.com</p>
+                <p>Email: vivek@tecplore.com</p>
                 <p>Support: +91 70101 31721</p>
-                <p>Hours: Mon-Fri 9AM-5PM IST</p>
+                <p>Hours: Mon-Fri 9AM-6PM IST</p>
               </div>
             </div>
           </div>

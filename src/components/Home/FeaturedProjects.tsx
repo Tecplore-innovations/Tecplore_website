@@ -23,24 +23,24 @@ const ThreeProjectsSection: React.FC<ThreeProjectsSectionProps> = ({ projects = 
   const defaultProjects = [
     {
       id: 1,
-      title: 'WIND TUNNEL',
+      title: 'Wind Tunnel',
       image: '/photos/wt1.jpeg',
-      category: 'PHYSICS',
+      category: 'Physics',
       description: 'Discover aerodynamics principles by testing different object shapes in a controlled airflow system, visualizing real-time effects of air resistance and pressure.'
     },
     {
       id: 2,
-      title: 'AIR ROCKET',
+      title: 'Projectile Launcher',
       image: '/photos/ar2.jpeg',
-      category: 'PHYSICS',
+      category: 'Physics',
       description: "Explore Newton's laws of motion and propulsion by designing, building, and launching compressed air-powered rockets, measuring flight trajectories and variables."
     },
     {
       id: 3,
-      title: 'PARABOLA',
-      image: '/photos/parabola1.jpeg',
-      category: 'MATHS',
-      description: 'Explore the focal point of a parabola using a laser light and a parabolic structure fitted with a mirror. Can observe how light rays converge, helping to understand reflective properties and the unique geometry of parabolic shapes.'
+      title: 'Ellipse Foci',
+      image: '/photos/ellipse1.jpeg',
+      category: 'Maths',
+      description: 'Explore the focal point of a ellipse using a laser light and a structure fitted with a mirror. Can observe how light rays converge, helping to understand reflective properties and the unique geometry of shapes.'
     }
 
   ];
@@ -67,96 +67,87 @@ const ThreeProjectsSection: React.FC<ThreeProjectsSectionProps> = ({ projects = 
           <div className="h-1 w-32 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {displayProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              onHoverStart={() => setHoveredProject(project.id)}
-              onHoverEnd={() => setHoveredProject(null)}
-              className="group relative"
-            >
-              {/* Card Container */}
-              <div className="relative h-full bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                {/* Image Section */}
-                <div className="relative h-80 overflow-hidden">
-                  <motion.div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{
-                      backgroundImage: `url(${project.image})`,
-                    }}
-                    animate={{
-                      scale: hoveredProject === project.id ? 1.1 : 1
-                    }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                  
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold tracking-wider shadow-lg">
-                      {project.category}
-                    </span>
-                  </div>
+       
+       {/* Projects Grid */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  {displayProjects.map((project, index) => (
+    <motion.div
+      key={project.id}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.15 }}
+      onHoverStart={() => setHoveredProject(project.id)}
+      onHoverEnd={() => setHoveredProject(null)}
+      className="group relative"
+    >
+      {/* Card Container */}
+      <div className="relative h-full bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
+        {/* Image Section */}
+        <div className="relative h-80 overflow-hidden">
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${project.image})` }}
+            animate={{
+              scale: hoveredProject === project.id ? 1.05 : 1
+            }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          />
 
-                  {/* Title Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
-                      {project.title}
-                    </h3>
-                  </div>
-                </div>
+          {/* Dark overlay on hover */}
+          <motion.div
+            className="absolute inset-0 bg-black/0"
+            animate={{
+              backgroundColor: hoveredProject === project.id ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0)'
+            }}
+            transition={{ duration: 0.4 }}
+          />
 
-                {/* Description Section */}
-                <div className="p-6 bg-white">
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{
-                      height: hoveredProject === project.id ? 'auto' : 0,
-                      opacity: hoveredProject === project.id ? 1 : 0
-                    }}
-                    transition={{ duration: 0.4 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-purple-600 mb-4 rounded-full"></div>
-                    <p className="text-gray-600 leading-relaxed">
-                      {project.description}
-                    </p>
-                  </motion.div>
-
-                  {/* Static Preview Text (visible when not hovered) */}
-                  <motion.div
-                    animate={{
-                      opacity: hoveredProject === project.id ? 0 : 1,
-                      height: hoveredProject === project.id ? 0 : 'auto'
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="text-gray-500 text-sm line-clamp-2">
-                      {project.description}
-                    </p>
-                  </motion.div>
-                </div>
-
-                {/* Hover Effect Border */}
-                <motion.div
-                  className="absolute inset-0 border-4 border-blue-600 rounded-2xl pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: hoveredProject === project.id ? 1 : 0
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-            </motion.div>
-          ))}
+         
+         {/* Category Badge */}
+        <div
+          className={`absolute top-4 left-4 transition-opacity duration-300 ${
+            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
+          }`}
+        >
+          <span className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold tracking-wider shadow-lg">
+            {project.category}
+          </span>
         </div>
+
+        {/* Title Overlay */}
+        <div
+          className={`absolute bottom-4 left-4 right-4 z-10 transition-opacity duration-300 ${
+            hoveredProject === project.id ? 'opacity-0' : 'opacity-100'
+          }`}
+        >
+          <h3 className="text-3xl font-light font-bold text-white drop-shadow-lg">
+            {project.title}
+          </h3>
+        </div>
+
+
+
+          {/* Description overlay (hidden initially) */}
+          <motion.div
+            className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center text-white z-20"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: hoveredProject === project.id ? 1 : 0
+            }}
+            transition={{ duration: 0.4 }}
+          >
+            <p className="text-lg leading-relaxed">
+              {project.description}
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </motion.div>
+  ))}
+</div>
+
+
       </div>
     </div>
   );
