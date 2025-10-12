@@ -77,7 +77,7 @@ const AboutPage = () => {
   },
   {
     name: "Dhamodharan K",
-    imageUrl: "/photos/aboutus/Dhomodhiran.jpeg",
+    imageUrl: "/photos/aboutus/Dhomodharan.jpeg",
     linkedin: "https://www.linkedin.com/in/dhamodarankkp", 
     bio: "Dhamodharan builds interactive technology solutions that inspire curiosity and creativity in learners.",
   },
