@@ -25,7 +25,7 @@ export const resources: Resource[] = [
     subject: "Physics",
     level: "Grade 8",
     thumbnail: "/teacher-resources/images/physics8_thumb.jpg",
-    contentUrl: "/teacher-resources/articles/physics8.pdf",
+    contentUrl: "/teacher-resources/articles/physics_grade8.pdf",
   }),
   createResource({
     id: 2,
@@ -34,7 +34,7 @@ export const resources: Resource[] = [
     subject: "Chemistry",
     level: "High School",
     thumbnail: "/teacher-resources/images/chem_safety_thumb.jpg",
-    contentUrl: "https://www.youtube.com/watch?v=Ajk352yc_Cs",
+    contentUrl: "https://www.youtube.com/watch?v=ciWpS6SetdY",
   }),
   createResource({
     id: 3,

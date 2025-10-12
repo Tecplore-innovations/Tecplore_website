@@ -51,14 +51,9 @@ const TeacherResources: React.FC = () => {
     </h1>
     <p className="text-lg md:text-xl mb-6">
       Explore our curated resources and training materials for teachers.  
-      Want personalized support? 
+   
     </p>
-    <a
-      href="/contact"
-      className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-300"
-    >
-      Contact Us
-    </a>
+   
   </div>
 </div>
 

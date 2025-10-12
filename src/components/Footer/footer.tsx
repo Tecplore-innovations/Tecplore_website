@@ -13,11 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Globe,
-  Facebook,
-  TwitterIcon,
   Instagram,
   Linkedin,
-  Youtube,
   ChevronUp,
 } from "lucide-react";
 
@@ -45,38 +42,21 @@ const Footer = () => {
   };
 
   return (
- <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white pt-10 pb-5 relative">
-
-
+    <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white pt-10 pb-10 relative">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Company Info */}
+        {/* Footer Sections */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Company Info + Socials + Language */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
               <h3 className="text-2xl font-bold">Tecplore</h3>
             </Link>
             <p className="text-gray-400">
-              Inspiring the next generation through interactive science and
-              technology
+              Inspiring the next generation through interactive science and technology
             </p>
-            <div className="flex space-x-4">
-              {/* Uncomment these if needed */}
-              {/*
-              <a 
-                href="#" 
-                className="hover:text-blue-400 transition-colors duration-300"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a 
-                href="#" 
-                className="hover:text-blue-400 transition-colors duration-300"
-                aria-label="Twitter"
-              >
-                <TwitterIcon className="h-5 w-5" />
-              </a>
-              */}
+
+            {/* Social Icons */}
+            <div className="flex space-x-4 mb-2">
               <a
                 href="https://www.instagram.com/tecplore_edu/?igsh=YzljYTk1ODg3Zg%3D%3D#"
                 target="_blank"
@@ -86,25 +66,38 @@ const Footer = () => {
               >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a         
-                  href="https://www.linkedin.com/company/tecplore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-400 transition-colors duration-300"
-                  aria-label="LinkedIn"
-                > 
-                  <Linkedin className="h-5 w-5" />
-                </a>
-
-                {/*
               <a
-                href="#"
+                href="https://www.linkedin.com/company/tecplore"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors duration-300"
-                aria-label="YouTube"
+                aria-label="LinkedIn"
               >
-                <Youtube className="h-5 w-5" />
+                <Linkedin className="h-5 w-5" />
               </a>
-              */}
+            </div>
+
+            {/* Language Selector */}
+            <div className="mt-2 w-40">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-full justify-start bg-white text-black hover:bg-gray-100">
+                    <Globe className="mr-2 h-4 w-4" />
+                    {selectedLanguage}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-white">
+                  {languages.map((language) => (
+                    <DropdownMenuItem
+                      key={language.name}
+                      onClick={() => setSelectedLanguage(language.name)}
+                      className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
+                    >
+                      {language.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
@@ -120,17 +113,6 @@ const Footer = () => {
                   Interactive Exhibits
                 </Link>
               </li>
-              {/*
-              <li>
-                <Link
-                  href="/stem-programs"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  STEM Programs
-                </Link>
-              </li>
-             */}
-             
               <li>
                 <Link
                   href="/teacher-resources"
@@ -162,8 +144,7 @@ const Footer = () => {
                   About Us
                 </Link>
               </li>
-
-               <li>
+              <li>
                 <Link
                   href="/careers"
                   className="text-gray-400 hover:text-white transition-colors duration-300"
@@ -171,7 +152,6 @@ const Footer = () => {
                   Join Our Team
                 </Link>
               </li>
-
               <li>
                 <Link
                   href="/contact"
@@ -180,95 +160,20 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
-             
-             
-             {/*
-              <li>
-                <Link
-                  href="/legal-notice"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Legal Notice
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy-policy"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms-conditions"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Terms & Conditions
-                </Link>
-              </li>
-
-              */}
-
             </ul>
-          </div>
-
-          {/* Language and Contact */}
-          <div className="space-y-6">
-            <div>
-              <h4 className="font-semibold text-lg mb-3">Select Language</h4>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    className="w-full justify-start bg-white text-black hover:bg-gray-100"
-                  >
-                    <Globe className="mr-2 h-4 w-4" />
-                    {selectedLanguage}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white">
-                  {languages.map((language) => (
-                    <DropdownMenuItem
-                      key={language.name}
-                      onClick={() => setSelectedLanguage(language.name)}
-                      className="cursor-pointer hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      {language.name}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="font-semibold text-lg">Contact Us</h4>
-              <div className="text-gray-400 space-y-2">
-                <p>Email: vivek@tecplore.com</p>
-                <p>Support: +91 70101 31721</p>
-                <p>Hours: Mon-Fri 9AM-6PM IST</p>
-              </div>
-            </div>
           </div>
         </div>
 
         <Separator className="my-8 bg-gray-800" />
 
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 relative">
+        {/* Footer Bottom */}
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-gray-500 text-sm md:text-base">
             © {new Date().getFullYear()} Tecplore. Empowering education through innovation.
           </p>
-
-          {/* Circular Go-To-Top Button */}
-          {showScrollTop && (
-            <button
-              onClick={scrollToTop}
-              aria-label="Scroll to top"
-              className="fixed bottom-6 right-6 z-50 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-gray-700 shadow-lg transition-all duration-300"
-            >
-              <ChevronUp className="h-6 w-6 md:h-7 md:w-7" />
-            </button>
-          )}
         </div>
+
+      
       </div>
     </footer>
   );

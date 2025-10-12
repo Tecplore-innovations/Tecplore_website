@@ -4,13 +4,9 @@ import React from 'react';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 import { Card } from '@/components/ui/card';
+import { Linkedin } from "lucide-react";
 
-interface TeamMember {
-  name: string;
-  role: string;
-  imageUrl: string;
-  bio: string;
-}
+
 
 const companyName = 'Tecplore';
 
@@ -20,7 +16,7 @@ const fadeIn: Variants = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6 }
+    transition: { duration: 0.3 }
   }
 };
 
@@ -65,24 +61,31 @@ const AboutPage = () => {
     { value: "12+", label: "STEM Learning Programs & Experiments" },
   ];
 
- const teamMembers: TeamMember[] = [
+ 
+  const teamMembers = [
   {
     name: "Vivek Devaraj",
-    role: "Role",
     imageUrl: "/photos/aboutus/Vivek.jpeg",
+    linkedin: "https://www.linkedin.com/in/vdevaraj", 
     bio: "Vivek leads Tecplore with a passion for experiential STEM education and hands-on learning innovation.",
   },
   {
     name: "Prasanna G",
-    role: "Role",
     imageUrl: "/photos/aboutus/Prasanna.jpeg",
+    linkedin: "https://www.linkedin.com/in/prasanna-g-57284012", 
     bio: "Prasanna designs cutting-edge science experiments that make complex concepts accessible and fun.",
   },
   {
-    name: "Dhamodhiran",
-    role: "Role",
+    name: "Dhamodharan K",
     imageUrl: "/photos/aboutus/Dhomodhiran.jpeg",
-    bio: "Dhamodhiran builds interactive technology solutions that inspire curiosity and creativity in learners.",
+    linkedin: "https://www.linkedin.com/in/dhamodarankkp", 
+    bio: "Dhamodharan builds interactive technology solutions that inspire curiosity and creativity in learners.",
+  },
+  {
+    name: "Arunkumar R",
+    imageUrl: "/photos/aboutus/Arunkumar.jpeg",
+    linkedin: "https://www.linkedin.com/in/arunkumar--r",
+    bio: "Arunkumar drives the creative and digital strategy at Tecplore, bringing ideas to life through technology and design.",
   },
 ];
 
@@ -95,45 +98,46 @@ const AboutPage = () => {
     >
 
       {/* Hero Section */}
-      <section className="relative h-[65vh] bg-black text-white flex items-center">
-        {/* Background Image */}
-        <motion.div
-          className="absolute inset-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
-        >
-          <motion.div
-            className="w-full h-full bg-[url('/photos/aboutus/2.jpg')] bg-cover bg-center"
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5 }}
-            style={{ opacity: 0.75 }}
-          />
-        </motion.div>
+<section className="relative h-[65vh] md:h-[70vh] lg:h-[75vh] bg-black text-white flex items-center overflow-hidden">
+  {/* Background Image */}
+  <motion.div
+    className="absolute inset-0"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1.2 }}
+  >
+    <motion.div
+      className="w-full h-full bg-[url('/photos/aboutus/2.jpg')] bg-cover bg-center"
+      initial={{ scale: 1.1 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 1.5 }}
+      style={{ opacity: 0.75 }}
+    />
+  </motion.div>
 
-        {/* Text Overlay Left Side */}
-        <div className="relative z-10 container mx-auto px-8 lg:px-16 max-w-6xl flex items-center justify-start">
-         <div className="max-w-xl">
-        <motion.h1
-          className="text-5xl lg:text-4xl font-bold mb-6 leading-tight"
-          variants={fadeIn}
-        >
-          We believe every great mind begins with a <span className="text-blue-500">spark</span><br />
-          <br/>
-          a first encounter that changes how we see the world.
-        </motion.h1>
-        <motion.p
-          className="text-lg text-gray-300"
-          variants={fadeIn}
-        >
-          <span className="text-blue-500 font-semibold">{companyName}</span> was founded to design those sparks,  
-          blending science, creativity, and technology into learning.
-        </motion.p>
-      </div>
+  {/* Text Overlay */}
+  <div className="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16 flex flex-col md:flex-row items-center justify-start h-full">
+    <div className="max-w-xl w-full">
+      <motion.h1
+        className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-snug sm:leading-tight"
+        variants={fadeIn}
+      >
+        We believe every great mind begins with a <span className="text-blue-500">spark</span>
+        <br />
+        <br />
+        a first encounter that changes how we see the world.
+      </motion.h1>
+      <motion.p
+        className="text-base sm:text-lg text-gray-300"
+        variants={fadeIn}
+      >
+        <span className="text-blue-500 font-semibold">{companyName}</span> was founded to design those sparks,  
+        blending science, creativity, and technology into learning.
+      </motion.p>
+    </div>
+  </div>
+</section>
 
-        </div>
-      </section>
 
 
       {/* Who We Are Section */}
@@ -153,9 +157,9 @@ const AboutPage = () => {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div className="text-sm text-gray-500 uppercase tracking-wider mb-2">Who We Are</div>
+           
               <h2 className="text-4xl font-bold">
-                Meet {companyName}: Inspiring Young Minds Through Learning
+               Inspiring Young Minds Through Learning
               </h2>
             </motion.div>
 
@@ -230,55 +234,63 @@ const AboutPage = () => {
 
       {/* Team Section */}
       <motion.section
-        className="py-16 bg-gray-50"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeIn}
-      >
-        <div className="container mx-auto px-4">
-          <motion.div className="mb-16 text-center" variants={fadeIn}>
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">
-              The <span className="text-blue-500">Brains</span> Behind {companyName}
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Our core team drives innovation, strategy, and design to shape the future of {companyName}.
-            </p>
-          </motion.div> 
+      className="py-16 bg-gray-50"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeIn}
+    >
+      <div className="container mx-auto px-4">
+        <motion.div className="mb-16 text-center" variants={fadeIn}>
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">
+            The <span className="text-blue-500">Team</span> of {companyName}
+          </h2>
+         
+        </motion.div>
 
-         <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={staggerContainer}
-          >
-            {teamMembers.map((member, index) => (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={staggerContainer}
+        >
+          {teamMembers.map((member, index) => (
             <motion.div
-            key={index}
-            className="group text-center"
-            variants={scaleUp}
-            whileHover={{ y: -10 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <div className="relative aspect-square mb-4 overflow-hidden bg-white rounded-2xl shadow-md">
-              <Image
-                src={member.imageUrl}
-                alt={member.name}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            </div>
+              key={index}
+              className="group text-center"
+              variants={scaleUp}
+              whileHover={{ y: -10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {/* Clickable Image */}
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                <div className="relative aspect-square mb-4 overflow-hidden bg-white rounded-2xl shadow-md">
+                  <Image
+                    src={member.imageUrl}
+                    alt={member.name}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+              </a>
 
-            <h3 className="text-xl font-semibold text-gray-800">{member.name}</h3>
-            <p className="text-gray-500">{member.role}</p>
+              {/* Name + LinkedIn Icon */}
+              <a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors"
+              >
+                <Linkedin size={18} className="text-blue-600" />
+                {member.name}
+              </a>
 
-            {/* Bio hidden initially, visible on hover */}
-            <p className="text-gray-600 mt-2 text-sm max-w-xs mx-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {member.bio}
-            </p>
-          </motion.div>
-
-
-            ))}
-          </motion.div>
+              {/* Bio */}
+              <p className="text-gray-600 mt-2 text-sm max-w-xs mx-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {member.bio}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+     
 
 
           {/* --- COMMENTED SECTION --- */}
