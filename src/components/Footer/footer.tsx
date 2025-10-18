@@ -121,6 +121,17 @@ const Footer = () => {
                   Teacher Resources
                 </Link>
               </li>
+
+              <li>
+            <Link
+              href="/tecplore-studio"
+              className="text-gray-400 hover:text-white transition-colors duration-300"
+            >
+              Tecplore Studio
+            </Link>
+          </li>
+
+
               <li>
                 <Link
                   href="/maker-space"
