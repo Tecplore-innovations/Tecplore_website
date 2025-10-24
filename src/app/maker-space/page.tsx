@@ -42,28 +42,92 @@ const MakerSpacePage: React.FC = () => {
         </div>
       </div>
 
-      {/* How It Works Section */}
-      <div className="max-w-4xl mx-auto text-center mb-16">
-        <h2 className="text-3xl font-bold mb-8">How It Works</h2>
-        <div className="flex flex-col md:flex-row justify-between gap-6">
-          <div className="bg-gray-100 p-6 rounded-xl">
-            <h3 className="font-semibold mb-2">1. Initial Discussion</h3>
-            <p className="text-gray-600">We understand your needs and audience.</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-xl">
-            <h3 className="font-semibold mb-2">2. Proposal & Layout</h3>
-            <p className="text-gray-600">Custom layout and project plan for your space.</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-xl">
-            <h3 className="font-semibold mb-2">3. Setup & Training</h3>
-            <p className="text-gray-600">We set up the space and train your staff.</p>
-          </div>
-          <div className="bg-gray-100 p-6 rounded-xl">
-            <h3 className="font-semibold mb-2">4. Launch & Support</h3>
-            <p className="text-gray-600">Space is ready to inspire, with ongoing support.</p>
-          </div>
+  {/* How It Works Section */}
+<div className="max-w-6xl mx-auto text-center mb-20 px-4">
+  <h2 className="text-4xl font-bold mb-4 text-gray-800">How It Works</h2>
+  <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
+    Our streamlined process ensures your space transforms into an inspiring environment efficiently
+  </p>
+
+
+  <div className="flex flex-col md:flex-row justify-between gap-8 relative">
+   
+    {[
+      {
+        step: 1,
+        title: "Initial Discussion",
+        description: "We understand your needs and audience.",
+      
+        color: "from-blue-500 to-blue-600",
+        hoverColor: "hover:from-blue-600 hover:to-blue-700"
+      },
+      {
+        step: 2,
+        title: "Proposal & Layout",
+        description: "Custom layout and project plan for your space.",
+       
+        color: "from-purple-500 to-purple-600",
+        hoverColor: "hover:from-purple-600 hover:to-purple-700"
+      },
+      {
+        step: 3,
+        title: "Setup & Training",
+        description: "We set up the space and train your staff.",
+       
+        color: "from-green-500 to-green-600",
+        hoverColor: "hover:from-green-600 hover:to-green-700"
+      },
+      {
+        step: 4,
+        title: "Launch & Support",
+        description: "Space is ready to inspire, with ongoing support.",
+      
+        color: "from-orange-500 to-orange-600",
+        hoverColor: "hover:from-orange-600 hover:to-orange-700"
+      }
+    ].map((step) => (
+      <div 
+        key={step.step}
+        className={`flex-1 group cursor-pointer transition-all duration-500 transform hover:-translate-y-2`}
+      >
+        {/* Step Card */}
+        <div className={`
+          bg-white p-8 rounded-2xl shadow-lg border border-gray-100 
+          relative overflow-hidden transition-all duration-300
+          group-hover:shadow-2xl group-hover:border-transparent
+        `}>
+          {/* Gradient Background on Hover */}
+          <div className={`
+            absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 
+            group-hover:opacity-5 transition-opacity duration-300
+          `}></div>
+          
+      
+          
+         
+          
+          {/* Content */}
+          <h3 className="font-bold text-xl mb-3 text-gray-800 group-hover:text-gray-900 transition-colors">
+            {step.title}
+          </h3>
+          <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors">
+            {step.description}
+          </p>
+          
+          {/* Hover Indicator */}
+          <div className={`
+            absolute bottom-0 left-1/2 transform -translate-x-1/2 
+            w-0 h-1 bg-gradient-to-r ${step.color} 
+            group-hover:w-full transition-all duration-300
+          `}></div>
         </div>
+     
       </div>
+    ))}
+  </div>
+
+ 
+</div>
 
    {/* Testimonials Section */}
 <div className="max-w-4xl mx-auto mb-16">
