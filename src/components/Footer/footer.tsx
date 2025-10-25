@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -15,12 +14,11 @@ import {
   Globe,
   Instagram,
   Linkedin,
-  ChevronUp,
 } from "lucide-react";
 
 const Footer = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("English");
-  const [showScrollTop, setShowScrollTop] = useState(false);
+
 
   const languages = [
     { name: "English" },
@@ -28,18 +26,6 @@ const Footer = () => {
     { name: "हिन्दी" },
   ];
 
-  // Handle Go-To-Top visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 200);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white pt-10 pb-10 relative">

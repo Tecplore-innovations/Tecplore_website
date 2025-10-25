@@ -4,8 +4,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import YouTube from "react-youtube";
 import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
-import { Play, Pause, Plus, Trash2, Save, RotateCcw, Scissors, CheckCircle, XCircle, AlertCircle } from "lucide-react";
-
+import { Plus, Trash2, Save, RotateCcw, Scissors, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { YouTubeProps } from "react-youtube";
 /**
  * === IMPORTS & TYPES ===
  */
@@ -300,8 +300,10 @@ export default function TeacherModule() {
   const [alert, setAlert] = useState<AlertState>(null);
 
   // Refs & player instance
-  const playerRef = useRef<any>(null);
-  const ytPlayerRef = useRef<any>(null); // actual YT player from onReady
+  const playerRef = useRef<YT.Player | null>(null);
+  const ytPlayerRef = useRef<YT.Player | null>(null);
+
+  // actual YT player from onReady
   const intervalRef = useRef<number | null>(null);
 
   // --- effects: alerts auto-clear ---
@@ -366,7 +368,7 @@ export default function TeacherModule() {
   }, []);
 
   // --- YouTube handlers ---
-  const onPlayerReady = (event: any) => {
+ const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     playerRef.current = event.target; // react-youtube exposes player API as event.target
     ytPlayerRef.current = event.target;
     const duration = event.target.getDuration();
@@ -380,7 +382,7 @@ export default function TeacherModule() {
     setAlert({ message: "Video loaded successfully!", type: "success" });
   };
 
-  const onStateChange = (event: any) => {
+const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     const state = event.data;
     if (state === 1) { // playing
       setIsPlaying(true);
@@ -547,7 +549,7 @@ export default function TeacherModule() {
   const safeTrimEnd = (trimFinalized && trimEnd != null) ? Math.floor(trimEnd) : undefined;
   const safeTrimStart = (trimFinalized && trimStart != null) ? Math.floor(trimStart) : 0;
 
-  const ytOpts: any = {
+ const ytOpts: YouTubeProps['opts'] = {
     playerVars: {
       start: safeTrimStart,
       ...(safeTrimEnd ? { end: safeTrimEnd } : {}),

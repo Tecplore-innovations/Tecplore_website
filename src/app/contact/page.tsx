@@ -109,11 +109,11 @@ const ContactPage: React.FC = () => {
           className="text-center mb-16"
         >
           <h1 className="text-5xl sm:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Let's Connect
+             Let&apos;s Connect
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-            Got a question, project idea, or need support? Drop us a message and we'll respond quickly.
-          </p>
+           Got a question, project idea, or need support? Drop us a message and we&apos;ll respond quickly.
+             </p>
         </motion.div>
 
         {/* Main Grid */}

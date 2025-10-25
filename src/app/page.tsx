@@ -1,13 +1,10 @@
 "use client";
 import React, { useRef, useEffect } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
-import { ChevronDown } from 'lucide-react';
 import { motion } from "framer-motion";
 import AnimatedWord from '@/components/Animated/AnimatedWord';
 import FeaturedProjects from '@/components/Home/FeaturedProjects';
-import Newsletter from '@/components/Home/Newsletter';
 import WhoWeAreSection from '@/components/Home/WhoWeAre';
-import News from '@/components/Home/News';
 
 const HomePage = () => {
 

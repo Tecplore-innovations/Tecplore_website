@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import YouTube from "react-youtube";
+import YouTube, { YouTubeProps } from "react-youtube";
 import { Upload, CheckCircle, Video } from "lucide-react"; // Using lucide-react for modern icons
 
 // --- Types ---
@@ -26,15 +26,15 @@ export default function StudentPage() {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [lessonEnded, setLessonEnded] = useState(false); // New state for black screen on video end
+  const [lessonEnded, setLessonEnded] = useState(false);
   const [summaryVisible, setSummaryVisible] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [triggeredQuestions, setTriggeredQuestions] = useState<Set<number>>(new Set());
   const [isPaused, setIsPaused] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null); // To display file name
+  const [fileName, setFileName] = useState<string | null>(null);
 
-  const playerRef = useRef<any>(null);
-  const intervalRef = useRef<number | undefined>(undefined);
+  const playerRef = useRef<YT.Player | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // --- Handlers ---
@@ -44,7 +44,7 @@ export default function StudentPage() {
 
     setFileName(file.name);
     const reader = new FileReader();
-    
+
     reader.onload = (ev) => {
       try {
         const data: Lesson = JSON.parse(ev.target?.result as string);
@@ -60,37 +60,33 @@ export default function StudentPage() {
         console.error("Error parsing lesson JSON:", error);
         alert("Invalid Lesson JSON file.");
         setFileName(null);
-        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset input
+        if (fileInputRef.current) fileInputRef.current.value = "";
       }
     };
     reader.readAsText(file);
   };
 
-  const onPlayerReady = (event: any) => {
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
     const startTime = lesson?.trimStart ?? 0;
-    playerRef.current.seekTo(startTime, true);
-    playerRef.current.playVideo();
+    playerRef.current?.seekTo(startTime, true);
+    playerRef.current?.playVideo();
 
-    // Small delay before starting the interval
     setTimeout(() => {
       startInterval();
     }, 500);
   };
 
-  const onStateChange = (event: any) => {
-    if (event.data === 0) {
-      // video ended naturally
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    if (event.data === YT.PlayerState.ENDED) {
       clearInterval(intervalRef.current);
       intervalRef.current = undefined;
       setCurrentQuestionIndex(null);
-      setLessonEnded(true); // Show lesson completed screen
+      setLessonEnded(true);
       setIsPaused(false);
-    } else if (event.data === 2) {
-      // video paused
+    } else if (event.data === YT.PlayerState.PAUSED) {
       setIsPaused(true);
-    } else if (event.data === 1) {
-      // playing
+    } else if (event.data === YT.PlayerState.PLAYING) {
       setIsPaused(false);
     }
   };
@@ -101,8 +97,7 @@ export default function StudentPage() {
       clearInterval(intervalRef.current);
       intervalRef.current = undefined;
     }
-
-    intervalRef.current = window.setInterval(checkVideoTime, 200);
+    intervalRef.current = setInterval(checkVideoTime, 200);
   };
 
   const checkVideoTime = () => {
@@ -112,17 +107,15 @@ export default function StudentPage() {
     const duration = playerRef.current.getDuration();
     const endTime = lesson.trimEnd ?? duration;
 
-    // Check for trimEnd
     if (duration && lesson.trimEnd && currentTime >= endTime - 0.5) {
       playerRef.current.pauseVideo();
       clearInterval(intervalRef.current);
       intervalRef.current = undefined;
-      setLessonEnded(true); // Show lesson completed screen
+      setLessonEnded(true);
       setCurrentQuestionIndex(null);
       return;
     }
 
-    // Check for questions
     for (let i = 0; i < lesson.questions.length; i++) {
       if (
         !answeredQuestions.has(i) &&
@@ -144,9 +137,7 @@ export default function StudentPage() {
 
   const okAnswer = () => {
     if (currentQuestionIndex !== null) {
-      // Mark as answered
       setAnsweredQuestions((prev) => new Set([...prev, currentQuestionIndex]));
-      // Remove from triggered (shouldn't be strictly necessary but good cleanup)
       setTriggeredQuestions((prev) => {
         const copy = new Set(prev);
         copy.delete(currentQuestionIndex);
@@ -179,10 +170,9 @@ export default function StudentPage() {
     setTriggeredQuestions(new Set());
     playerRef.current = null;
     setIsPaused(false);
-    if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input for fresh upload
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Cleanup effect
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -191,7 +181,6 @@ export default function StudentPage() {
       }
     };
   }, []);
-
 
   // --- Render Components ---
 
@@ -229,20 +218,23 @@ export default function StudentPage() {
 
   const renderLessonSummary = () => (
     <div className="p-8 border rounded-xl max-w-4xl mx-auto bg-white shadow-xl flex flex-col gap-6">
-     
-     <h2 className="font-bold text-3xl text-gray-800 border-b pb-3 flex flex-col items-start gap-1">
+      <h2 className="font-bold text-3xl text-gray-800 border-b pb-3 flex flex-col items-start gap-1">
         <div className="flex items-center gap-2">
           <Video className="w-6 h-6 text-blue-600" />
           Lesson Summary
         </div>
-      <span className="text-blue-600 text-2xl font-semibold mt-1">{lesson?.title}</span>
-    </h2>
-      
+        <span className="text-blue-600 text-2xl font-semibold mt-1">{lesson?.title}</span>
+      </h2>
+
       <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4">
         {lesson?.questions.map((q, i) => (
-          <div 
-            key={q.id} 
-            className={`border-l-4 p-4 rounded-r-lg shadow-sm ${answeredQuestions.has(i) ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-gray-50'}`}
+          <div
+            key={q.id}
+            className={`border-l-4 p-4 rounded-r-lg shadow-sm ${
+              answeredQuestions.has(i)
+                ? "border-green-500 bg-green-50"
+                : "border-gray-300 bg-gray-50"
+            }`}
           >
             <p className="font-semibold text-lg text-gray-800 mb-1">
               Q{i + 1} ({q.time.toFixed(2)}s): {q.question}
@@ -264,7 +256,8 @@ export default function StudentPage() {
   );
 
   const renderQuestionModal = () => {
-    if (currentQuestionIndex === null || !lesson || !lesson.questions[currentQuestionIndex]) return null;
+    if (currentQuestionIndex === null || !lesson || !lesson.questions[currentQuestionIndex])
+      return null;
 
     const questionData = lesson.questions[currentQuestionIndex];
 
@@ -272,9 +265,7 @@ export default function StudentPage() {
       <div className="absolute inset-0 bg-black/95 backdrop-blur-sm flex flex-col justify-center items-center p-6 z-20">
         <div className="bg-white rounded-xl p-8 max-w-xl w-full shadow-2xl flex flex-col gap-5 transform scale-100 transition-transform duration-300 relative z-30 border-t-4 border-blue-600">
           <h3 className="font-bold text-2xl text-blue-600">Pop-up Question 🧠</h3>
-          <p className="text-gray-800 text-lg border-b pb-3">
-            {questionData.question}
-          </p>
+          <p className="text-gray-800 text-lg border-b pb-3">{questionData.question}</p>
 
           {!showAnswer ? (
             <button
@@ -302,23 +293,20 @@ export default function StudentPage() {
     );
   };
 
-  const renderLessonCompletedScreen = () => {
-    return (
-      <div className="absolute inset-0 bg-black/95 flex flex-col justify-center items-center p-6 z-20">
-        <div className="text-white text-center">
-          <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
-          <h3 className="font-extrabold text-4xl mb-6">Lesson Completed!</h3>
-        
-          <button
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg text-lg"
-            onClick={viewSummary}
-          >
-            View Summary
-          </button>
-        </div>
+  const renderLessonCompletedScreen = () => (
+    <div className="absolute inset-0 bg-black/95 flex flex-col justify-center items-center p-6 z-20">
+      <div className="text-white text-center">
+        <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
+        <h3 className="font-extrabold text-4xl mb-6">Lesson Completed!</h3>
+        <button
+          className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg text-lg"
+          onClick={viewSummary}
+        >
+          View Summary
+        </button>
       </div>
-    );
-  };
+    </div>
+  );
 
   const renderVideoPlayer = () => (
     <div className="relative flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -331,15 +319,15 @@ export default function StudentPage() {
             playerVars: {
               start: lesson!.trimStart ?? 0,
               end: lesson!.trimEnd,
-              controls: 1, 
-              modestbranding: 1, 
-              rel: 0, 
-              showinfo: 0, 
-              disablekb: 1, 
-              fs: 0, 
-              iv_load_policy: 3, 
-              cc_load_policy: 0, 
-              autohide: 1, 
+              controls: 1,
+              modestbranding: 1,
+              rel: 0,
+              showinfo: 0,
+              disablekb: 1,
+              fs: 0,
+              iv_load_policy: 3,
+              cc_load_policy: 0,
+              autohide: 1,
             },
           }}
           onReady={onPlayerReady}
@@ -347,41 +335,29 @@ export default function StudentPage() {
           className="w-full h-full"
         />
 
-        {/* Dynamic Overlays */}
         {isPaused && currentQuestionIndex === null && !lessonEnded && (
           <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none flex items-center justify-center">
             <span className="text-white text-4xl font-bold opacity-75">Paused</span>
           </div>
         )}
-        
+
         {lessonEnded && renderLessonCompletedScreen()}
         {renderQuestionModal()}
       </div>
       <h1 className="text-2xl font-bold text-gray-800">{lesson?.title}</h1>
-     
     </div>
   );
 
   // --- Main Render ---
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col gap-8">
-      
-      {/* State: Initial Load */}
       {!lesson && !summaryVisible && (
-        <div className="min-h-[80vh] flex items-center justify-center">
-          {renderFileUploader()}
-        </div>
+        <div className="min-h-[80vh] flex items-center justify-center">{renderFileUploader()}</div>
       )}
 
-      {/* State: Lesson Playing */}
-      {lesson && !summaryVisible && (
-        renderVideoPlayer()
-      )}
+      {lesson && !summaryVisible && renderVideoPlayer()}
 
-      {/* State: Summary View */}
-      {summaryVisible && lesson && (
-        renderLessonSummary()
-      )}
+      {summaryVisible && lesson && renderLessonSummary()}
     </div>
   );
 }

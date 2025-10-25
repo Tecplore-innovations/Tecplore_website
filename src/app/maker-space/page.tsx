@@ -135,13 +135,13 @@ const MakerSpacePage: React.FC = () => {
   <div className="space-y-6">
     <div className="bg-white p-6 rounded-xl shadow">
       <p className="text-gray-700 italic">
-        "The maker space at our school transformed the way students learn science. Highly recommended!"
+        The maker space at our school transformed the way students learn science. Highly recommended!
       </p>
       <p className="text-gray-900 font-semibold mt-2">– Aarvam Learning Center, Trichy</p>
     </div>
     <div className="bg-white p-6 rounded-xl shadow">
       <p className="text-gray-700 italic">
-        "Visitors at our mall love the interactive STEM corner. Great experience for all ages!"
+        Visitors at our mall love the interactive STEM corner. Great experience for all ages!
       </p>
       <p className="text-gray-900 font-semibold mt-2">– City Mall Management</p>
     </div>
