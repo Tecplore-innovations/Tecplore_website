@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { resources, Resource } from "./resources";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, Play, FileText, Search, Star, Award, SlidersHorizontal } from "lucide-react";
+import { X, Play, FileText, Search, Star, Award, SlidersHorizontal } from "lucide-react";
 
 const TeacherResources: React.FC = () => {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
