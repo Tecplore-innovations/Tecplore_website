@@ -342,7 +342,7 @@ useEffect(() => {
         // If trim finalized, stop at trim end (do not loop)
         if (trimFinalized && trimEnd != null && t >= trimEnd - 0.05) {
           // pause at end
-          try { playerRef.current.pauseVideo(); } catch (_e) { /* ignore */ }
+          try { playerRef.current.pauseVideo(); } catch {}
           setIsPlaying(false);
         }
       }
@@ -352,7 +352,7 @@ useEffect(() => {
   // reset full
   const resetAllState = useCallback(() => {
     if (playerRef.current && typeof playerRef.current.stopVideo === "function") {
-      try { playerRef.current.stopVideo(); } catch (_e) {}
+      try { playerRef.current.stopVideo(); } catch {}
     }
     setLesson({ title: "", youtubeLink: "", youtubeId: "", questions: [] });
     setVideoMode("none");
@@ -412,7 +412,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     setTrimEnd(null); // reset any previously set end
     setAlert({ message: `Start set to ${formatTime(t)}`, type: "success" });
     // pause for precision
-    try { playerRef.current.pauseVideo(); } catch (_e) {}
+    try { playerRef.current.pauseVideo(); } catch {}
   };
 
   // Set End: capture current time (must be after start) and reveal Apply
@@ -429,7 +429,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     }
     setTrimEnd(t);
     setAlert({ message: `End set to ${formatTime(t)}`, type: "success" });
-    try { playerRef.current.pauseVideo(); } catch (_e) {}
+    try { playerRef.current.pauseVideo(); } catch {}
   };
 
   // Apply Trim: finalize trim and restrict player start/end on reload
@@ -449,7 +449,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
         try {
           playerRef.current.seekTo(trimStart, true);
           playerRef.current.playVideo();
-        } catch (_e) {}
+        } catch {}
       }
     }, 150);
   };
@@ -462,13 +462,13 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
       if (trimEnd != null && time >= trimEnd - 0.5) return;
       setTrimStart(time);
       if (playerRef.current && typeof playerRef.current.seekTo === "function") {
-        try { playerRef.current.seekTo(time, true); } catch (_e) {}
+        try { playerRef.current.seekTo(time, true); } catch {}
       }
     } else {
       if (trimStart != null && time <= trimStart + 0.05) return;
       setTrimEnd(time);
       if (playerRef.current && typeof playerRef.current.seekTo === "function") {
-        try { playerRef.current.seekTo(time, true); } catch (_e) {}
+        try { playerRef.current.seekTo(time, true); } catch {}
       }
     }
   }, [trimStart, trimEnd]);
@@ -481,7 +481,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
       if (trimStart != null && time < trimStart) { setAlert({ message: "Question time must be within trimmed range!", type: "error" }); return; }
       if (trimEnd != null && time > trimEnd) { setAlert({ message: "Question time must be within trimmed range!", type: "error" }); return; }
     }
-    try { playerRef.current.pauseVideo(); } catch (_e) {}
+    try { playerRef.current.pauseVideo(); } catch {}
     setQuestionTime(time);
     setAddingQuestion(true);
     setAlert({ message: `Adding question at ${formatTime(time)}`, type: "info" });
@@ -494,7 +494,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     newTime = Math.max(minTime, Math.min(maxTime, newTime));
     setQuestionTime(newTime);
     if (playerRef.current && typeof playerRef.current.seekTo === "function") {
-      try { playerRef.current.seekTo(newTime, true); } catch (_e) {}
+      try { playerRef.current.seekTo(newTime, true); } catch {}
     }
   };
 
@@ -505,10 +505,10 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     setCurrentQuestion({ question: "", answer: "" });
     setAddingQuestion(false);
     setAlert({ message: "Question added successfully!", type: "success" });
-    try { if (playerRef.current) playerRef.current.playVideo(); } catch (_e) {}
+    try { if (playerRef.current) playerRef.current.playVideo(); } catch {}
   };
 
-  const cancelQuestion = () => { setAddingQuestion(false); setCurrentQuestion({ question: "", answer: "" }); if (playerRef.current) try { playerRef.current.playVideo(); } catch (_e) {} };
+  const cancelQuestion = () => { setAddingQuestion(false); setCurrentQuestion({ question: "", answer: "" }); if (playerRef.current) try { playerRef.current.playVideo(); } catch  {} };
 
   const deleteQuestion = (id: string) => {
   setLesson(prev => {
@@ -544,7 +544,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
   // Seek helper
   const seekTo = (time: number) => {
     if (playerRef.current && typeof playerRef.current.seekTo === "function") {
-      try { playerRef.current.seekTo(time, true); setCurrentTime(time); } catch (_e) {}
+      try { playerRef.current.seekTo(time, true); setCurrentTime(time); } catch {}
     }
   };
 
