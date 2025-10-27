@@ -258,7 +258,7 @@ const MakerSpacePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-semibold mb-4">Ready to Begin?</h2>
           <p className="text-blue-800/80 text-lg mb-6">
-            Let's discuss how a maker space can enhance learning at your institution.
+            Let&apos;s discuss how a maker space can enhance learning at your institution.
           </p>
           <div className="text-blue-700 font-medium">
             Contact us to schedule a consultation
