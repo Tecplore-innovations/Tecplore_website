@@ -47,39 +47,52 @@ const TeacherResources: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Minimal Professional */}
-      <div className="relative w-full bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 rounded text-xs font-medium text-gray-700 mb-3">
-              <Award className="w-3.5 h-3.5" />
-              Premium Teacher Resources
-            </div>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 text-gray-900">
-              Teacher Resources Portal
-            </h1>
-            
-            <p className="text-base sm:text-lg max-w-2xl mx-auto text-gray-600 mb-6">
-              Access curated training materials and teaching resources
-            </p>
+    {/* Hero Section - Minimal Professional */}
+    <div 
+        className="relative w-full bg-white border-b border-gray-200"
+        style={{
+            backgroundImage: "url('/teacher-resources/images/teacher_res.png')",
+            // Optional: Adjust background properties for a good pattern display
+            backgroundRepeat: 'repeat', 
+            backgroundSize: 'auto', // or 'cover' if you want it to fill the container
+            backgroundPosition: 'center center',
+        }}
+    >
+        {/* Optional: Add an overlay div for better text readability */}
+        <div className="absolute inset-0 bg-white opacity-90"></div>
+        
+        {/* Content Container (make sure this is relative so it sits above the background) */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="text-center">
+                <div className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 rounded text-xs font-medium text-gray-700 mb-3">
+                    <Award className="w-3.5 h-3.5" />
+                    Premium Teacher Resources
+                </div>
+                
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 text-gray-900">
+                    Teacher Resources Portal
+                </h1>
+                
+                <p className="text-base sm:text-lg max-w-2xl mx-auto text-gray-600 mb-6">
+                    Access curated training materials and teaching resources
+                </p>
 
-            {/* Search Bar */}
-            <div className="max-w-xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search resources..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
-                />
-              </div>
+                {/* Search Bar */}
+                <div className="max-w-xl mx-auto">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search resources..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                        />
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
 
       {/* Stats Bar - Compact */}
       <div className="bg-white border-b border-gray-200">

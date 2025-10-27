@@ -34,7 +34,7 @@ export const resources: Resource[] = [
     subject: "Chemistry",
     level: "High School",
     thumbnail: "/teacher-resources/images/chem_safety_thumb.jpg",
-    contentUrl: "https://www.youtube.com/watch?v=ciWpS6SetdY",
+    contentUrl: "https://www.youtube.com/watch?v=PhwyPQ0_5K0&pp=ygUnY2hlbWlzdHJ5IGxhYiBzYWZldHkgcnVsZXMgZm9yIHN0dWRlbnRz",
   }),
   createResource({
     id: 3,

@@ -4,187 +4,267 @@ import React from "react";
 
 const MakerSpacePage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 px-4 md:px-8 py-16">
-      
-      {/* Hero Section */}
+  <div className="min-h-screen bg-white text-gray-900 font-sans">
+    {/* Hero Section */}
+    <section className="relative w-full h-[60vh] flex items-center justify-center text-center overflow-hidden">
       <div
-        className="relative w-full bg-cover bg-center rounded-xl mb-12"
-        style={{ backgroundImage: "url('/photos/maker-space/maker_space_banner.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/photos/maker-space/maker_space_banner.jpg')",
+        }}
       >
-        <div className="absolute inset-0 bg-black/50 rounded-xl"></div>
-        <div className="relative max-w-4xl mx-auto text-center py-24 px-6 text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-           Setup Maker Space at Your Institute
-          </h1>
-          <p className="text-lg md:text-xl mb-6">
-            Inspire creativity, and STEM learning.
-          </p>
-         
-        </div>
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
-      {/* Benefits Section */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
-          <img src="/photos/maker-space/icons/innovation.png" className="w-16 h-16 mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Hands-on Learning</h3>
-          <p className="text-gray-600">Students engage in real STEM projects and experiments.</p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
-          <img src="/photos/maker-space/icons/fun.png" className="w-16 h-16 mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Fun & Interactive</h3>
-          <p className="text-gray-600">Encourages creativity through playful and safe experimentation.</p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300">
-          <img src="/photos/maker-space/icons/customizable.png" className="w-16 h-16 mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Customizable for Your Space</h3>
-          <p className="text-gray-600">We adapt the maker space to your location, audience, and goals.</p>
-        </div>
+      <div className="relative z-10 px-6">
+        <h1 className="text-4xl md:text-6xl font-light mb-4 text-white">
+          Maker Space Solutions
+        </h1>
+        <div className="w-20 h-0.5 bg-white/60 mx-auto mb-6"></div>
+        <p className="text-lg md:text-2xl text-white/90">
+          Transform Learning Through Innovation & Hands-On Discovery
+        </p>
       </div>
-
-  {/* How It Works Section */}
-<div className="max-w-6xl mx-auto text-center mb-20 px-4">
-  <h2 className="text-4xl font-bold mb-4 text-gray-800">How It Works</h2>
-  <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
-    Our streamlined process ensures your space transforms into an inspiring environment efficiently
-  </p>
-
-
-  <div className="flex flex-col md:flex-row justify-between gap-8 relative">
-   
-    {[
-      {
-        step: 1,
-        title: "Initial Discussion",
-        description: "We understand your needs and audience.",
-      
-        color: "from-blue-500 to-blue-600",
-        hoverColor: "hover:from-blue-600 hover:to-blue-700"
-      },
-      {
-        step: 2,
-        title: "Proposal & Layout",
-        description: "Custom layout and project plan for your space.",
-       
-        color: "from-purple-500 to-purple-600",
-        hoverColor: "hover:from-purple-600 hover:to-purple-700"
-      },
-      {
-        step: 3,
-        title: "Setup & Training",
-        description: "We set up the space and train your staff.",
-       
-        color: "from-green-500 to-green-600",
-        hoverColor: "hover:from-green-600 hover:to-green-700"
-      },
-      {
-        step: 4,
-        title: "Launch & Support",
-        description: "Space is ready to inspire, with ongoing support.",
-      
-        color: "from-orange-500 to-orange-600",
-        hoverColor: "hover:from-orange-600 hover:to-orange-700"
-      }
-    ].map((step) => (
-      <div 
-        key={step.step}
-        className={`flex-1 group cursor-pointer transition-all duration-500 transform hover:-translate-y-2`}
+    </section>
+      {/* Introduction Section */}
+      <section
+        className="relative w-full bg-cover bg-center bg-no-repeat py-20 px-6"
+       /*  style={{
+          backgroundImage: 'url("/photos/maker-space/maker_hero_bg.png")',
+        }} */
       >
-        {/* Step Card */}
-        <div className={`
-          bg-white p-8 rounded-2xl shadow-lg border border-gray-100 
-          relative overflow-hidden transition-all duration-300
-          group-hover:shadow-2xl group-hover:border-transparent
-        `}>
-          {/* Gradient Background on Hover */}
-          <div className={`
-            absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 
-            group-hover:opacity-5 transition-opacity duration-300
-          `}></div>
-          
-      
-          
-         
-          
-          {/* Content */}
-          <h3 className="font-bold text-xl mb-3 text-gray-800 group-hover:text-gray-900 transition-colors">
-            {step.title}
-          </h3>
-          <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors">
-            {step.description}
+       {/*  <div className="absolute inset-0 bg-white/90"></div> */}
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl md:text-5xl font-light mb-6 text-gray-900">
+            Empowering Educational Institutions
+          </h2>
+          <div className="w-16 h-0.5 bg-gray-300 mx-auto mb-8"></div>
+          <p className="text-base md:text-xl text-gray-700 leading-relaxed">
+            We design and implement custom maker spaces that foster creativity,
+            critical thinking, and practical STEM skills. Each space is
+            thoughtfully crafted to inspire experimentation and innovation in
+            learners of all ages.
           </p>
-          
-          {/* Hover Indicator */}
-          <div className={`
-            absolute bottom-0 left-1/2 transform -translate-x-1/2 
-            w-0 h-1 bg-gradient-to-r ${step.color} 
-            group-hover:w-full transition-all duration-300
-          `}></div>
         </div>
-     
-      </div>
-    ))}
-  </div>
+      </section>
 
- 
-</div>
+      {/* Core Benefits */}
+      <section className="bg-gray-50 py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 text-gray-900 text-center md:text-left">
+            Key Features
+          </h2>
 
-   {/* Testimonials Section */}
-<div className="max-w-4xl mx-auto mb-16">
-  <h2 className="text-3xl font-bold text-center mb-8">What Our Partners Say</h2>
-  <div className="space-y-6">
-    <div className="bg-white p-6 rounded-xl shadow">
-      <p className="text-gray-700 italic">
-        The maker space at our school transformed the way students learn science. Highly recommended!
-      </p>
-      <p className="text-gray-900 font-semibold mt-2">– Aarvam Learning Center, Trichy</p>
-    </div>
-    <div className="bg-white p-6 rounded-xl shadow">
-      <p className="text-gray-700 italic">
-        Visitors at our mall love the interactive STEM corner. Great experience for all ages!
-      </p>
-      <p className="text-gray-900 font-semibold mt-2">– City Mall Management</p>
-    </div>
-  </div>
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+            {[
+              {
+                title: "Experiential Learning",
+                desc: "Students engage with tangible projects that bridge theoretical concepts with real-world applications, developing problem-solving skills through direct experience.",
+              },
+              {
+                title: "Safe Exploration Environment",
+                desc: "Purpose-built spaces that encourage experimentation while maintaining safety standards, allowing learners to test ideas and learn from failures.",
+              },
+              {
+                title: "Tailored Implementation",
+                desc: "Every maker space is customized to align with your institution's curriculum, available space, age groups, and educational objectives.",
+              },
+              {
+                title: "Cross-Disciplinary Integration",
+                desc: "Spaces designed to support learning across science, technology, engineering, arts, and mathematics, encouraging holistic skill development.",
+              },
+              {
+                title: "Scalable Design",
+                desc: "From compact classroom corners to comprehensive facility-wide installations, we adapt to your spatial and budgetary constraints.",
+              },
+              {
+                title: "Educator Support",
+                desc: "Comprehensive training programs ensure your staff can confidently guide students and maintain the space effectively.",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="border-l-2 border-gray-300 pl-6 hover:border-blue-600 transition-all"
+              >
+                <h3 className="text-xl md:text-2xl font-medium mb-3 text-gray-900">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-{/* Final CTA Section */}
-<div className="text-center py-16 relative">
-  <h2 className="text-3xl font-bold mb-4">Ready to Bring a Maker Space?</h2>
-  <p className="text-gray-600 mb-6">
-    Talk to us and we’ll help you plan the perfect space.
-  </p>
-</div>
+      {/* Implementation Process */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl md:text-4xl font-light mb-12 text-gray-900 text-center md:text-left">
+          Implementation Process
+        </h2>
 
-{/* Floating Contact Button 
-<a
-  href="/contact"
-  className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 z-50"
-  title="Contact Us"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-7 w-7"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M21 12.79A9 9 0 1111.21 3h.01A9 9 0 0121 12.79z"
-    />
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 8v4l3 3"
-    />
-  </svg>
-</a>
+        <div className="space-y-10">
+          {[
+            {
+              step: "01",
+              title: "Consultation & Assessment",
+              desc: "We begin with an in-depth analysis of your institutional needs, target audience, existing infrastructure, and educational goals to ensure optimal alignment.",
+            },
+            {
+              step: "02",
+              title: "Custom Design & Planning",
+              desc: "Our team develops detailed spatial layouts, equipment specifications, and curriculum integration strategies tailored specifically to your requirements.",
+            },
+            {
+              step: "03",
+              title: "Installation & Training",
+              desc: "Professional installation of all equipment and materials, followed by comprehensive training sessions for educators and facility managers.",
+            },
+            {
+              step: "04",
+              title: "Activation & Ongoing Support",
+              desc: "Launch support to ensure smooth operations, with continued technical assistance, curriculum updates, and maintenance guidance as your program evolves.",
+            },
+          ].map((step, i) => (
+            <div key={i} className="flex flex-col md:flex-row gap-6 md:gap-10 border-b border-gray-200 pb-8">
+              <div className="text-5xl font-light text-gray-300 md:w-24">
+                {step.step}
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl md:text-2xl font-medium mb-3 text-gray-900">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">{step.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-*/}
+      {/* Equipment & Resources */}
+      <section className="bg-gray-50 py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-light mb-8 text-gray-900 text-center md:text-left">
+            Typical Resources & Equipment
+          </h2>
+          <p className="text-gray-600 mb-12 max-w-3xl leading-relaxed text-center md:text-left mx-auto md:mx-0">
+            Each maker space is outfitted with age-appropriate tools and materials.
+            Standard configurations may include:
+          </p>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              {
+                category: "Electronics & Robotics",
+                items: [
+                  "Microcontrollers & development boards",
+                  "Sensor kits & electronic components",
+                  "Robotics platforms",
+                  "Programming interfaces",
+                ],
+              },
+              {
+                category: "Fabrication Tools",
+                items: [
+                  "3D printers & scanners",
+                  "Laser cutting equipment",
+                  "Hand tools & workbenches",
+                  "Safety equipment",
+                ],
+              },
+              {
+                category: "Design & Prototyping",
+                items: [
+                  "CAD software licenses",
+                  "Building materials & supplies",
+                  "Testing & measurement tools",
+                  "Documentation systems",
+                ],
+              },
+            ].map((cat, i) => (
+              <div key={i}>
+                <h4 className="text-lg font-semibold mb-3 text-gray-900 uppercase tracking-wide">
+                  {cat.category}
+                </h4>
+                <ul className="space-y-2 text-gray-600 text-sm">
+                  {cat.items.map((it, j) => (
+                    <li key={j}>• {it}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+            {/* Testimonials */}
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-gray-900 text-center md:text-left">
+            Partner Testimonials
+          </h2>
+
+          <div className="space-y-10 md:space-y-12">
+            {[
+              {
+                quote:
+                  "The implementation of our maker space has fundamentally changed how students approach scientific inquiry. The level of engagement and depth of understanding we're seeing is remarkable.",
+                author: "Aarvam Learning Center, Trichy",
+              },
+              {
+                quote:
+                  "Our interactive STEM installation has become a cornerstone attraction. Families spend meaningful time exploring the exhibits, and feedback has been overwhelmingly positive across all age groups.",
+                author: "City Mall Management",
+              },
+            ].map((t, i) => (
+              <div key={i} className="border-l-2 border-blue-500 pl-5 md:pl-6">
+                <p className="text-sm md:text-base text-gray-600 italic mb-2 leading-relaxed">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <p className="text-gray-800 font-medium text-base md:text-lg">
+                  {t.author}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+
+
+      {/* Ideal For */}
+      <section className="bg-gray-50 py-20 px-6">
+        <div className="max-w-6xl mx-auto text-center md:text-left">
+          <h2 className="text-3xl md:text-4xl font-light mb-10 text-gray-900">
+            Ideal For
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              ["Schools & Colleges", "K-12 and higher education institutions"],
+              ["Learning Centers", "After-school programs and enrichment facilities"],
+              ["Public Spaces", "Libraries, museums, and community centers"],
+              ["Commercial Venues", "Shopping centers and family entertainment spaces"],
+            ].map(([title, desc], i) => (
+              <div key={i}>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">{title}</h4>
+                <p className="text-gray-600 text-sm">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-blue-50 text-blue-900 py-16">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-semibold mb-4">Ready to Begin?</h2>
+          <p className="text-blue-800/80 text-lg mb-6">
+            Let's discuss how a maker space can enhance learning at your institution.
+          </p>
+          <div className="text-blue-700 font-medium">
+            Contact us to schedule a consultation
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
