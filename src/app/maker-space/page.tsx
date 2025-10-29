@@ -141,44 +141,42 @@ const MakerSpacePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Equipment & Resources */}
+      {/* Learning Infrastructure Section */}
       <section className="bg-gray-50 py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-light mb-8 text-gray-900 text-center md:text-left">
-            Typical Resources & Equipment
+            Innovative Learning Infrastructure
           </h2>
           <p className="text-gray-600 mb-12 max-w-3xl leading-relaxed text-center md:text-left mx-auto md:mx-0">
-            Each maker space is outfitted with age-appropriate tools and materials.
-            Standard configurations may include:
+            Each Tecplore learning space is designed around curiosity, experimentation,
+            and tangible scientific discovery. Beyond standard maker tools, our environments
+            integrate hands-on setups that transform theoretical ideas into observable phenomena.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
               {
-                category: "Electronics & Robotics",
+                category: "Exploration & Engineering",
                 items: [
-                  "Microcontrollers & development boards",
-                  "Sensor kits & electronic components",
-                  "Robotics platforms",
-                  "Programming interfaces",
+                  "Modular electronic kits and programmable controllers",
+                  "Interactive sensor systems and data interfaces",
+                  "Mechanisms for testing motion, forces, and energy",
                 ],
               },
               {
-                category: "Fabrication Tools",
+                category: "Fabrication & Design",
                 items: [
-                  "3D printers & scanners",
-                  "Laser cutting equipment",
-                  "Hand tools & workbenches",
-                  "Safety equipment",
+                  "Digital fabrication tools for rapid prototyping",
+                  "Safe workspaces for model construction and testing",
+                  "Custom fixtures and setups for real-world simulations",
                 ],
               },
               {
-                category: "Design & Prototyping",
+                category: "Discovery & Analysis",
                 items: [
-                  "CAD software licenses",
-                  "Building materials & supplies",
-                  "Testing & measurement tools",
-                  "Documentation systems",
+                  "Visualization and measurement instruments",
+                  "Tools for documenting, analyzing, and iterating ideas",
+                  "Interactive exhibits connecting science concepts with practical applications",
                 ],
               },
             ].map((cat, i) => (
@@ -196,6 +194,7 @@ const MakerSpacePage: React.FC = () => {
           </div>
         </div>
       </section>
+
 
             {/* Testimonials */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20">

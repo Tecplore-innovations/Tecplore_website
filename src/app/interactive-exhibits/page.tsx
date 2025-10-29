@@ -46,7 +46,7 @@ const exhibits: Exhibit[] = [
   {
     id: 6,
     title: "Chladni Plate",
-    imageUrl: "/photos/interactive-exhibits/chladni_plate.jpg",
+    imageUrl: "/photos/interactive-exhibits/chladni plate.jpg",
     description: "Visualize sound vibrations by creating intricate patterns with sand on a vibrating plate.",
   },
   {
