@@ -55,6 +55,25 @@ const HomePage = () => {
   const words = ["Making", "Solving", "Breaking", "Discovery"];
   const [currentWord, setCurrentWord] = useState(0);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  if (typeof window === "undefined") {
+    return; // safely exit during SSR — fixes "not all code paths return a value"
+  }
+
+  setIsMobile(window.innerWidth < 640);
+
+  const handleResize = () => setIsMobile(window.innerWidth < 640);
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);
+
+
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentWord((prev) => (prev + 1) % words.length);
@@ -213,7 +232,8 @@ const HomePage = () => {
                   const scale = isActive ? 1.1 : 0.8 - Math.abs(offset) * 0.05;
                   const opacity = isActive ? 1 : 0.4 - Math.abs(offset) * 0.1;
                   const zIndex = 50 - Math.abs(offset);
-                  const xOffset = offset * (window.innerWidth < 640 ? 100 : 200);
+                 const xOffset = offset * (isMobile ? 100 : 200);
+
 
                   return (
                     <motion.div
