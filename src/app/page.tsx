@@ -38,14 +38,14 @@ const colorCombinations = [
 
 const HomePage = () => {
   const videos = [
-    "/videos/Video 1.mp4",
-    "/videos/Video 2.mp4",
-    "/videos/Video 3.mp4",
-    "/videos/Video 4.mp4",
-    "/videos/Video 5.mp4",
-    "/videos/Video 6.mp4",
-    "/videos/Video 7.mp4",
-    "/videos/Video 8.mp4",
+    "/videos/Video 1.webm",
+    "/videos/Video 2.webm",
+    "/videos/Video 3.webm",
+    "/videos/Video 4.webm",
+    "/videos/Video 5.webm",
+    "/videos/Video 6.webm",
+    "/videos/Video 7.webm",
+    "/videos/Video 8.webm",
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -57,20 +57,22 @@ const HomePage = () => {
 
   const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-  if (typeof window === "undefined") {
-    return; // safely exit during SSR — fixes "not all code paths return a value"
-  }
 
-  setIsMobile(window.innerWidth < 640);
+  
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return; // safely exit during SSR — fixes "not all code paths return a value"
+    }
 
-  const handleResize = () => setIsMobile(window.innerWidth < 640);
-  window.addEventListener("resize", handleResize);
+    setIsMobile(window.innerWidth < 640);
 
-  return () => {
-    window.removeEventListener("resize", handleResize);
-  };
-}, []);
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
 
 
