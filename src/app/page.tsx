@@ -119,6 +119,8 @@ const HomePage = () => {
     return visible;
   };
 
+  isPlaying;
+
   return (
     <main className="w-full overflow-x-hidden bg-black">
       {/* 🎬 Hero Section */}
@@ -173,7 +175,7 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                {/* 🌈 Gradient Stroke Button with Down Icon */}
+                {/* Gradient Stroke Button with Down Icon */}
                 <button
                   onClick={() => {
                     window.scrollBy({
