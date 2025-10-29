@@ -180,10 +180,12 @@ const HomePage = () => {
                 {/* Gradient Stroke Button with Down Icon */}
                 <button
                   onClick={() => {
+                     if (typeof window !== "undefined") {
                     window.scrollBy({
                       top: window.innerHeight,
                       behavior: "smooth",
                     });
+                  }
                   }}
                   className="relative inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105"
                   style={{
