@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
           <li>Enhance website performance & personalization</li>
         </ul>
 
-        <h2 className="font-semibold text-lg mt-8 mb-2">Children's Privacy</h2>
+        <h2 className="font-semibold text-lg mt-8 mb-2">Children&apos;s Privacy</h2>
         <p className="mb-4">
           We create learning products for children but **do not collect personal data from children under 13 without guardian consent**. Schools and parents manage child accounts.
         </p>
