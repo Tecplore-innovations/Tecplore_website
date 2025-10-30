@@ -18,39 +18,38 @@ interface ContactFormData {
 interface OfficeLocationProps {
   type: "Main" | "Branch";
   city: string;
-  href: string;
-  delay: number;
+
+  
 }
 
 const OfficeLocationCard: React.FC<OfficeLocationProps> = ({
   type,
   city,
-  href,
-  delay,
-}) => {
-  const colorMap =
-    type === "Main"
-      ? {
-          stroke: "text-blue-600",
-          border: "border-blue-500/30",
-          bg: "bg-white/25 backdrop-blur-xl",
-        }
-      : {
-          stroke: "text-gray-700",
-          border: "border-gray-400/30",
-          bg: "bg-white/15 backdrop-blur-lg",
-        };
+  
+  }) => {
+    const colorMap =
+      type === "Main"
+        ? {
+            stroke: "text-blue-600",
+            border: "border-blue-500/30",
+            bg: "bg-white/25 backdrop-blur-xl",
+          }
+        : {
+            stroke: "text-gray-700",
+            border: "border-gray-400/30",
+            bg: "bg-white/15 backdrop-blur-lg",
+          };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 + delay, type: "spring", stiffness: 100 }}
+      transition={{type: "spring", stiffness: 100 }}
       whileHover={{
         scale: 1.02,
         boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)",
       }}
-      onClick={() => window.open(href, "_blank")}
+ 
       className={`${colorMap.bg} ${colorMap.border} border rounded-2xl p-4 cursor-pointer shadow-[inset_0_0_10px_rgba(255,255,255,0.2)] transition-all`}
     >
       <div className="flex items-center gap-4">
@@ -127,18 +126,15 @@ const ContactPage: React.FC = () => {
   const officeLocations = [
     {
       type: "Main" as const,
-      city: "Coimbatore, Tamil Nadu",
-      href: "https://maps.app.goo.gl/FtN8uryurorbamcN6",
+      city: "Coimbatore, Tamil Nadu",     
     },
     {
       type: "Branch" as const,
-      city: "Trivandrum, Kerala",
-      href: "https://maps.app.goo.gl/e9qYCa6pufYQgeUFA",
+      city: "Trivandrum, Kerala",     
     },
     {
       type: "Branch" as const,
       city: "Nagpur, Maharashtra",
-      href: "https://maps.app.goo.gl/3fLQQAhyTj1jhPoM7",
     },
   ];
 
@@ -240,11 +236,11 @@ const ContactPage: React.FC = () => {
 
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-gray-800">Our Offices</h3>
-            {officeLocations.map((office, index) => (
+            {officeLocations.map((office) => (
               <OfficeLocationCard
                 key={office.city}
                 {...office}
-                delay={index * 0.1}
+               
               />
             ))}
           </div>

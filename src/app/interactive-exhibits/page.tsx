@@ -58,7 +58,7 @@ const exhibits: Exhibit[] = [
   {
     id: 8,
     title: "Vertical Wind Tunnel",
-    imageUrl: "/photos/interactive-exhibits/vertical_wind_tunnel.jpg",
+    imageUrl: "/photos/interactive-exhibits/aero tower.jpg",
     description: "Experience the thrill of flight and aerodynamics by floating in a vertical wind tunnel.",
   },
   {

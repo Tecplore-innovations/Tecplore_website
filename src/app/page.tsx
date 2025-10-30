@@ -52,7 +52,7 @@ const HomePage = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [videosLoaded, setVideosLoaded] = useState(false);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const words = ["Making", "Solving", "Breaking", "Discovery"];
+  const words = ["Making", "Solving", "Breaking"];
   const [currentWord, setCurrentWord] = useState(0);
 
   const [isMobile, setIsMobile] = useState(false);
