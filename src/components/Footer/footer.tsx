@@ -51,8 +51,8 @@ const Footer = () => {
             <div className="lg:col-span-4 space-y-6">
               <div className="flex items-center gap-3">
                 <Image
-                  src="/photos/tecplore logo.jpg"
-                  alt="Tecplore Logo"
+                  src="/photos/Tecplore logo.jpg"
+                  alt="Logo"
                   width={40}
                   height={40}
                   className="object-contain rounded-full"
