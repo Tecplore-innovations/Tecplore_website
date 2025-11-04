@@ -83,7 +83,7 @@ const ContactPage = () => {
           className="bg-white border border-gray-200 shadow-md rounded-lg p-8 space-y-6"
         >
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-            Let's Connect
+            Let&apos;s Connect
           </h1>
           <p className="text-gray-600 mb-4">
             Share your details. Our team will reach out to understand your needs.
