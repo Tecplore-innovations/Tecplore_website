@@ -1,181 +1,136 @@
 "use client";
 
+import Link from "next/link";
+
+const sections = [
+  {
+      
+    desc: (
+      <>      
+      Utilize the <b className="text-teal-400">Creator Studio</b> to load a youtube video,
+      embed interactive elements like quizzes at precise points, and save the lesson as a JSON file.
+      </>
+    ),
+    button: "Create Lesson",
+    href: "/tecplore-studio/teacher",
+    banner: "Creator Studio 🛠️",
+    img: "/photos/teacher.png",
+    imageLeft: true,
+  },
+  {
+   
+    desc: (
+      <>
+      Load the JSON file in <b className="text-teal-400">Classroom Mode</b>, the video auto-plays, pauses for questions, and resumes after responses and gives an summary at end.
+      </>
+    ),
+    button: "Start Teaching",
+    href: "/tecplore-studio/student",
+    banner: "Classroom Mode 🎓",
+    img: "/photos/student.png",
+    imageLeft: false,
+  },
+];
+
+
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden font-inter">
-      {/* Page Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-       
-      >
-        <div className="absolute inset-0 bg-blue-900/70 backdrop-blur-[2px]"></div>
-      </div>
+    <div className="min-h-screen bg-white font-inter">
+      {/* HERO */}
+      <section className="pt-24 pb-12 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
+        <h1 className="text-5xl md:text-5xl font-black text-blue-900 leading-tig   mb-4 ">
+          Tecplore Studio
+        </h1>
+        <p className="text-lg md:text-1.5xl text-blue-800/90 mt-4 max-w-3xl mx-auto leading-relaxed ">
+          Transform YouTube videos into classroom learning experiences with interaction, questions, and learning checkpoints.
+        </p>
+      
+      
+      </section>
 
-      {/* Page Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center p-8">
-        {/* Header */}
-        <header className="mb-8 text-center max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
-            <span className="bg-gradient-to-r from-yellow-400 to-cyan-400 bg-clip-text text-transparent">
-              Tecplore Studio
-            </span>
-          </h1>
+     <main className="max-w-6xl mx-auto py-10 px-4">
+      {sections.map((card, index) => (
+        <section
+          key={index}
+          className={`flex flex-col md:flex-row items-stretch mb-20 ${
+            card.imageLeft ? "" : "md:flex-row-reverse"
+          }`}
+        >
+          {/* Image Pane */}
+          <div className="md:w-1/2 w-full flex-shrink-0 flex items-center justify-center relative">
+            <div
+              className={`w-full h-80 md:h-96 ${
+                card.imageLeft ? "clip-left" : "clip-right"
+              } bg-blue-100 overflow-hidden rounded-3xl shadow-lg relative`}
+            >
+              <img
+                src={card.img}
+                alt="Tecplore feature section"
+                className="w-full h-full object-cover object-center"
+                draggable={false}
+              />
 
-          <p className="text-xl md:text-2xl text-blue-100 font-light mb-8 leading-relaxed">
-            Transform YouTube Videos into Engaging Classroom Lessons
-          </p>
-
-          {/* Feature Tags */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {[
-              "Teacher-Driven Design",
-              "Structured Content",
-              "Interactive Lessons",
-              "Smart Analytics",
-            ].map((tag) => (
               <span
-                key={tag}
-                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium border border-white/30"
+                className={`
+                absolute top-4 
+                ${card.imageLeft ? "left-4" : "right-4"}
+                bg-blue-700 text-white uppercase py-1 px-4 rounded-full shadow text-xs font-semibold tracking-wider
+              `}
               >
-                {tag}
+                {card.banner}
               </span>
-            ))}
-          </div>
-        </header>
-
-        {/* Platform Description */}
-        <section className="max-w-4xl mb-20 text-center">    
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20 shadow-2xl">
-          
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              A Space for Teachers to Design, Deliver & Inspire
-            </h2>
-            <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
-              Tecplore Studio empowers educators to reimagine existing YouTube content into
-              well-structured classroom experiences - designed for clarity, engagement, and
-              outcome-based learning.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6 mt-10">
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  Lesson Creation
-                </h3>
-                <p className="text-blue-100">
-                  Curate YouTube videos into structured lesson plans with prompts, quizzes,
-                  and discussions. Build complete learning journeys effortlessly.
-                </p>
-              </div>
-
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  Lesson Delivery
-                </h3>
-                <p className="text-blue-100">
-                  Present curated lessons interactively in class, track real-time engagement,
-                  and encourage active participation through built-in tools.
-                </p>
-              </div>
             </div>
           </div>
-        </section>
 
-{/* Main Cards Section (Desktop + Tablet) */}
-<main className="hidden sm:grid sm:grid-cols-2 gap-10 w-full max-w-5xl">
-  {[
-    {
-      title: "Lesson Creator",
-      href: "/tecplore-studio/teacher",
-      img: "/photos/teacher.png",
-      buttonText: "Create Lesson",
-      buttonColor: "text-blue-600",
-    },
-    {
-      title: "Classroom Mode",
-      href: "/tecplore-studio/student",
-      img: "/photos/student.png",
-      buttonText: "Start Teaching",
-      buttonColor: "text-blue-600",
-    },
-  ].map((card) => (
-    <a
-      key={card.title}
-      href={card.href}
-      className="relative group overflow-hidden rounded-3xl shadow-2xl border border-white/20 h-[400px] sm:h-[450px] transition-all duration-500 hover:scale-[1.02]"
-    >
-      {/* Image Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-50"
-        style={{ backgroundImage: `url(${card.img})` }}
-      />
+          {/* Text Panel */}
+          <div className="md:w-1/2 w-full flex flex-col justify-center p-8 md:pl-10 md:pr-10">
+            <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-6">
+              {card.desc}
+            </p>
 
-      {/* CTA on Hover (bottom aligned) */}
-      <div className="absolute inset-0 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div
-          className={`bg-white px-6 py-3 rounded-full font-semibold text-sm ${card.buttonColor}`}
-        >
-          {card.buttonText}
-        </div>
-      </div>
-    </a>
-  ))}
-</main>
-
-{/* Mobile Compact Cards */}
-<div className="sm:hidden flex flex-col gap-6 w-full max-w-md mt-10">
-  {[
-    {
-      title: "Lesson Creator",
-      href: "/tecplore-studio/teacher",
-      img: "/photos/teacher.png",
-      buttonText: "Create Lesson",
-    },
-    {
-      title: "Classroom Mode",
-      href: "/tecplore-studio/student",
-      img: "/photos/student.png",
-      buttonText: "Start Teaching",
-    },
-  ].map((card) => (
-    <a
-      key={card.title}
-      href={card.href}
-      className="relative rounded-2xl overflow-hidden border border-white/20 bg-white/10 backdrop-blur-md h-64 flex flex-col justify-end transition-all duration-500 hover:scale-[1.02]"
-    >
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${card.img})` }}
-      />
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative z-10 p-6 text-white text-center">
-        <h3 className="text-xl font-bold mb-2">{card.title}</h3>
-        <div className="mt-2 bg-white text-blue-700 font-semibold text-sm px-5 py-2 rounded-full inline-block">
-          {card.buttonText}
-        </div>
-      </div>
-    </a>
-  ))}
-</div>
-
-
-        {/* Footer */}
-        <footer className="mt-16 text-center">
-          <p className="text-blue-200 text-sm">
-            Join educators transforming YouTube content into powerful classroom experiences
-          </p>
-          <div className="mt-4 flex gap-4 justify-center flex-wrap">
-            <span className="text-white/60 text-xs">
-              ✓ Trusted by educators worldwide
-            </span>
-            <span className="text-white/60 text-xs">
-              ✓ Easy YouTube integration
-            </span>
-            <span className="text-white/60 text-xs">
-              ✓ Time-saving lesson creation
-            </span>
+            <Link href={card.href}>
+              <span className="inline-block border-2 border-blue-700 text-blue-700 px-7 py-2 rounded-full font-bold text-lg shadow-sm hover:bg-blue-700 hover:text-white transition">
+                {card.button}
+              </span>
+            </Link>
           </div>
-        </footer>
-      </div>
+        </section>
+      ))}
+    </main>
+
+
+    {/* Footer */}
+{/* Footer */}
+<footer className="mt-12 text-center px-2">
+  <p className="text-gray-500 text-base sm:text-lg mb-4 leading-snug">
+    Join educators transforming YouTube content into powerful classroom experiences
+  </p>
+
+  <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-7">
+    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+      ✓ Trusted by educators worldwide
+    </span>
+    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+      ✓ Classroom appropriate content
+    </span>
+    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+      ✓ Time-saving lesson creation
+    </span>
+  </div>
+</footer>
+
+
+
+
+      {/* CUSTOM CLIP-PATH STYLES */} 
+      <style jsx global>{`
+        .clip-left {
+          clip-path: polygon(0 0, 95% 0, 85% 100%, 0 100%);
+        }
+        .clip-right {
+          clip-path: polygon(5% 0, 100% 0, 100% 100%, 15% 100%);
+        }
+      `}</style>
     </div>
   );
 }

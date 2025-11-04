@@ -3,11 +3,7 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 
 const faqs = [
-  {
-    question: "What is Tecplore?",
-    answer:
-      "Tecplore is a hands-on STEM learning platform and maker lab for students. We bring science, engineering, and technology to life through real experiments, interactive exhibits, and project-based learning.",
-  },
+
   {
     question: "Who can use Tecplore?",
     answer:
@@ -23,25 +19,11 @@ const faqs = [
     answer:
       "Yes, all our activities are designed with strict safety guidelines. Supervision is required for tools, machines, and live science demos.",
   },
-  {
-    question: "Is Tecplore a gaming platform?",
-    answer:
-      "No. Tecplore is not a gaming product. It is a real-world learning and scientific exploration platform using hands-on models and interactive STEM equipment.",
-  },
-  {
-    question: "Do you provide online learning?",
-    answer:
-      "Yes, Tecplore offers blended learning — interactive physical science exhibits + digital learning modules.",
-  },
-  {
-    question: "Does Tecplore collect student data?",
-    answer:
-      "We only collect minimal information for learning analytics and login management. Student privacy and data protection is our top priority.",
-  },
+
   {
     question: "How do I contact support?",
     answer:
-      "Email us at support@tecplore.com or visit our Contact page.",
+      "Email us at info@tecplore.com or visit our Contact page.",
   },
 ];
 

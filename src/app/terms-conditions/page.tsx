@@ -17,12 +17,12 @@ export default function TermsOfUsePage() {
         </p>
 
         <p className="mb-6">
-          By accessing or using <strong>Tecplore</strong>’s website, STEM modules, exhibits, learning tools, or resources, you agree to these Terms of Use.
+          By accessing or using <strong>Tecplore</strong>&apos;s website, STEM modules, exhibits, learning tools, or resources, you agree to these Terms of Use.
         </p>
 
         <h2 className="font-semibold text-lg mt-8 mb-2">Educational Purpose</h2>
         <p className="mb-4">
-          Tecplore provides hands-on learning content, interactive STEM exhibits, and curiosity-driven educational tools. Material is for **learning and informational purposes only** — not professional engineering or scientific certification.
+          Tecplore provides hands-on learning content, interactive STEM exhibits, and curiosity-driven educational tools. Material is for learning and informational purposes only, not professional engineering or scientific certification.
         </p>
 
         <h2 className="font-semibold text-lg mt-8 mb-2">User Responsibilities</h2>

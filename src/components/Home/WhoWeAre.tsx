@@ -73,7 +73,7 @@ const WhoWeAre = () => {
             style={{ transformOrigin: 'left' }}
           />
           <h1 className="text-lg sm:text-xl md:text-2xl font-light tracking-[0.25em] uppercase text-gray-800">
-            What Defines Us
+            What We Do
           </h1>
         </div>
 
@@ -116,7 +116,7 @@ const WhoWeAre = () => {
               } : {}}
               className="text-gray-700 break-words text-base sm:text-lg md:text-xl lg:text-2xl"
             >
-              that inspire discovery and creativity.
+              that spark curiosity.
             </motion.div>
           </div>
 

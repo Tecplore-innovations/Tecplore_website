@@ -24,9 +24,9 @@ const companyName = "Tecplore";
 
 const stats = [
   { value: "50+", label: "Interactive STEM Exhibits Created" },
-  { value: "95%", label: "Concept Retention Improvement in Students" },
-  { value: "20+", label: "Teachers Trained in Experiential Learning" },
-  { value: "12+", label: "STEM Learning Programs & Experiments" },
+  { value: "95%", label: "Concept Retention among Students" },
+  { value: "50+", label: "Teachers Trained in Experiential Learning" },
+  { value: "08", label: "Science Themes including Math, Geology, Space, Ecology etc." },
 ];
 
 const colorCombinations = [
@@ -79,7 +79,7 @@ const HomePage = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentWord((prev) => (prev + 1) % words.length);
-    }, 2000);
+    },2000);
     return () => clearInterval(timer);
   }, []);
 
@@ -147,7 +147,7 @@ const HomePage = () => {
   return (
     <main className="w-full overflow-x-hidden bg-black">
       {/* 🎬 Hero Section */}
-      <section className="relative min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
+     <section className="relative min-h-[75vh] sm:min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
         {/* background effects */}
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -157,8 +157,11 @@ const HomePage = () => {
           ></div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen">
+     
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-12 lg:py-20">
+
+         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[50vh] sm:min-h-screen">
+
             {/* 🧠 Text */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -190,7 +193,7 @@ const HomePage = () => {
                 transition={{ delay: 0.4 }}
                 className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-xl"
               >
-                Experience hands-on STEM education through interactive projects and real-world experiments that inspire the next generation of innovators.
+               
               </motion.p>
 
               <motion.div
@@ -208,16 +211,16 @@ const HomePage = () => {
                     });
                   }
                   }}
-                  className="relative inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white transition-all duration-300 transform hover:scale-105"
-                  style={{
-                    border: "2px solid transparent",
-                    background:
-                      "linear-gradient(black, black) padding-box, linear-gradient(135deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%) border-box",
-                  }}
-                >
-                  Get Started
-                  <ChevronDown className="w-5 h-5 text-white" />
-                </button>
+                   className="hidden sm:inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white hover:scale-105 transition-all duration-300"
+                style={{
+                  border: "2px solid transparent",
+                  background:
+                    "linear-gradient(black, black) padding-box, linear-gradient(135deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%) border-box",
+                }}
+              >
+                Get Started
+                <ChevronDown className="w-5 h-5 text-white" />
+              </button>
               </motion.div>
             </motion.div>
 
@@ -320,7 +323,7 @@ const HomePage = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-0">
-                Inspiring Young Minds Through Learning
+                Learn and Love Science
               </h2>
             </motion.div>
 
@@ -332,8 +335,7 @@ const HomePage = () => {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                At {companyName}, we create a hands-on learning space where students explore science, technology, and engineering.
-                Through interactive projects, DIY activities, and real experiments, learners discover and build their skills.
+                At {companyName}, Experience STEM education through real-world experiments that nurture the next generation of problem solvers
               </motion.p>
 
               <motion.div

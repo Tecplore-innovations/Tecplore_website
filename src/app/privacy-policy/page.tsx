@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
         <h2 className="font-semibold text-lg mt-8 mb-2">Information We Collect</h2>
         <ul className="list-disc ml-6 space-y-2 mb-4">
           <li>Basic contact details (name, email, school or parent information)</li>
-          <li>Usage data — activities on website & learning modules</li>
+          <li>Usage data - activities on website & learning modules</li>
           <li>Device, browser & analytics information</li>
         </ul>
 
@@ -37,12 +37,12 @@ export default function PrivacyPolicyPage() {
 
         <h2 className="font-semibold text-lg mt-8 mb-2">Children&apos;s Privacy</h2>
         <p className="mb-4">
-          We create learning products for children but **do not collect personal data from children under 13 without guardian consent**. Schools and parents manage child accounts.
+          We create learning products for children but do not collect personal data from children under 13 without guardian consent.
         </p>
 
         <h2 className="font-semibold text-lg mt-8 mb-2">Data Sharing</h2>
         <p className="mb-4">
-          We do not sell personal data. We may share limited information with trusted partners for analytics, hosting, and security — always with strict privacy compliance.
+          We do not sell personal data. We may share limited information with trusted partners for analytics, hosting, and security, always with strict privacy compliance.
         </p>
 
         <h2 className="font-semibold text-lg mt-8 mb-2">Your Rights</h2>
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
         <p className="mt-10 text-sm text-gray-600">
           If you have questions or privacy requests, contact us at  
           <br />
-          <strong>support@tecplore.com</strong>
+          <strong>info@tecplore.com</strong>
         </p>
 
         <Link href="/" className="inline-block mt-8 text-blue-600 hover:underline">

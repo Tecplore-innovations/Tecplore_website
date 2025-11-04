@@ -4,248 +4,194 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Send } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import Link from "next/link";
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  message: string;
-}
-
-interface OfficeLocationProps {
-  type: "Main" | "Branch";
-  city: string;
-
-  
-}
-
-const OfficeLocationCard: React.FC<OfficeLocationProps> = ({
-  type,
-  city,
-  
-  }) => {
-    const colorMap =
-      type === "Main"
-        ? {
-            stroke: "text-blue-600",
-            border: "border-blue-500/30",
-            bg: "bg-white/25 backdrop-blur-xl",
-          }
-        : {
-            stroke: "text-gray-700",
-            border: "border-gray-400/30",
-            bg: "bg-white/15 backdrop-blur-lg",
-          };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{type: "spring", stiffness: 100 }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)",
-      }}
- 
-      className={`${colorMap.bg} ${colorMap.border} border rounded-2xl p-4 cursor-pointer shadow-[inset_0_0_10px_rgba(255,255,255,0.2)] transition-all`}
-    >
-      <div className="flex items-center gap-4">
-        <div
-          className={`p-3 rounded-xl border ${colorMap.border} flex items-center justify-center`}
-        >
-          <MapPin className={`w-5 h-5 ${colorMap.stroke}`} />
-        </div>
-        <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase">
-            {type} Office
-          </div>
-          <div className="text-base font-medium text-gray-900">{city}</div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const ContactPage: React.FC = () => {
+const ContactPage = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = React.useState<ContactFormData>({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const GOOGLE_SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycbwxY0TkY9a0CwjHBdIFbmedDCxhowbt3zpFpui1uJwz4eTQgslid1bw-w6nIdR5X-nw/exec";
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleSubmit = async () => {
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!name.trim() || !email.trim()) {
       toast({
-        title: "Missing fields",
-        description: "Please fill in all required fields.",
+        title: "Fields required",
+        description: "Please enter your name and email.",
         variant: "destructive",
       });
       return;
     }
 
-    setIsSubmitting(true);
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, timestamp: new Date().toISOString() }),
+        body: JSON.stringify({
+          name,
+          email,
+          message: "",
+          timestamp: new Date().toISOString(),
+        }),
       });
+
       toast({
-        title: "Message sent!",
-        description: "We've received your message and will respond soon.",
+        title: "Details submitted",
+        description: "We will contact you shortly.",
       });
-      setFormData({ name: "", email: "", message: "" });
-    } catch (error) {
-      console.error("Submission error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again later.",
-        variant: "destructive",
-      });
+
+      setName("");
+      setEmail("");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
-  const officeLocations = [
-    {
-      type: "Main" as const,
-      city: "Coimbatore, Tamil Nadu",     
-    },
-    {
-      type: "Branch" as const,
-      city: "Trivandrum, Kerala",     
-    },
-    {
-      type: "Branch" as const,
-      city: "Nagpur, Maharashtra",
-    },
-  ];
-
   return (
-   <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden py-10 sm:py-16">
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-16 sm:px-6 lg:px-8 bg-gray-50">
 
-      {/* Background Image */}
+      {/* Subtle background pattern */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/photos/contact1.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
+        style={{ backgroundImage: "url('/patterns/serious.png')" }}
       />
-      <div className="absolute inset-0 bg-white/60 backdrop-blur-2xl" />
 
-      {/* Floating light gradient overlays */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-gradient-to-br from-white/60 to-transparent rounded-full blur-3xl opacity-50" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-blue-200/50 to-transparent rounded-full blur-3xl opacity-40" />
+      <div className="relative w-full max-w-6xl grid lg:grid-cols-2 gap-10">
 
-      {/* Main Glass Container */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7 }}
-        className="relative w-full max-w-6xl grid lg:grid-cols-2 gap-10 bg-white/30 backdrop-blur-2xl border border-white/40 rounded-[2rem] shadow-[0_8px_60px_-10px_rgba(0,0,0,0.15),inset_0_0_15px_rgba(255,255,255,0.4)] p-8 sm:p-10"
-      >
-        {/* Contact Form */}
-        <div className="flex flex-col justify-between space-y-6">
-          <div>
-            <h2 className="text-3xl font-semibold text-gray-900 mb-2 drop-shadow-sm">
-              Let’s Connect
+        {/* Form Section */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white border border-gray-200 shadow-md rounded-lg p-8 space-y-6"
+        >
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+            Let's Connect
+          </h1>
+          <p className="text-gray-600 mb-4">
+            Share your details. Our team will reach out to understand your needs.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Name
+              </label>
+              <Input
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="border-gray-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <Input
+                placeholder="you@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border-gray-300"
+              />
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full bg-gray-900 text-white hover:bg-black transition h-11"
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </div>
+
+          {/* Direct email section */}
+          <div className="pt-5 border-t border-gray-200">
+            <p className="text-sm font-medium text-gray-800 mb-1">
+              Prefer sending requirements directly?
+            </p>
+            <a
+              href="mailto:info@tecplore.com"
+              className="text-blue-700 font-medium hover:underline"
+            >
+              info@tecplore.com
+            </a>
+          </div>
+
+          <div className="pt-2">
+            <Link
+              href="/faq"
+              className="text-sm text-blue-700 hover:underline"
+            >
+              View FAQs
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Office Locations */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-6"
+        >
+          <div className="bg-white border border-gray-200 shadow-md rounded-lg p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">
+              Our Offices
             </h2>
-            <p className="text-gray-700 text-sm sm:text-base font-light">
-              Have a question or idea? Drop us a quick note.
+            <p className="text-gray-600 text-sm">
+              Connect with the location closest to you.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <Input
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Your Name"
-              className="h-11 bg-white/50 border border-gray-300/40 text-gray-800 placeholder-gray-500 rounded-xl focus:border-blue-500 focus-visible:ring-1 focus-visible:ring-blue-400/50 shadow-inner"
-            />
-            <Input
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Your Email"
-              className="h-11 bg-white/50 border border-gray-300/40 text-gray-800 placeholder-gray-500 rounded-xl focus:border-blue-500 focus-visible:ring-1 focus-visible:ring-blue-400/50 shadow-inner"
-            />
-            <Textarea
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              placeholder="Your Message..."
-              className="min-h-[120px] bg-white/50 border border-gray-300/40 text-gray-800 placeholder-gray-500 rounded-xl focus:border-blue-500 focus-visible:ring-1 focus-visible:ring-blue-400/50 resize-none shadow-inner"
-            />
-            <Button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="w-full h-11 text-base font-medium bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white rounded-xl shadow-lg shadow-black/10 transition-transform hover:scale-[1.01]"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  Sending...
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <Send className="w-4 h-4" /> Send
-                </span>
-              )}
-            </Button>
+          {/* Main Office */}
+          <div className="bg-white border border-gray-200 shadow-md rounded-lg p-8">
+            <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full mb-3 inline-block">
+              Main Office
+            </span>
+            <h3 className="text-lg font-semibold text-gray-900">Coimbatore</h3>
+            <p className="text-gray-600 text-sm">Tamil Nadu, India</p>
           </div>
-        </div>
 
-        {/* Info & Offices */}
-        <div className="flex flex-col justify-between space-y-6">
-          <div className="bg-white/30 backdrop-blur-xl rounded-2xl p-6 border border-white/40 shadow-[inset_0_0_20px_rgba(255,255,255,0.3)]">
-           
-           <div
-              onClick={() =>
-                window.open("mailto:vivek@tecplore.com", "_self")
-              }
-              className="flex items-center gap-4 cursor-pointer group"
-            >
-              <div className="p-3 rounded-full bg-white/50 text-gray-800 group-hover:bg-white/70 transition shadow-inner">
-                <Mail className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Email</p>
-                <p className="text-gray-900 font-medium group-hover:text-blue-600 transition">
-                  vivek@tecplore.com
-                </p>
-              </div>
+          {/* Branch Offices */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white border border-gray-200 shadow rounded-lg p-6">
+              <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded mb-2 inline-block">
+                Branch
+              </span>
+              <h4 className="font-semibold text-gray-900 mb-1">Trivandrum</h4>
+              <p className="text-gray-600 text-sm">Kerala, India</p>
+            </div>
+
+            <div className="bg-white border border-gray-200 shadow rounded-lg p-6">
+              <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded mb-2 inline-block">
+                Branch
+              </span>
+              <h4 className="font-semibold text-gray-900 mb-1">Nagpur</h4>
+              <p className="text-gray-600 text-sm">Maharashtra, India</p>
             </div>
           </div>
-
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-800">Our Offices</h3>
-            {officeLocations.map((office) => (
-              <OfficeLocationCard
-                key={office.city}
-                {...office}
-               
-              />
-            ))}
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       <Toaster />
     </div>

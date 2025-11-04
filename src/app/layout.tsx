@@ -10,7 +10,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Tecplore - Interactive Science Experiments",
+  title: "Tecplore",
   description: "Innovative educational platform for interactive science exhibits",
   keywords: ["science", "education", "experiments", "interactive learning"],
   openGraph: {
