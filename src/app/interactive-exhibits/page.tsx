@@ -25,50 +25,38 @@ const exhibits: Exhibit[] = [
   { id: 10, title: "DIY Electronics Lab", imageUrl: "/photos/interactive-exhibits/diy_electronics.jpg", description: "Circuits, Current & Voltage, Components & Sensors, Real-world Engineering." }
 ];
 
+type GridSize = "compact" | "comfortable" | "spacious";
 
-function useIsTruncated<T extends HTMLElement>(
-  ref: React.RefObject<T | null>, // accept null
-  trigger: unknown
-)
- {
+const useIsTruncated = (
+  ref: React.RefObject<HTMLElement | null>,
+  dependency: unknown
+) => {
   const [truncated, setTruncated] = useState(false);
 
-  const checkTruncation = () => {
+  const check = () => {
     const el = ref.current;
     if (el) setTruncated(el.scrollHeight > el.clientHeight);
   };
 
   useEffect(() => {
-    requestAnimationFrame(checkTruncation);
-    window.addEventListener("resize", checkTruncation);
-    return () => window.removeEventListener("resize", checkTruncation);
-  }, [trigger]);
+    requestAnimationFrame(check);
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [dependency]);
 
   return truncated;
-}
+};
 
-
-
-
-type GridSize = "compact" | "comfortable" | "spacious";
-
-const gridOptions: { size: GridSize; icon: React.ComponentType<{ className?: string }> }[] = [
-  { size: "compact", icon: Grid3x3 },
-  { size: "comfortable", icon: Grid2x2 },
-  { size: "spacious", icon: LayoutGrid },
-];
-
-
-function ExhibitCard({ exhibit, gridSize }: { exhibit: Exhibit; gridSize: GridSize }) {
-const ref = useRef<HTMLParagraphElement | null>(null);
-  const isTruncated = useIsTruncated(ref, gridSize);
+const ExhibitCard = ({ exhibit, gridSize }: { exhibit: Exhibit; gridSize: GridSize }) => {
+  const ref = useRef<HTMLParagraphElement | null>(null);
+  const truncated = useIsTruncated(ref, gridSize);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
+      transition={{ duration: 0.25 }}
+      className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-200">
         <Image
@@ -78,17 +66,15 @@ const ref = useRef<HTMLParagraphElement | null>(null);
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
 
-        {isTruncated && (
+        {truncated && (
           <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
-            <p className="text-white text-sm leading-relaxed">
-              {exhibit.description}
-            </p>
+            <p className="text-white text-sm">{exhibit.description}</p>
           </div>
         )}
       </div>
 
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">
           {exhibit.title}
         </h3>
         <p ref={ref} className="text-sm text-gray-600 line-clamp-2">
@@ -97,14 +83,26 @@ const ref = useRef<HTMLParagraphElement | null>(null);
       </div>
     </motion.div>
   );
-}
+};
+
+const gridOptions: { size: GridSize; icon: React.ComponentType<{ className?: string }> }[] = [
+  { size: "compact", icon: Grid3x3 },
+  { size: "comfortable", icon: Grid2x2 },
+  { size: "spacious", icon: LayoutGrid },
+];
 
 export default function InteractiveExhibitsGallery() {
   const [gridSize, setGridSize] = useState<GridSize>("comfortable");
 
+  const gridConfig: Record<GridSize, string> = {
+    compact: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5",
+    comfortable: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+    spacious: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-200">
+      <header className="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Interactive Exhibits</h1>
@@ -116,20 +114,24 @@ export default function InteractiveExhibitsGallery() {
               <button
                 key={size}
                 onClick={() => setGridSize(size)}
-                className={`p-2 rounded-md transition ${gridSize === size ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
+                className={`p-2 rounded-md transition ${
+                  gridSize === size ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                }`}
               >
                 <Icon className="w-5 h-5" />
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {exhibits.map((exhibit) => (
-          <ExhibitCard key={exhibit.id} exhibit={exhibit} gridSize={gridSize} />
-        ))}
-      </div>
+      <main className="max-w-7xl mx-auto px-6 py-10 grid gap-6 flex-1">
+        <div className={`grid ${gridConfig[gridSize]} gap-6`}>
+          {exhibits.map((exhibit) => (
+            <ExhibitCard key={exhibit.id} exhibit={exhibit} gridSize={gridSize} />
+          ))}
+        </div>
+      </main>
     </div>
   );
 }
