@@ -4,36 +4,48 @@ import React from "react";
 
 const MakerSpacePage: React.FC = () => {
   return (
-  <div className="min-h-screen bg-white text-gray-900 font-sans">
-    {/* Hero Section */}
-    <section className="relative w-full h-[60vh] flex items-center justify-center text-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/photos/maker-space/maker_space_banner.jpg')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/60"></div>
-      </div>
+          <div className="min-h-screen bg-white text-gray-900 font-sans">
+          {/* Hero Section */}
+        <section className="relative w-full h-[60vh] flex items-center justify-center text-center overflow-hidden bg-gray-900">
+          {/* Background Image */}
+          <div className="absolute inset-0">
+            <div
+              className="w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out"
+              style={{
+                backgroundImage: "url('/photos/maker-space/maker_space_banner.jpg')",
+               
+              }}
+            />
+            <div className="absolute inset-0 bg-black/60" />
+          </div>
 
-      <div className="relative z-10 px-6">
-        <h1 className="text-4xl md:text-6xl font-light mb-4 text-white">
-          Maker Space Solutions
-        </h1>
-        <div className="w-20 h-0.5 bg-white/60 mx-auto mb-6"></div>
-        <div className="flex flex-col text-lg md:text-1xl text-white/90">
-        <span>Experiential Learning | Safe Exploration Environment</span>
-        <br/>
-        <span>Cross-Disciplinary Integration | Educator Support</span>
-      </div>
+            {/* Text Content */}
+            <div className="relative z-10 px-6 max-w-3xl">
+              <h1 className="text-4xl md:text-6xl font-light mb-6 text-white">
+                Maker Space Solutions
+              </h1>
+              <div className="w-20 h-0.5 bg-white/60 mx-auto mb-8" />
 
-      </div>    
-    </section>
-             
+              {/* Tagline Block */}
+              <div className="space-y-3 text-slate-300 text-base md:text-lg leading-relaxed">
+                <p className="flex flex-col md:flex-row md:justify-center md:gap-3">
+                  <span>Experiential Learning</span>
+                  <span className="hidden md:inline">|</span>
+                  <span>Safe Exploration Environment</span>
+                </p>
+                <p className="flex flex-col md:flex-row md:justify-center md:gap-3">
+                  <span>Cross-Disciplinary Integration</span>
+                  <span className="hidden md:inline">|</span>
+                  <span>Educator Support</span>
+                </p>
+              </div>
+            </div>
+          </section>
+                  
     {/* Ideal For */}
-      <section className="bg-gray-50 py-20 px-6">
+      <section className="bg-gray-50 py-8 px-6">
         <div className="max-w-6xl mx-auto text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-light mb-10 text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900">
             Ideal For
           </h2>
 
@@ -53,57 +65,59 @@ const MakerSpacePage: React.FC = () => {
         </div>
       </section>
 
-      
       {/* Implementation Process */}
-      <section className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-light mb-12 mt-12 text-gray-900 text-center md:text-left">
-          Implementation Process
-        </h2>
+        <section className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-light mb-8 mt-6 text-gray-900 text-center md:text-left">
+            Implementation Process
+          </h2>
+          <div className="space-y-8">
+            {[
+              {
+                step: "01",
+                title: "Assessment",
+                desc: "We begin with an in-depth analysis of your institutional needs, target audience, existing infrastructure, and educational goals to ensure optimal alignment.",
+              },
+              {
+                step: "02",
+                title: "Proposal",
+                desc: "Our team develops detailed spatial layouts, equipment specifications, and curriculum integration strategies tailored specifically to your requirements.",
+              },
+              {
+                step: "03",
+                title: "Setup",
+                desc: "Professional installation of all equipment and materials, followed by comprehensive training sessions for educators and facility managers.",
+              },
+              {
+                step: "04",
+                title: "Support",
+                desc: "Launch support to ensure smooth operations, with continued technical assistance, curriculum updates, and maintenance guidance as your program evolves.",
+              },
+            ].map((step, i) => (
+              <div
+                key={i}
+                className="flex flex-row items-start gap-4 md:gap-8 border-b border-gray-200 pb-6"
+              >
+                {/* Step Number */}
+                <div className="text-2xl md:text-4xl font-light text-blue-600 flex-shrink-0 w-12 md:w-20 text-center md:text-left">
+                  {step.step}
+                </div>
 
-        <div className="space-y-10">
-          {[
-            {
-              step: "01",
-              title: "Assessment",
-              desc: "We begin with an in-depth analysis of your institutional needs, target audience, existing infrastructure, and educational goals to ensure optimal alignment.",
-            },
-            {
-              step: "02",
-              title: "Proposal",
-              desc: "Our team develops detailed spatial layouts, equipment specifications, and curriculum integration strategies tailored specifically to your requirements.",
-            },
-            {
-              step: "03",
-              title: "Setup",
-              desc: "Professional installation of all equipment and materials, followed by comprehensive training sessions for educators and facility managers.",
-            },
-            {
-              step: "04",
-              title: "Support",
-              desc: "Launch support to ensure smooth operations, with continued technical assistance, curriculum updates, and maintenance guidance as your program evolves.",
-            },
-          ].map((step, i) => (
-            <div key={i} className="flex flex-col md:flex-row gap-6 md:gap-10 border-b border-gray-200 pb-8">
-           <div className="text-5xl font-light text-blue-600 md:w-24">
-
-                {step.step}
+                {/* Content */}
+                <div className="flex-1">
+                  <h3 className="text-lg md:text-2xl font-medium mb-2 text-gray-900">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="text-xl md:text-2xl font-medium mb-3 text-gray-900">
-                  {step.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">{step.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-    
-
+            ))}
+          </div>
+        </section>
 
             {/* Testimonials */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-gray-900 text-center md:text-left">
             Partner Testimonials
           </h2>
@@ -134,21 +148,22 @@ const MakerSpacePage: React.FC = () => {
         </section>
      
           {/* Footer */}
-          <footer className="bg-blue-50 text-blue-900 py-16">
+          <footer className="bg-blue-50 text-blue-900 py-8">
             <div className="max-w-6xl mx-auto px-6 text-center">
-              <h2 className="text-3xl font-semibold mb-4">Ready to Begin?</h2>
-              <p className="text-blue-800/80 text-lg mb-6">
+              <h2 className="text-2xl font-light mb-4">Ready to Begin?</h2>
+              <p className="text-blue-800/80 text-small mb-4">
                 Let&apos;s discuss how a maker space can enhance learning at your institution.
               </p>   
 
               {/* Contact Us Button */}
-              <a
-                href="/contact"
-                className="inline-block px-6 py-3 border border-blue-700 text-blue-700 rounded-full 
-                          hover:bg-blue-700 hover:text-white transition duration-200 font-medium"
-              >
-                Contact Us!
-              </a>
+             <a
+              href="/contact"
+              className="inline-block px-2 py-1 border border-blue-50 text-blue-700 rounded-full 
+                        hover:border-blue-700 transition duration-200 font-medium"
+            >
+              Contact Us!
+            </a>
+
             </div>
           </footer>
 

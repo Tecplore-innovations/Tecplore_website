@@ -3,38 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import WhoWeAreSection from "@/components/Home/WhoWeAre";
-import { Card } from "@/components/ui/card";
+import CounterEffectStats from "@/components/Home/counterEffect";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
-const staggerContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
-
-const scaleUp = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
-};
-
-const companyName = "Tecplore";
-
-const stats = [
-  { value: "50+", label: "Interactive STEM Exhibits Created" },
-  { value: "95%", label: "Concept Retention among Students" },
-  { value: "50+", label: "Teachers Trained in Experiential Learning" },
-  { value: "08", label: "Science Themes including Math, Geology, Space, Ecology etc." },
-];
-
-const colorCombinations = [
-  { primary: "bg-amber-400/40", secondary: "bg-teal-400/40" },
-  { primary: "bg-blue-400/40", secondary: "bg-purple-400/40" },
-  { primary: "bg-green-400/40", secondary: "bg-cyan-400/40" },
-  { primary: "bg-pink-400/40", secondary: "bg-orange-400/40" },
-];
 
 const HomePage = () => {
   const videos = [
@@ -302,78 +272,11 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 👇 Who We Are Section */}
+  
       <WhoWeAreSection />
 
-      {/* 👇 New “Inspiring Young Minds” Section */}
-      <motion.section
-        className="bg-white text-black py-12 sm:py-16 lg:py-20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
-            <motion.div
-              className="lg:w-1/4 text-center lg:text-left"
-              variants={fadeIn}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-0">
-                Learn and Love Science
-              </h2>
-            </motion.div>
+      <CounterEffectStats />
 
-            <div className="lg:w-3/4">
-              <motion.p
-                className="text-gray-600 mb-8 sm:mb-12 lg:mb-16 text-base sm:text-lg leading-relaxed"
-                variants={fadeIn}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                At {companyName}, Experience STEM education through real-world experiments that nurture the next generation of problem solvers
-              </motion.p>
-
-              <motion.div
-                className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-12 lg:mb-16"
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-              >
-                {stats.map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    variants={scaleUp}
-                    whileHover={{ scale: 1.05 }}
-                    className="cursor-pointer"
-                  >
-                    <Card className="relative bg-gray-50 border border-gray-200 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden h-40 sm:h-56 flex flex-col justify-center items-center">
-                      <div
-                        className={`absolute top-1/2 right-0 w-20 h-20 sm:w-32 sm:h-32 ${colorCombinations[index].primary} rounded-full blur-xl sm:blur-2xl transform translate-x-4 sm:translate-x-8 -translate-y-8 sm:-translate-y-12`}
-                      ></div>
-                      <div
-                        className={`absolute bottom-0 left-1/2 w-20 h-20 sm:w-32 sm:h-32 ${colorCombinations[index].secondary} rounded-full blur-xl sm:blur-2xl transform -translate-x-10 sm:-translate-x-16 translate-y-8 sm:translate-y-12`}
-                      ></div>
-
-                      <div className="relative z-10 text-center">
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-1 sm:mb-2">
-                          {stat.value}
-                        </div>
-                        <div className="text-xs sm:text-sm text-gray-600 px-2">{stat.label}</div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </motion.section>
     </main>
   );
 };

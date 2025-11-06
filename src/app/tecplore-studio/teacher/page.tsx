@@ -6,17 +6,14 @@ import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
 import { Plus, Trash2, Save, RotateCcw, Scissors, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { YouTubeProps } from "react-youtube";
-/**
- * === IMPORTS & TYPES ===
- */
+
+
 type Question = { id: string; time: number; question: string; answer: string; };
 type Lesson = { title: string; youtubeLink: string; youtubeId: string; trimStart?: number; trimEnd?: number; questions: Question[]; };
 type AlertType = "success" | "error" | "info" | "warning";
 type AlertState = { message: string; type: AlertType } | null;
 
-/**
- * === UTILITIES ===
- */
+
 function extractYouTubeId(url: string): string {
   const match = url.match(/(?:youtube\.com\/(?:.*v=|v\/|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   return match ? match[1] : "";
@@ -28,9 +25,7 @@ function formatTime(seconds: number | null | undefined): string {
   return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
-/**
- * === ALERT COMPONENT ===
- */
+
 const Alert = ({ alert, setAlert }: { alert: AlertState; setAlert: (a: AlertState) => void }) => {
   if (!alert) return null;
   const icons = {
@@ -59,18 +54,7 @@ const Alert = ({ alert, setAlert }: { alert: AlertState; setAlert: (a: AlertStat
   );
 };
 
-/**
- * === VIDEO PROGRESS BAR COMPONENT ===
- *
- * Props:
- *  - trimStart, trimEnd can be null | number to indicate unset.
- *  - onSeek and onTrimAdjust are optional; if undefined, progress bar is non-interactive for that action.
- *  - setTrimStart/setTrimEnd are optional helpers (we pass them from parent so the bar can update parent state while dragging/seeking).
- *
- * Behavior:
- *  - When trim is not finalized: user can click to seek and drag handles (if handlers provided).
- *  - When trim is finalized: bar becomes read-only (no click, no drag), but still visually shows trimmed region.
- */
+
 const VideoProgressBar = ({
   currentTime,
   duration,
@@ -566,11 +550,6 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
     height: "100%",
   };
 
-
-  /**
-   * === RENDER ===
-   * - Kept the original layout and styling; replaced only the trim flow & progress bar wiring.
-   */
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Alert alert={alert} setAlert={setAlert} />

@@ -13,9 +13,9 @@ interface Exhibit {
 }
 
 const exhibits: Exhibit[] = [
-  { id: 1, title: "Curved Carrom", imageUrl: "/photos/interactive-exhibits/ellipse1.jpeg", description: "Ellipses, Focal Points, Reflection & Convergence, Geometry in Motion." },
-  { id: 2, title: "Wind Tunnel", imageUrl: "/photos/interactive-exhibits/wind tunnel.jpeg", description: "Bernoulli’s Principle, Aerodynamics, Drag & Lift Forces, Pressure Differences." },
-  { id: 3, title: "Static Rocket Model", imageUrl: "/photos/interactive-exhibits/static rocket.jpeg", description: "Rocket Staging, Thrust, Fuel Mass, Newton’s Laws of Motion." },
+  { id: 1, title: "Curved Carrom", imageUrl: "/photos/interactive-exhibits/ellipse1.jpeg", description: "Reflection & Convergence, Focal Points, Geometry in Motion." },
+  { id: 2, title: "Wind Tunnel", imageUrl: "/photos/interactive-exhibits/wind tunnel.jpeg", description: "Bernoulli's Principle, Aerodynamics, Drag & Lift Forces, Pressure Differences." },
+  { id: 3, title: "Static Rocket Model", imageUrl: "/photos/interactive-exhibits/static rocket.jpeg", description: "Rocket Staging, Thrust, Fuel Mass, Newton's Laws of Motion." },
   { id: 4, title: "Projectile Launcher", imageUrl: "/photos/interactive-exhibits/teachers_projectile.jpg", description: "Projectile Motion, Parabolic Trajectories, Gravity, Launch Angles & Velocity." },
   { id: 5, title: "Stream Table", imageUrl: "/photos/interactive-exhibits/stream_table.jpg", description: "Erosion & Deposition, River Meanders, Sediment Transport, Delta Formation." },
   { id: 6, title: "Chladni Plate", imageUrl: "/photos/interactive-exhibits/chladni plate.jpg", description: "Resonance, Standing Waves, Frequency & Harmonics, Vibration Patterns." },

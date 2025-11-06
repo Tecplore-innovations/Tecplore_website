@@ -10,7 +10,6 @@ import Link from "next/link";
 
 const ContactPage = () => {
   const { toast } = useToast();
-
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -65,31 +64,29 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-16 sm:px-6 lg:px-8 bg-gray-50">
-
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8 bg-gray-50">
       {/* Subtle background pattern */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
-        style={{ backgroundImage: "url('/patterns/serious.png')" }}
+        style={{ backgroundImage: "url('/patterns/embossed-diamond.webp')" }}
       />
 
-      <div className="relative w-full max-w-6xl grid lg:grid-cols-2 gap-10">
-
-        {/* Form Section */}
+      <div className="relative w-full max-w-lg space-y-12">
+        {/* Let's Connect Section */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white border border-gray-200 shadow-md rounded-lg p-8 space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8 space-y-6 text-center"
         >
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+          <h1 className="text-2xl font-semibold text-gray-900">
             Let&apos;s Connect
           </h1>
-          <p className="text-gray-600 mb-4">
-            Share your details. Our team will reach out to understand your needs.
+          <p className="text-gray-600">
+          Our team will reach out, to understand your needs.
           </p>
 
-          <div className="space-y-4">
+          <div className="space-y-4 text-left">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name
@@ -124,9 +121,9 @@ const ContactPage = () => {
             </Button>
           </div>
 
-          {/* Direct email section */}
-          <div className="pt-5 border-t border-gray-200">
-            <p className="text-sm font-medium text-gray-800 mb-1">
+          {/* Direct email + FAQ */}
+          <div className="pt-5 border-t border-gray-200 space-y-1">
+            <p className="text-sm font-medium text-gray-800">
               Prefer sending requirements directly?
             </p>
             <a
@@ -135,67 +132,68 @@ const ContactPage = () => {
             >
               info@tecplore.com
             </a>
-          </div>
-
-          <div className="pt-2">
-            <Link
-              href="/faq"
-              className="text-sm text-blue-700 hover:underline"
-            >
-              View FAQs
-            </Link>
+          
           </div>
         </motion.div>
 
-        {/* Office Locations */}
+          {/* Locations Section */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-inner p-8"
         >
-          <div className="bg-white border border-gray-200 shadow-md rounded-lg p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-1">
-              Our Offices
-            </h2>
-            <p className="text-gray-600 text-sm">
-              Connect with the location closest to you.
-            </p>
-          </div>
-
-          {/* Main Office */}
-          <div className="bg-white border border-gray-200 shadow-md rounded-lg p-8">
-            <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full mb-3 inline-block">
-              Main Office
-            </span>
-            <h3 className="text-lg font-semibold text-gray-900">Coimbatore</h3>
-            <p className="text-gray-600 text-sm">Tamil Nadu, India</p>
-          </div>
-
-          {/* Branch Offices */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-white border border-gray-200 shadow rounded-lg p-6">
-              <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded mb-2 inline-block">
-                Branch
+          <div className="space-y-8">
+            {/* Registered Office */}
+            <div className="text-center">
+              <span className="text-xs font-medium text-gray-700 bg-violet-100 px-3 py-1 rounded-full inline-block mb-1">
+                Registered Office
               </span>
-              <h4 className="font-semibold text-gray-900 mb-1">Trivandrum</h4>
-              <p className="text-gray-600 text-sm">Kerala, India</p>
+              <h3 className="text-lg font-semibold text-gray-900">Coimbatore</h3>
+              <p className="text-gray-600 text-sm">Tamil Nadu, India</p>
             </div>
 
-            <div className="bg-white border border-gray-200 shadow rounded-lg p-6">
-              <span className="text-xs uppercase font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded mb-2 inline-block">
-                Branch
+            {/* Branch Offices */}
+            <div className="text-center">
+              <span className="text-xs font-medium text-gray-600 bg-violet-100 px-3 py-1 rounded-full inline-block mb-1">
+                Branch Offices
               </span>
-              <h4 className="font-semibold text-gray-900 mb-1">Nagpur</h4>
-              <p className="text-gray-600 text-sm">Maharashtra, India</p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-gray-700">
+                <div>
+                  <h4 className="font-medium text-gray-900">Trivandrum</h4>
+                  <p className="text-gray-600 text-xs">Kerala, India</p>
+                </div>
+                <div className="hidden sm:block text-gray-400">|</div>
+                <div>
+                  <h4 className="font-medium text-gray-900">Nagpur</h4>
+                  <p className="text-gray-600 text-xs">Maharashtra, India</p>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>
-      </div>
 
-      <Toaster />
-    </div>
+        {/* FAQ Link Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-6 text-center"
+        >
+          <Link
+            href="/faq"
+            className="text-sm text-blue-700 hover:underline"
+          >
+            View FAQs
+          </Link>
+        </motion.div>
+
+        </div>
+
+  <Toaster />
+  </div>
   );
-};
+  };
 
-export default ContactPage;
+  export default ContactPage;

@@ -7,13 +7,13 @@ const sections = [
       
     desc: (
       <>      
-      Utilize the <b className="text-teal-400">Creator Studio</b> to load a youtube video,
+      Utilize the <b className="text-slate-700">Creator Studio</b> to load a youtube video,
       embed interactive elements like quizzes at precise points, and save the lesson as a JSON file.
       </>
     ),
     button: "Create Lesson",
     href: "/tecplore-studio/teacher",
-    banner: "Creator Studio 🛠️",
+    banner: "Creator Studio",
     img: "/photos/teacher.png",
     imageLeft: true,
   },
@@ -21,12 +21,12 @@ const sections = [
    
     desc: (
       <>
-      Load the JSON file in <b className="text-teal-400">Classroom Mode</b>, the video auto-plays, pauses for questions, and resumes after responses and gives an summary at end.
+      Load the JSON file in <b className="text-slate-700">Classroom Mode</b>, the video auto-plays, pauses for questions, and resumes after responses and gives an summary at end.
       </>
     ),
     button: "Start Teaching",
     href: "/tecplore-studio/student",
-    banner: "Classroom Mode 🎓",
+    banner: "Classroom Mode",
     img: "/photos/student.png",
     imageLeft: false,
   },
@@ -38,10 +38,10 @@ export default function HomePage() {
     <div className="min-h-screen bg-white font-inter">
       {/* HERO */}
       <section className="pt-24 pb-12 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
-        <h1 className="text-5xl md:text-5xl font-black text-blue-900 leading-tig   mb-4 ">
+        <h1 className="text-5xl md:text-5xl font-black text-slate-700 leading-tig   mb-4 ">
           Tecplore Studio
         </h1>
-        <p className="text-lg md:text-1.5xl text-blue-800/90 mt-4 max-w-3xl mx-auto leading-relaxed ">
+        <p className="text-lg md:text-1.5xl text-blue-700/75 mt-4 max-w-3xl mx-auto leading-relaxed ">
           Transform YouTube videos into classroom learning experiences with interaction, questions, and learning checkpoints.
         </p>
       
@@ -89,9 +89,10 @@ export default function HomePage() {
             </p>
 
             <Link href={card.href}>
-              <span className="inline-block border-2 border-blue-700 text-blue-700 px-7 py-2 rounded-full font-bold text-lg shadow-sm hover:bg-blue-700 hover:text-white transition">
-                {card.button}
+             <span className="inline-block border-2 border-gray-300 text-blue-700 px-7 py-2 rounded-full font-semi text-lg shadow-sm hover:border-blue-700 transition">
+              {card.button}
               </span>
+
             </Link>
           </div>
         </section>
@@ -102,7 +103,7 @@ export default function HomePage() {
     {/* Footer */}
 {/* Footer */}
 <footer className="mt-12 text-center px-2">
-  <p className="text-gray-500 text-base sm:text-lg mb-4 leading-snug">
+  <p className="text-gray-800 text-base sm:text-lg mb-4 leading-snug">
     Join educators transforming YouTube content into powerful classroom experiences
   </p>
 
