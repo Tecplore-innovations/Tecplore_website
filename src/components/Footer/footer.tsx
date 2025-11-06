@@ -29,10 +29,19 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+         
         <div className="py-12 lg:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
-            <div className="lg:col-span-4 space-y-6">
-              <div className="flex items-center gap-3">
+          <div className="
+            grid 
+            grid-cols-1 
+            sm:grid-cols-2 
+            lg:grid-cols-12 
+            gap-8 lg:gap-12
+          ">
+
+            {/* --- Tecplore logo + socials (top on web, bottom on mobile) --- */}
+            <div className="lg:col-span-4 sm:col-span-2 order-3 lg:order-1 space-y-6 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-3">
                 <Image
                   src="/photos/Tecplore logo.jpg"
                   alt="Logo"
@@ -43,7 +52,7 @@ const Footer = () => {
                 <h3 className="text-2xl font-bold tracking-tight">Tecplore</h3>
               </div>
 
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex items-center justify-center sm:justify-start gap-4 pt-2">
                 <a
                   href="https://www.instagram.com/tecplore_edu/"
                   target="_blank"
@@ -65,7 +74,8 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-4 space-y-4">
+            {/* --- Quick Links --- */}
+            <div className="sm:col-span-1 lg:col-span-4 order-1 lg:order-2 space-y-4">
               <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
                 Quick Links
               </h4>
@@ -94,7 +104,8 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="lg:col-span-4 space-y-4">
+            {/* --- Company Links --- */}
+            <div className="sm:col-span-1 lg:col-span-4 order-2 lg:order-3 space-y-4">
               <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
                 Company
               </h4>
@@ -111,12 +122,13 @@ const Footer = () => {
                 ))}
               </ul>
             </div>
+
           </div>
         </div>
 
         <Separator className="bg-gray-700" />
 
-        <div className="py-6">
+        <div className="py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-xs order-2 sm:order-1 text-center">
               © {new Date().getFullYear()} Tecplore. All rights reserved.
