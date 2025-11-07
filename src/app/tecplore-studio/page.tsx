@@ -37,7 +37,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white font-inter">
       {/* HERO */}
-      <section className="pt-24 pb-12 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
+      <section className="pt-12 pb-8 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
         <h1 className="text-5xl md:text-5xl font-black text-slate-700 leading-tig   mb-4 ">
           Tecplore Studio
         </h1>
@@ -99,26 +99,24 @@ export default function HomePage() {
       ))}
     </main>
 
+      {/* Footer */}
+      <footer className="mt-12 text-center px-2">
+        <p className="text-gray-800 text-base sm:text-lg mb-4 leading-snug">
+          Join educators transforming YouTube content into powerful classroom experiences
+        </p>
 
-    {/* Footer */}
-{/* Footer */}
-<footer className="mt-12 text-center px-2">
-  <p className="text-gray-800 text-base sm:text-lg mb-4 leading-snug">
-    Join educators transforming YouTube content into powerful classroom experiences
-  </p>
-
-  <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-7">
-    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
-      ✓ Trusted by educators worldwide
-    </span>
-    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
-      ✓ Classroom appropriate content
-    </span>
-    <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
-      ✓ Time-saving lesson creation
-    </span>
-  </div>
-</footer>
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-7">
+          <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+            ✓ Trusted by educators worldwide
+          </span>
+          <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+            ✓ Classroom appropriate content
+          </span>
+          <span className="text-gray-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 whitespace-nowrap shrink">
+            ✓ Time-saving lesson creation
+          </span>
+        </div>
+      </footer>
 
 
 

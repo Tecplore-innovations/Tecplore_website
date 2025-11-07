@@ -141,7 +141,7 @@ const HomePage = () => {
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 Learn Science Through
-                <div className="mt-2 bg-gradient-to-r from-amber-400 via-teal-400 to-green-400 bg-clip-text text-transparent">
+             <div className="mt-2 bg-gradient-to-r from-[#4f46e5] via-white/90 to-[#00c6ff] bg-clip-text text-transparent">
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={currentWord}

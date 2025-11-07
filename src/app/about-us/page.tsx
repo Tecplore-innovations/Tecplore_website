@@ -4,9 +4,6 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Linkedin, } from "lucide-react";
 
-
-const companyTagline = "Learn and Love Science";
-
 const fadeIn: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
@@ -61,72 +58,79 @@ export default function AboutPage() {
   return (
     <motion.div className="min-h-screen flex flex-col">
       {/* HERO */}
-      <header
-        className="relative text-white py-20 px-6 overflow-hidden"
-        style={{
-          backgroundImage: "url('/patterns/pattern_pink.jpg')",
-          backgroundRepeat: "repeat",
-          backgroundSize: "auto",
-          backgroundPosition: "center center",
-        }}
+     <header
+  className="relative text-white py-6 px-6 overflow-hidden"
+  style={{
+    backgroundImage: "url('/patterns/pattern_pink.jpg')",
+    backgroundRepeat: "repeat",
+    backgroundSize: "auto",
+    backgroundPosition: "center center",
+  }}
+>
+  {/* Dim Overlay */}
+  <div className="absolute inset-0 bg-white opacity-70"></div>
+
+  <motion.div
+    className="relative max-w-4xl mx-auto text-center"
+    variants={fadeIn}
+  >
+    <h1 className="text-3xl font-bold text-slate-900 mb-2">
+      About Us
+    </h1>
+  </motion.div>
+
+  {/* ABOUT US */}
+  <section className="relative py-6 px-6 text-center max-w-4xl mx-auto">
+    <p className="text-lg text-slate-700 leading-relaxed">
+      At Tecplore, we turn science into an experience.
+      <br/> From classrooms to communities, our mission is to ignite
+      curiosity, inspire creativity, and connect everyday life with the wonders of science.
+    </p>
+  </section>
+
+  {/* CORE VALUES */}
+  <section className="relative py-6 px-6">
+    {/* Optional faint background image behind values */}
+    <div
+      className="absolute inset-0 bg-cover bg-center opacity-20"
+      style={{
+        backgroundImage: "url('/photos/stat cards.jpg')",
+      }}
+    ></div>
+
+    <motion.div
+      className="relative max-w-6xl mx-auto text-center"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
+      {/* Main Title */}
+      <h1 className="text-slate-900 text-2xl md:text-4xl font-light mb-8">
+        Core Values
+      </h1>
+
+      {/* Values */}
+      <motion.div
+        className="grid md:grid-cols-2 lg:grid-cols-4 gap-10"
+        variants={staggerContainer}
       >
-        {/* Dim Overlay */}
-        <div className="absolute inset-0 bg-white opacity-70"></div>
-
-        <motion.div
-          className="relative max-w-4xl mx-auto text-center"
-          variants={fadeIn}
-        >
-          <h1 className="text-slate-900 text-5xl md:text-4xl font-bold mb-4">
-          Tecplore
-          </h1>
-          <p className="text-2xl text-gray-500 font-medium mb-2">
-            {companyTagline}
-          </p>
-        </motion.div>
-
-        {/* CORE VALUES */}
-        <section className="relative py-20 px-6">
-          {/* Optional faint background image behind values */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-10"
-            style={{
-              backgroundImage: "url('/photos/stat cards.jpg')",
-            }}
-          ></div>
-
+        {values.map((val, i) => (
           <motion.div
-            className="relative max-w-6xl mx-auto text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            key={i}
+            className="flex flex-col items-center text-center"
+            variants={scaleUp}
           >
-          
-            {/* Values */}
-            <motion.div
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-10"
-              variants={staggerContainer}
-            >
-              {values.map((val, i) => {
-             
-                return (
-                  <motion.div
-                    key={i}
-                    className="flex flex-col items-center text-center"
-                    variants={scaleUp}
-                  >
-                  
-                    <h3 className="text-medium font-bold text-slate-900 mb-1">
-                      {val.title}
-                    </h3>
-                    <p className="text-slate-600 max-w-xs">{val.description}</p>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+            <h3 className="text-medium font-bold text-slate-900 mb-1">
+              {val.title}
+            </h3>
+            <p className="text-slate-600 max-w-xs">{val.description}</p>
           </motion.div>
-        </section>
-      </header>
+        ))}
+      </motion.div>
+    </motion.div>
+  </section>
+</header>
+
    
       {/* TEAM MEMBERS */}
       <section className="bg-slate-50 px-6 py-12">

@@ -43,7 +43,12 @@ const MakerSpacePage: React.FC = () => {
           </section>
                   
     {/* Ideal For */}
-      <section className="bg-gray-50 py-8 px-6">
+      <section className="bg-gray-50 py-8 px-6"
+       style={{
+    backgroundImage: "url('/patterns/embossed-diamond.webp')",
+    backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
+  }}
+  >
         <div className="max-w-6xl mx-auto text-center md:text-left">
           <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900">
             Ideal For
@@ -117,7 +122,8 @@ const MakerSpacePage: React.FC = () => {
         </section>
 
             {/* Testimonials */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12"
+    >
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-gray-900 text-center md:text-left">
             Partner Testimonials
           </h2>
@@ -147,26 +153,33 @@ const MakerSpacePage: React.FC = () => {
           </div>
         </section>
      
-          {/* Footer */}
-          <footer className="bg-blue-50 text-blue-900 py-8">
-            <div className="max-w-6xl mx-auto px-6 text-center">
+         {/* Footer */}
+          <footer
+            className="relative bg-cover bg-center text-black py-8"
+            style={{
+              backgroundImage: "url('/photos/maker-space/maker_space_illustration.jpg')",
+              backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
+            }}
+          >
+            {/* Optional overlay for better text contrast */}
+            <div className="absolute inset-0 bg-blue-50/70" />
+
+            <div className="relative max-w-6xl mx-auto px-6 text-center">
               <h2 className="text-2xl font-light mb-4">Ready to Begin?</h2>
-              <p className="text-blue-800/80 text-small mb-4">
+              <p className="text-slate-800 text-sm mb-4">
                 Let&apos;s discuss how a maker space can enhance learning at your institution.
-              </p>   
+              </p>
 
               {/* Contact Us Button */}
-             <a
-              href="/contact"
-              className="inline-block px-2 py-1 border border-blue-50 text-blue-700 rounded-full 
-                        hover:border-blue-700 transition duration-200 font-medium"
-            >
-              Contact Us!
-            </a>
-
+              <a
+                href="/contact"
+                className="inline-block px-4 py-2 border border-blue-700 text-slate-800 rounded-full 
+                          hover:bg-blue-700 hover:text-white transition duration-200 font-medium"
+              >
+                Contact Us!
+              </a>
             </div>
           </footer>
-
     </div>
   );
 };

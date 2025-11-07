@@ -229,22 +229,15 @@ const handleProceedToLesson = () => {
       {/* --- Updated Help Text Section --- */}
       <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
         <h3 className="font-bold text-lg mb-2 text-blue-800">
-          How This Works
+          How To Use!
         </h3>
-        <p className="text-gray-600">
-          As a teacher, you first use the Creator Studio to prepare
-          your lesson. <br/>
-          Choose any YouTube video you want to teach with, 
-          add your questions at specific timestamps, and save your lesson as a .json file. 
-          <br/>
-          <br/> Then, here select and upload the saved file and click proceed.
-        <br/>  The system will automatically start the lesson, the video will play for the class, 
-          pause whenever a question appears, continue after answering, 
-          and finally display a complete lesson summary with all questions and answers.
-        </p>
+      <p className="text-gray-600">
+        Use the <strong>Creator Studio</strong> to design your lesson - pick any YouTube video, add questions at chosen timestamps, and save it as a <code>.json</code> file. <br /><br />
+        Then upload the file here and click <em>Proceed</em>. 
+        The system will play the video, pause for questions, resume on answer, and end with a summary of all Q&As.
+      </p>
        
       </div>
-
       {/* --- Upload/Proceed Logic --- */}
       {!pendingLesson ? (
         <label

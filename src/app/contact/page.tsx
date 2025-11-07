@@ -67,8 +67,8 @@ const ContactPage = () => {
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8 bg-gray-50">
       {/* Subtle background pattern */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none"
-        style={{ backgroundImage: "url('/patterns/embossed-diamond.webp')" }}
+        className="absolute inset-0 bg-cover bg-center opacity-40 pointer-events-none"
+        style={{ backgroundImage: "url('/patterns/contact_us_bg.jpg')" }}
       />
 
       <div className="relative w-full max-w-lg space-y-12">
