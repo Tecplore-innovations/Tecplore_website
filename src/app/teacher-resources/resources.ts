@@ -22,16 +22,16 @@ export const resources: Resource[] = [
     id: 1,
     title: "Make a Straw Plane",
     type: "document",
-    subject: "Aeronautics",
+    subject: "Aeronautics-Flight Dynamics",
     level: "Grade 6-8",
     thumbnail: "/teacher-resources/images/physics8_thumb.jpg",
-    contentUrl: "/teacher-resources/articles/physics_grade8.pdf",
+    contentUrl: "/teacher-resources/articles/Make a Straw Plane.pdf",
   }),
   createResource({
     id: 2,
     title: "Chemistry Lab Safety Video",
     type: "video",
-    subject: "Chemistry",
+    subject: "Chemistry-Lab",
     level: "High School",
     thumbnail: "/teacher-resources/images/chem_safety_thumb.jpg",
     contentUrl: "https://www.youtube.com/watch?v=PhwyPQ0_5K0&pp=ygUnY2hlbWlzdHJ5IGxhYiBzYWZldHkgcnVsZXMgZm9yIHN0dWRlbnRz",
@@ -43,7 +43,7 @@ export const resources: Resource[] = [
     subject: "Mathematics",
     level: "High School",
     thumbnail: "/teacher-resources/images/math_lesson_thumb.jpg",
-    contentUrl: "/teacher-resources/articles/math_of_earth.pdf",
+    contentUrl: "/teacher-resources/articles/Maths of Planet Earth.pdf",
   }),
    createResource({
     id: 4,
@@ -89,6 +89,16 @@ export const resources: Resource[] = [
     level: "High School",
     thumbnail: "/teacher-resources/images/aliens.jpg",
     contentUrl: "/teacher-resources/articles/The Search for Life.pdf",
+  }),
+
+    createResource({
+    id: 9,
+    title: "Imperial vs Metric",
+    type: "document",
+    subject: "Physics-Units",
+    level: "Grade 6-8",
+    thumbnail: "/teacher-resources/images/rulers.jpeg",
+    contentUrl: "/teacher-resources/articles/Imperial vs Metric.pdf",
   }),
 
   
