@@ -45,6 +45,9 @@ const TeacherResources: React.FC = () => {
     setShowFilters(false);
   };
 
+  const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
+
+
   return (
     <div className="min-h-screen bg-gray-50">
     {/* Hero Section - Minimal Professional */}
@@ -430,6 +433,7 @@ const TeacherResources: React.FC = () => {
         </div>
       </div>
 
+
       {/* Resource Modal - Clean Professional */}
       <AnimatePresence>
         {selectedResource && (
@@ -494,14 +498,31 @@ const TeacherResources: React.FC = () => {
                   </div>
                 )}
 
-                {selectedResource.type === "document" && (
+             
+             {selectedResource.type === "document" && (
+              <>
+                {isMobile ? (
+                  <div className="flex flex-col items-center justify-center py-8">
+                    <p className="text-gray-600 mb-4">PDF preview unavailable on mobile.</p>
+                    <a
+                      href={selectedResource.contentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    >
+                      Open PDF in Full Screen
+                    </a>
+                  </div>
+                ) : (
                   <iframe
                     src={selectedResource.contentUrl}
                     className="w-full h-[75vh] rounded border border-gray-200"
                     title={selectedResource.title}
                   />
                 )}
-              </div>
+              </>
+            )}
+            </div>
             </motion.div>
           </div>
         )}
