@@ -1,137 +1,390 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { Grid3x3, Grid2x2, LayoutGrid } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
+// Assuming these types/data are correctly imported
+import { showcases, moreExhibits, Showcase, MoreExhibit } from "./exhibits";
 
-interface Exhibit {
-  id: number;
-  title: string;
-  imageUrl: string;
-  description: string;
-}
+type Exhibit = Showcase | MoreExhibit; // unified type
 
-const exhibits: Exhibit[] = [
-  { id: 1, title: "Curved Carrom", imageUrl: "/photos/interactive-exhibits/ellipse1.jpeg", description: "Reflection & Convergence, Focal Points, Geometry in Motion." },
-  { id: 2, title: "Wind Tunnel", imageUrl: "/photos/interactive-exhibits/wind tunnel.jpeg", description: "Bernoulli's Principle, Aerodynamics, Drag & Lift Forces, Pressure Differences." },
-  { id: 3, title: "Static Rocket Model", imageUrl: "/photos/interactive-exhibits/static rocket.jpeg", description: "Rocket Staging, Thrust, Fuel Mass, Newton's Laws of Motion." },
-  { id: 4, title: "Projectile Launcher", imageUrl: "/photos/interactive-exhibits/teachers_projectile.jpg", description: "Projectile Motion, Parabolic Trajectories, Gravity, Launch Angles & Velocity." },
-  { id: 5, title: "Stream Table", imageUrl: "/photos/interactive-exhibits/stream_table.jpg", description: "Erosion & Deposition, River Meanders, Sediment Transport, Delta Formation." },
-  { id: 6, title: "Chladni Plate", imageUrl: "/photos/interactive-exhibits/chladni plate.jpg", description: "Resonance, Standing Waves, Frequency & Harmonics, Vibration Patterns." },
-  { id: 7, title: "Musical Pipes", imageUrl: "/photos/interactive-exhibits/musical_pipes.jpg", description: "Pitch & Frequency, Wavelengths, Standing Waves in Air Columns." },
-  { id: 8, title: "Vertical Wind Tunnel", imageUrl: "/photos/interactive-exhibits/aero tower.jpg", description: "Airflow & Lift, Gravity vs Thrust, Stability & Aerodynamics in Flight." },
-  { id: 9, title: "Molecular Structure Builder", imageUrl: "/photos/interactive-exhibits/molecular block.jpg", description: "Atoms & Elements, Valency, Chemical Bonding, Molecular Geometry." },
-  { id: 10, title: "DIY Electronics Lab", imageUrl: "/photos/interactive-exhibits/diy_electronics.jpg", description: "Circuits, Current & Voltage, Components & Sensors, Real-world Engineering." }
-];
+const VARIATION_MS = 4000;
 
-type GridSize = "compact" | "comfortable" | "spacious";
-
-const useIsTruncated = (
-  ref: React.RefObject<HTMLElement | null>,
-  dependency: unknown
-) => {
-  const [truncated, setTruncated] = useState(false);
-
-  const check = () => {
-    const el = ref.current;
-    if (el) setTruncated(el.scrollHeight > el.clientHeight);
-  };
-
-  useEffect(() => {
-    requestAnimationFrame(check);
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, [dependency]);
-
-  return truncated;
-};
-
-const ExhibitCard = ({ exhibit, gridSize }: { exhibit: Exhibit; gridSize: GridSize }) => {
-  const ref = useRef<HTMLParagraphElement | null>(null);
-  const truncated = useIsTruncated(ref, gridSize);
-
+// Helper component for the Expanded Desktop Gallery (Modal)
+const DesktopGalleryModal = ({
+  exhibit,
+  onClose,
+}: {
+  exhibit: Exhibit;
+  onClose: () => void;
+}) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      onClick={onClose} // Close when clicking outside
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-gray-200">
-        <Image
-          src={exhibit.imageUrl}
-          alt={exhibit.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-
-        {truncated && (
-          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
-            <p className="text-white text-sm">{exhibit.description}</p>
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 50, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto text-gray-900"
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+      >
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h5 className="font-bold text-3xl text-gray-800">{exhibit.title}</h5>
+            <p className="text-md text-gray-600 mt-2">{exhibit.long}</p>
           </div>
-        )}
-      </div>
+          <button
+            onClick={onClose}
+            className="flex-shrink-0 ml-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all shadow-md"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">
-          {exhibit.title}
-        </h3>
-        <p ref={ref} className="text-sm text-gray-600 line-clamp-2">
-          {exhibit.description}
-        </p>
-      </div>
+        {/* Horizontal scroll gallery with fixed height - MADE SMALLER (h-36) */}
+        <div className="flex gap-4 overflow-x-auto py-2 scrollbar-hide h-36 mt-4">
+          {exhibit.gallery.map((g, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-60 h-full rounded-xl overflow-hidden shadow-lg" // Added rounded-xl and shadow
+            >
+              <img
+                src={g}
+                alt={`${exhibit.title}-gallery-${i}`}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-lg" // Rounded corners on image (rounded-lg = 2dp more than rounded-xl)
+              />
+            </div>
+          ))}
+        </div>
+        
+        {/* Categories (optional, moved here for completeness) */}
+        <div className="flex flex-wrap gap-2 mt-4 border-t pt-4">
+          {exhibit.categories.map((c) => (
+            <span
+              key={c}
+              className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   );
 };
 
-const gridOptions: { size: GridSize; icon: React.ComponentType<{ className?: string }> }[] = [
-  { size: "compact", icon: Grid3x3 },
-  { size: "comfortable", icon: Grid2x2 },
-  { size: "spacious", icon: LayoutGrid },
-];
+export default function InteractiveExhibits() {
+  const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const [filter, setFilter] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-export default function InteractiveExhibitsGallery() {
-  const [gridSize, setGridSize] = useState<GridSize>("comfortable");
+  // Detect mobile
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const gridConfig: Record<GridSize, string> = {
-    compact: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-5",
-    comfortable: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
-    spacious: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  };
+  // Auto slide
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % showcases.length);
+    }, VARIATION_MS);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const goNext = () => setIndex((i) => (i + 1) % showcases.length);
+  const goPrev = () => setIndex((i) => (i - 1 + showcases.length) % showcases.length);
+  const goTo = (i: number) => setIndex(i);
+  const handleExpand = (id: number) => setExpanded((prev) => (prev === id ? null : id));
+
+  // Merge showcases + more exhibits
+  const allExhibits: Exhibit[] = [...showcases, ...moreExhibits];
+
+  // Filter logic
+  const ALL_CATEGORIES = Array.from(
+    new Set(allExhibits.flatMap((ex) => ex.categories))
+  );
+  const filteredExhibits = filter
+    ? allExhibits.filter((ex) => ex.categories.includes(filter))
+    : allExhibits;
+
+  // Find the currently expanded exhibit for the modal
+  const expandedExhibit = allExhibits.find((ex) => ex.id === expanded);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <header className="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Interactive Exhibits</h1>
-            <p className="text-gray-600 text-sm mt-1">by <span className="text-blue-600 font-semibold">Tecplore</span></p>
-          </div>
+    <div className="w-full min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+      {/* --- HERO SECTION  --- */}
+      <section
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div className="text-center lg:text-left mb-8 lg:mb-0 lg:absolute lg:left-8 lg:top-1/2 lg:-translate-y-1/2 lg:max-w-md z-10">
+          <h2 className="text-xs uppercase text-gray-400 mb-3 tracking-widest">
+            Interactive Exhibits
+          </h2>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {showcases[index].title}
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+            {showcases[index].short}
+          </p>
+        </div>
 
-          <div className="hidden sm:flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
-            {gridOptions.map(({ size, icon: Icon }) => (
+        {/* Cards */}
+        <div className="relative lg:ml-auto lg:mr-0 lg:w-2/3 h-[500px] md:h-[600px] lg:h-[700px]">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={showcases[index].id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+              className="absolute inset-0"
+            >
+              {/* Top Right Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                className="absolute top-0 right-0 
+                w-[90%] sm:w-[80%] h-[45%]
+                md:w-[60%] lg:w-[55%] md:h-[50%] lg:h-[55%]
+                translate-y-2 
+                rounded-2xl overflow-hidden shadow-2xl
+                [clip-path:polygon(0_0,100%_0,100%_100%,25%_100%,0_75%)]
+                md:[clip-path:polygon(0_0,100%_0,100%_90%,0_100%)]
+                lg:[clip-path:polygon(0_0,100%_0,100%_100%,25%_100%,0_75%)]"
+              >
+                <img
+                  src={
+                    isMobile
+                      ? showcases[index].images[0]
+                      : showcases[index].images[1]
+                  }
+                  alt={showcases[index].title}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+
+              {/* Bottom Left Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="absolute bottom-0 left-0 
+                w-[90%] sm:w-[80%] h-[45%]
+                md:w-[60%] lg:w-[55%] md:h-[50%] lg:h-[55%]
+                -translate-y-2
+                rounded-2xl overflow-hidden shadow-2xl
+                [clip-path:polygon(0_0,75%_0,100%_25%,100%_100%,0_100%)]
+                md:[clip-path:polygon(0_10%,100%_0,100%_100%,0_100%)]
+                lg:[clip-path:polygon(0_0,75%_0,100%_25%,100%_100%,0_100%)]"
+              >
+                <img
+                  src={
+                    isMobile
+                      ? showcases[index].images[1]
+                      : showcases[index].images[0]
+                  }
+                  alt={showcases[index].title}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Controls */}
+          <button
+            onClick={goPrev}
+            className="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/50 backdrop-blur-md text-white shadow-lg flex items-center justify-center hover:bg-black/70 transition-all z-20"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+
+          <button
+            onClick={goNext}
+            className="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/50 backdrop-blur-md text-white shadow-lg flex items-center justify-center hover:bg-black/70 transition-all z-20"
+          >
+            <ArrowRight className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Dots  */}
+        <div className="flex justify-center gap-2 mt-8 lg:absolute lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:mt-0">
+          {showcases.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`h-2 rounded-full transition-all ${
+                i === index ? "bg-white w-8" : "bg-gray-600 w-2"
+              }`}
+            />
+          ))}
+        </div>
+      </section>
+
+      ---
+
+      {/* ---------- Explore Exhibits ---------- */}
+      <section className="bg-gray-100 text-gray-900 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header + Filters */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <h3 className="text-2xl md:text-3xl font-bold">Explore Exhibits</h3>
+            <div className="flex items-center gap-2 flex-wrap">
               <button
-                key={size}
-                onClick={() => setGridSize(size)}
-                className={`p-2 rounded-md transition ${
-                  gridSize === size ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                onClick={() => setFilter(null)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  filter === null ? "bg-black text-white" : "bg-white hover:bg-gray-200"
                 }`}
               >
-                <Icon className="w-5 h-5" />
+                All
               </button>
+              {ALL_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setFilter((f) => (f === cat ? null : cat))}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    filter === cat
+                      ? "bg-black text-white"
+                      : "bg-white hover:bg-gray-200"
+                  }`}
+                >
+                  {cat}
+              </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Card Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredExhibits.map((ex) => (
+              <React.Fragment key={ex.id}>
+                {/* Exhibit Card */}
+                <div
+                  className="bg-white rounded-2xl shadow-lg p-5 hover:shadow-xl transition-all cursor-pointer border border-gray-200"
+                  // Only handleExpand on click if it's NOT the exhibit with no gallery
+                  onClick={() => {
+                      if ("gallery" in ex && ex.gallery && ex.gallery.length > 0) {
+                          handleExpand(ex.id);
+                      }
+                  }}
+                >
+                  {/* Header / Image */}
+                  {"images" in ex && ex.images ? (
+                    <div className="flex gap-4">
+                      <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                        <img
+                          src={ex.images[0]}
+                          alt={ex.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
+                        {"short" in ex && ex.short && (
+                          <p className="text-sm text-gray-600 line-clamp-2">
+                            {ex.short}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
+                      <p className="text-sm text-gray-700 leading-relaxed">{ex.long}</p>
+                    </>
+                  )}
+
+                  {/* Categories  */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {ex.categories.map((c) => (
+                      <span
+                        key={c}
+                        className="bg-gray-100 rounded-full px-3 py-1 text-xs"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Mobile Gallery (Inline) */}
+                  <div className="block lg:hidden">
+                    <AnimatePresence>
+                      {expanded === ex.id && "gallery" in ex && ex.gallery.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="mt-4 pt-4 border-t border-gray-200"
+                        >
+                          <div className="relative">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpanded(null);
+                              }}
+                              className="hidden sm:flex absolute top-2 right-2 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 items-center justify-center transition-all shadow-sm"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <p className="text-xs text-gray-600 mb-3">{ex.long}</p>
+
+                          {/* Mobile Gallery Images - added rounded-lg */}
+                          <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+                            {ex.gallery.map((g, i) => (
+                              <div
+                                key={i}
+                                className="flex-shrink-0 w-40 h-40 rounded-xl overflow-hidden snap-center"
+                              >
+                                <img
+                                  src={g}
+                                  alt={`${ex.title}-gallery-${i}`}
+                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-lg" // Rounded corners added
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </React.Fragment>
             ))}
           </div>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-7xl mx-auto px-6 py-10 grid gap-6 flex-1">
-        <div className={`grid ${gridConfig[gridSize]} gap-6`}>
-          {exhibits.map((exhibit) => (
-            <ExhibitCard key={exhibit.id} exhibit={exhibit} gridSize={gridSize} />
-          ))}
-        </div>
-      </main>
+      {/* --- DESKTOP GALLERY MODAL --- */}
+      <AnimatePresence>
+        {expandedExhibit &&
+         "gallery" in expandedExhibit && 
+         expandedExhibit.gallery.length > 0 && 
+         !isMobile && ( // Only show on desktop
+          <DesktopGalleryModal 
+            exhibit={expandedExhibit} 
+            onClose={() => setExpanded(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
