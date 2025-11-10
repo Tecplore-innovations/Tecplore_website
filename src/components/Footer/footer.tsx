@@ -42,14 +42,22 @@ const Footer = () => {
             {/* --- Tecplore logo + socials (top on web, bottom on mobile) --- */}
             <div className="lg:col-span-4 sm:col-span-2 order-3 lg:order-1 space-y-6 text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-3">
-                <Image
-                  src="/photos/Tecplore logo.jpg"
-                  alt="Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain rounded-full"
-                />
-                <h3 className="text-2xl font-bold tracking-tight">Tecplore</h3>
+               
+               <div className="lg:col-span-4 sm:col-span-2 order-3 lg:order-1 space-y-6 text-center sm:text-left">
+                <Link
+                  href="/"
+                  className="flex items-center justify-center sm:justify-start gap-3 hover:opacity-80 transition-opacity"
+                >
+                  <Image
+                    src="/photos/Tecplore logo.jpg"
+                    alt="Tecplore Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain rounded-full"
+                  />
+                  <h3 className="text-2xl font-bold tracking-tight">Tecplore</h3>
+                </Link>
+              </div>
               </div>
 
               <div className="flex items-center justify-center sm:justify-start gap-4 pt-2">
