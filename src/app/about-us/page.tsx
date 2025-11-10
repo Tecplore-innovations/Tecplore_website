@@ -257,7 +257,7 @@ export default function AboutPage() {
             Ready to Transform Your Learning Space?
           </h2>
           <p className="font-light text-lg md:text-xl text-slate-600 mb-8 leading-relaxed">
-            Let's collaborate to create engaging maker spaces and STEM learning environments 
+            Let&apos;s collaborate to create engaging maker spaces and STEM learning environments 
             that inspire the next generation of innovators and problem-solvers.
           </p>        
         </motion.div>
