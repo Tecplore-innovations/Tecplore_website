@@ -5,18 +5,23 @@ import { motion, Variants } from 'framer-motion';
 import { Linkedin, } from "lucide-react";
 
 const fadeIn: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
 };
 
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
 
 const scaleUp: Variants = {
-  hidden: { scale: 0.96, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { duration: 0.6 } }
+  hidden: { scale: 0.95, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.5 } }
 };
 
 const teamMembers = [
@@ -24,159 +29,239 @@ const teamMembers = [
     name: "Vivek Devaraj",  
     imageUrl: "/photos/aboutus/Vivek.jpeg",
     linkedin: "https://www.linkedin.com/in/vdevaraj",
-    bio: "Leads Tecplore with a passion for experiential STEM learning and hands-on science innovation."
+    bio: "A mechanical engineer with a Master's from Eindhoven University of Technology, Netherlands. Formerly at Renault-Nissan, where I designed advanced automotive systems across Europe. Now, I channel that experience into building maker spaces - places where students don't just learn engineering, they build it."
   },
   {
-    name: "Prasanna G", 
+    name: "Prasanna G",
     imageUrl: "/photos/aboutus/Prasanna.jpeg",
     linkedin: "https://www.linkedin.com/in/prasanna-g-57284012",
-    bio: "Designs science experiments that make complex concepts simple, engaging and fun."
+    bio: "I spent two decades at ISRO, launching satellites - now I launch young minds into orbit. I bring the same precision used in space engineering to craft hands-on experiments that make physics truly click."
   },
   {
-    name: "Dhamodharan K",    
+    name: "Dhamodharan K",
     imageUrl: "/photos/aboutus/Dhomodharan.jpeg",
     linkedin: "https://www.linkedin.com/in/dhamodarankkp",
-    bio: "Builds interactive learning systems that spark curiosity and creativity."
+    bio: "An engineer turned community educator who believes science should feel like play, not pressure. After years with NGOs designing learning spaces, I focus on helping kids discover science naturally - through curiosity, not curriculum."
   },
   {
-    name: "Arunkumar R",    
+    name: "Arunkumar R",
     imageUrl: "/photos/aboutus/Arunkumar.jpeg",
     linkedin: "https://www.linkedin.com/in/arunkumar--r",
-    bio: "Drives digital strategy & learning experience design to bring ideas to life."
+    bio: "An Physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I blend scientific rigor with creative storytelling to design learning experiences that truly resonate."
   }
 ];
 
 const values = [
-  { title: "Excellence", description: "We set high standards for content, experience, and delivery." },
-  { title: "Innovation", description: "Constantly evolving to make STEM exciting and meaningful." },
-  { title: "Collaboration", description: "We co-create with educators and learners, together." },
-  { title: "Quality", description: "Obsessive about safe tools and evidence-based pedagogy." }
+  {    
+    title: "Excellence", 
+    description: "We set high standards for content, experience, and delivery in every maker space and learning environment we create." 
+  },
+  { 
+    title: "Innovation", 
+    description: "Constantly evolving our approach to make STEM education exciting, relevant, and deeply meaningful for learners." 
+  },
+  {   
+    title: "Collaboration", 
+    description: "We co-create with educators, institutions, and learners to build sustainable learning ecosystems together." 
+  },
+  {   
+    title: "Quality", 
+    description: "Obsessive about safe tools, evidence-based pedagogy, and creating transformative educational experiences." 
+  }
 ];
-
 
 export default function AboutPage() {
   return (
-    <motion.div className="min-h-screen flex flex-col">
-      {/* HERO */}
-     <header
-  className="relative text-white py-6 px-6 overflow-hidden"
-  style={{
-    backgroundImage: "url('/patterns/pattern_pink.jpg')",
-    backgroundRepeat: "repeat",
-    backgroundSize: "auto",
-    backgroundPosition: "center center",
-  }}
->
-  {/* Dim Overlay */}
-  <div className="absolute inset-0 bg-white opacity-70"></div>
-
-  <motion.div
-    className="relative max-w-4xl mx-auto text-center"
-    variants={fadeIn}
-  >
-    <h1 className="text-3xl font-bold text-slate-900 mb-2">
-      About Us
-    </h1>
-  </motion.div>
-
-  {/* ABOUT US */}
-  <section className="relative py-6 px-6 text-center max-w-4xl mx-auto">
-    <p className="text-lg text-slate-700 leading-relaxed">
-      At Tecplore, we turn science into an experience.
-      <br/> From classrooms to communities, our mission is to ignite
-      curiosity, inspire creativity, and connect everyday life with the wonders of science.
-    </p>
-  </section>
-
-  {/* CORE VALUES */}
-  <section className="relative py-6 px-6">
-    {/* Optional faint background image behind values */}
-    <div
-      className="absolute inset-0 bg-cover bg-center opacity-20"
-      style={{
-        backgroundImage: "url('/photos/stat cards.jpg')",
-      }}
-    ></div>
-
-    <motion.div
-      className="relative max-w-6xl mx-auto text-center"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-    >
-      {/* Main Title */}
-      <h1 className="text-slate-900 text-2xl md:text-4xl font-light mb-8">
-        Core Values
-      </h1>
-
-      {/* Values */}
-      <motion.div
-        className="grid md:grid-cols-2 lg:grid-cols-4 gap-10"
-        variants={staggerContainer}
+    <div className="min-h-screen bg-white">
+      {/* COMBINED HERO + MISSION BACKGROUND */}
+      <section
+        className="relative text-white py-20 px-6 overflow-hidden"
+        style={{
+          backgroundImage: "url('/patterns/pattern_pink.jpg')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "auto",
+          backgroundPosition: "center center",
+        }}
       >
-        {values.map((val, i) => (
-          <motion.div
-            key={i}
-            className="flex flex-col items-center text-center"
-            variants={scaleUp}
-          >
-            <h3 className="text-medium font-bold text-slate-900 mb-1">
-              {val.title}
-            </h3>
-            <p className="text-slate-600 max-w-xs">{val.description}</p>
-          </motion.div>
-        ))}
-      </motion.div>
-    </motion.div>
-  </section>
-</header>
+      {/* Simple dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/60"></div>
 
-   
-      {/* TEAM MEMBERS */}
-      <section className="bg-slate-50 px-6 py-12">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <motion.div className="text-center mb-16" variants={fadeIn}>
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Meet Our Team</h2>
-            <p className="text-xl text-slate-600">Passionate educators, makers & engineers</p>
+
+        <motion.div
+          className="relative max-w-5xl mx-auto text-center"
+          initial="hidden"
+          animate="visible"
+          variants={fadeIn}
+        >
+          <motion.h1
+            className="text-4xl md:text-4xl font-bold mb-6 text-white"
+            variants={fadeInUp}
+          >
+            About Tecplore
+          </motion.h1>
+          <motion.p
+            className="text-xl md:text-2xl text-blue-100 leading-relaxed max-w-3xl mx-auto"
+            variants={fadeInUp}
+          >
+            Transforming Education Through Experiential Learning
+          </motion.p>
+        </motion.div>
+
+        {/* MISSION SECTION */}
+        <motion.div
+          className="relative max-w-4xl mx-auto text-center mt-24"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeIn}
+        >
+          <h2 className="text-3xl md:text-3xl font-bold text-white mb-6">
+            Our Mission
+          </h2>
+          <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
+            At Tecplore, we turn science into an experience. From classrooms to communities,
+            we design and setup maker spaces and learning environments that ignite curiosity,
+            inspire creativity, and connect everyday life with the wonders of science. Our mission
+            is to make STEM education accessible, engaging, and transformative for every learner.
+          </p>
+        </motion.div>
+      </section>
+  
+
+
+      {/* CORE VALUES */}
+      <section className="py-16 px-6 bg-white relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-5"
+          style={{
+            backgroundImage: "url('/photos/stat cards.jpg')",
+          }}
+        ></div>
+
+        <motion.div
+          className="relative max-w-6xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <motion.div className="text-center mb-12" variants={fadeIn}>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              Our Core Values
+            </h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              The principles that guide everything we create and deliver
+            </p>
           </motion.div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto"
+
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
             variants={staggerContainer}
           >
-            {teamMembers.map((m, i) => (
+            {values.map((val, i) => {
+          
+              return (
+                <motion.div
+                  key={i}
+                  className="bg-slate-50 p-8 rounded-2xl border border-slate-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
+                  variants={scaleUp}
+                >
+               
+                  <h3 className="text-xl font-light text-blue-900 mb-3 text-center">
+                    {val.title}
+                  </h3>
+                  <p className="text-slate-600 text-center leading-relaxed">
+                    {val.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* TEAM SECTION */}
+      <section className="py-16 px-6 bg-slate-50">
+        <motion.div 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <motion.div className="text-center mb-16" variants={fadeIn}>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              Meet Our Team
+            </h2>
+            <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
+              Passionate educators, engineers, and makers dedicated to transforming STEM learning
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto"
+            variants={staggerContainer}
+          >
+            {teamMembers.map((member, i) => (
               <motion.div 
                 key={i}
-                className="bg-white p-6 rounded-xl border border-slate-200 text-center hover:shadow-xl transition"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 group"
                 variants={scaleUp}
               >
-                <div className="w-40 h-40 mx-auto mb-5 rounded-full overflow-hidden border-4 border-white shadow-lg ring-2 ring-slate-200">
-                  <img
-                    src={m.imageUrl}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                <div className="p-8">
+                  <div className="flex items-start gap-6">
+                    <div className="flex-shrink-0">
+                      <div className="w-32 h-32 rounded-2xl overflow-hidden border-4 border-slate-100 shadow-lg group-hover:border-blue-200 transition-colors">
+                        <img
+                          src={member.imageUrl}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl font-bold text-slate-900 mb-3">
+                        {member.name}
+                      </h3>
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors text-sm"
+                      >
+                        <Linkedin size={16} />
+                        <span>Connect on LinkedIn</span>
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <p className="text-slate-700 leading-relaxed mt-6">
+                    {member.bio}
+                  </p>
                 </div>
-              
-               
-               <a
-                href={m.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-light text-slate-900 mb-1 block outline-none focus:outline-none hover:text-blue-500 transition-colors"
-              >
-                <Linkedin size={18} className="inline mr-1" /> {m.name}
-              </a>
-
-
-          
-                <p className="text-slate-600">{m.bio}</p>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
-      </section>   
+      </section>
 
-      
-    </motion.div>
+      {/* CLOSING CTA */}
+      <section className="py-16 px-6 text-slate-900">
+        <motion.div
+          className="max-w-3xl mx-auto text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+        >
+          <h2 className="text-2xl md:text-3xl font-light mb-6">
+            Ready to Transform Your Learning Space?
+          </h2>
+          <p className="font-light text-lg md:text-xl text-slate-600 mb-8 leading-relaxed">
+            Let's collaborate to create engaging maker spaces and STEM learning environments 
+            that inspire the next generation of innovators and problem-solvers.
+          </p>        
+        </motion.div>
+      </section>
+    </div>
   );
 }

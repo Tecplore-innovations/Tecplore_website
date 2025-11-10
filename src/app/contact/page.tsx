@@ -183,7 +183,7 @@ const ContactPage = () => {
         >
           <Link
             href="/faq"
-            className="text-sm text-blue-700 hover:underline"
+            className="text-lg text-blue-700 hover:underline"
           >
             View FAQs
           </Link>

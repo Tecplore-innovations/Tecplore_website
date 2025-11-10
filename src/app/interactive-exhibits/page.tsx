@@ -3,12 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
-// Assuming these types/data are correctly imported
 import { showcases, moreExhibits, Showcase, MoreExhibit } from "./exhibits";
 
 type Exhibit = Showcase | MoreExhibit; // unified type
 
 const VARIATION_MS = 4000;
+
+function preloadImages(paths: string[]) {
+  paths.forEach((path) => {
+    const img = new Image();
+    img.src = path;
+  });
+}
+
+
 
 // Helper component for the Expanded Desktop Gallery (Modal)
 const DesktopGalleryModal = ({
@@ -86,6 +94,17 @@ export default function InteractiveExhibits() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [filter, setFilter] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  // ✅ Preload all images once when component mounts
+  useEffect(() => {
+    const showcaseImages = showcases.flatMap(
+      (item) => [...(item.images || []), ...(item.gallery || [])]
+    );
+    const moreExhibitImages = moreExhibits.flatMap((item) => [...(item.gallery || [])]);
+    const allImages = Array.from(new Set([...showcaseImages, ...moreExhibitImages]));
+    preloadImages(allImages);
+  }, []);
+
 
   // Detect mobile
   useEffect(() => {
@@ -238,153 +257,183 @@ export default function InteractiveExhibits() {
         </div>
       </section>
 
-      ---
+    
 
+    
       {/* ---------- Explore Exhibits ---------- */}
-      <section className="bg-gray-100 text-gray-900 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header + Filters */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold">Explore Exhibits</h3>
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                onClick={() => setFilter(null)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  filter === null ? "bg-black text-white" : "bg-white hover:bg-gray-200"
-                }`}
-              >
-                All
-              </button>
-              {ALL_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setFilter((f) => (f === cat ? null : cat))}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    filter === cat
-                      ? "bg-black text-white"
-                      : "bg-white hover:bg-gray-200"
-                  }`}
+<section className="bg-gray-100 text-gray-900 py-16">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Header + Filters */}
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <h3 className="text-2xl md:text-3xl font-bold">Explore Exhibits</h3>
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          onClick={() => setFilter(null)}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            filter === null
+              ? "bg-black text-white"
+              : "bg-white hover:bg-gray-200"
+          }`}
+        >
+          All
+        </button>
+        {ALL_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setFilter((f) => (f === cat ? null : cat))}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              filter === cat
+                ? "bg-black text-white"
+                : "bg-white hover:bg-gray-200"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Card Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredExhibits.map((ex) => (
+        <React.Fragment key={ex.id}>
+          {/* Exhibit Card */}
+          <div
+            className="bg-white rounded-2xl shadow-lg p-5 hover:shadow-xl transition-all cursor-pointer border border-gray-200"
+            onClick={() => {
+              if ("gallery" in ex && ex.gallery && ex.gallery.length > 0) {
+                handleExpand(ex.id);
+              }
+            }}
+          >
+            {/* Header / Image */}
+            {"images" in ex && ex.images ? (
+            
+              <div className="flex gap-4">
+                <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                  <img
+                    src={ex.images[0]}
+                    alt={ex.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
+                  {"short" in ex && ex.short && (
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {ex.short}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : "image" in ex && ex.image ? (
+
+              // --- MoreExhibit with single image ---
+
+               <div className="flex gap-4">
+               <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+              <img
+                src={ex.image}
+                alt={ex.title}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+                <div className="flex-1 min-w-0">
+
+                <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
+                {ex.short && (
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    {ex.short}
+                  </p>
+                )}
+                </div>
+              </div>
+            ) : (
+              // --- Fallback text-only exhibit ---
+              <>
+                <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {ex.long}
+                </p>
+              </>
+            )}
+
+            {/* Categories */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {ex.categories.map((c) => (
+                <span
+                  key={c}
+                  className="bg-gray-100 rounded-full px-3 py-1 text-xs"
                 >
-                  {cat}
-              </button>
+                  {c}
+                </span>
               ))}
             </div>
-          </div>
 
-          {/* Card Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredExhibits.map((ex) => (
-              <React.Fragment key={ex.id}>
-                {/* Exhibit Card */}
-                <div
-                  className="bg-white rounded-2xl shadow-lg p-5 hover:shadow-xl transition-all cursor-pointer border border-gray-200"
-                  // Only handleExpand on click if it's NOT the exhibit with no gallery
-                  onClick={() => {
-                      if ("gallery" in ex && ex.gallery && ex.gallery.length > 0) {
-                          handleExpand(ex.id);
-                      }
-                  }}
-                >
-                  {/* Header / Image */}
-                  {"images" in ex && ex.images ? (
-                    <div className="flex gap-4">
-                      <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                        <img
-                          src={ex.images[0]}
-                          alt={ex.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
-                        {"short" in ex && ex.short && (
-                          <p className="text-sm text-gray-600 line-clamp-2">
-                            {ex.short}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <h4 className="font-semibold text-lg mb-2">{ex.title}</h4>
-                      <p className="text-sm text-gray-700 leading-relaxed">{ex.long}</p>
-                    </>
-                  )}
-
-                  {/* Categories  */}
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {ex.categories.map((c) => (
-                      <span
-                        key={c}
-                        className="bg-gray-100 rounded-full px-3 py-1 text-xs"
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Mobile Gallery (Inline) */}
-                  <div className="block lg:hidden">
-                    <AnimatePresence>
-                      {expanded === ex.id && "gallery" in ex && ex.gallery.length > 0 && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="mt-4 pt-4 border-t border-gray-200"
+            {/* Mobile Gallery (Inline) */}
+            <div className="block lg:hidden">
+              <AnimatePresence>
+                {expanded === ex.id &&
+                  "gallery" in ex &&
+                  ex.gallery.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-4 pt-4 border-t border-gray-200"
+                    >
+                      <div className="relative">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpanded(null);
+                          }}
+                          className="hidden sm:flex absolute top-2 right-2 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 items-center justify-center transition-all shadow-sm"
                         >
-                          <div className="relative">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExpanded(null);
-                              }}
-                              className="hidden sm:flex absolute top-2 right-2 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 items-center justify-center transition-all shadow-sm"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                          <p className="text-xs text-gray-600 mb-3">{ex.long}</p>
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-3">{ex.long}</p>
 
-                          {/* Mobile Gallery Images - added rounded-lg */}
-                          <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
-                            {ex.gallery.map((g, i) => (
-                              <div
-                                key={i}
-                                className="flex-shrink-0 w-40 h-40 rounded-xl overflow-hidden snap-center"
-                              >
-                                <img
-                                  src={g}
-                                  alt={`${ex.title}-gallery-${i}`}
-                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-lg" // Rounded corners added
-                                />
-                              </div>
-                            ))}
+                      <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+                        {ex.gallery.map((g, i) => (
+                          <div
+                            key={i}
+                            className="flex-shrink-0 w-40 h-40 rounded-xl overflow-hidden snap-center"
+                          >
+                            <img
+                              src={g}
+                              alt={`${ex.title}-gallery-${i}`}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-lg"
+                            />
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </React.Fragment>
-            ))}
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
-      </section>
+        </React.Fragment>
+      ))}
+    </div>
+  </div>
+</section>
 
-      {/* --- DESKTOP GALLERY MODAL --- */}
-      <AnimatePresence>
-        {expandedExhibit &&
-         "gallery" in expandedExhibit && 
-         expandedExhibit.gallery.length > 0 && 
-         !isMobile && ( // Only show on desktop
-          <DesktopGalleryModal 
-            exhibit={expandedExhibit} 
-            onClose={() => setExpanded(null)} 
-          />
-        )}
-      </AnimatePresence>
+{/* --- DESKTOP GALLERY MODAL --- */}
+<AnimatePresence>
+  {expandedExhibit &&
+    "gallery" in expandedExhibit &&
+    expandedExhibit.gallery.length > 0 &&
+    !isMobile && (
+      <DesktopGalleryModal
+        exhibit={expandedExhibit}
+        onClose={() => setExpanded(null)}
+      />
+    )}
+</AnimatePresence>
+
     </div>
   );
 }

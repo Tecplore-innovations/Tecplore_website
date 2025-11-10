@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
-import {Instagram, Linkedin, Home } from "lucide-react";
+import {Instagram, Linkedin, Home, Youtube } from "lucide-react";
 
 const Footer = () => {
   const pathname = usePathname();
@@ -71,6 +71,18 @@ const Footer = () => {
                 >
                   <Linkedin className="h-5 w-5" />
                 </a>
+               
+
+                 <a
+                  href=" https://www.youtube.com/@Tecplore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                  aria-label="Youtube"
+                >
+                  <Youtube className="h-5 w-5" />
+                </a>
+
               </div>
             </div>
 
