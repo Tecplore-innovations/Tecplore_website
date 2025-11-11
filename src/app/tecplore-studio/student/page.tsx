@@ -445,7 +445,7 @@ const handleProceedToLesson = () => {
         <div
           className="min-h-[80vh] flex items-center justify-center rounded-xl overflow-hidden relative p-4"
           style={{
-            backgroundImage: "url('/photos/studio creator.jpg')", // Ensure this path is correct in your /public folder
+            backgroundImage: "url('/photos/studio_creator.avif')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

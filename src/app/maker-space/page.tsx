@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 
 const MakerSpacePage: React.FC = () => {
@@ -12,7 +11,7 @@ const MakerSpacePage: React.FC = () => {
             <div
               className="w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out"
               style={{
-                backgroundImage: "url('/photos/maker-space/maker_space_banner.jpg')",
+                backgroundImage: "url('/photos/maker-space/maker_space_banner.avif')",
                
               }}
             />
@@ -157,7 +156,7 @@ const MakerSpacePage: React.FC = () => {
           <footer
             className="relative bg-cover bg-center text-black py-8"
             style={{
-              backgroundImage: "url('/photos/maker-space/maker_space_illustration.jpg')",
+              backgroundImage: "url('/photos/maker-space/maker_space_illustration.avif')",
               backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
             }}
           >

@@ -8,14 +8,14 @@ import CounterEffectStats from "@/components/Home/counterEffect";
 
 const HomePage = () => {
   const videos = [
-    "/videos/Video 1.webm",
-    "/videos/Video 2.webm",
-    "/videos/Video 3.webm",
-    "/videos/Video 4.webm",
-    "/videos/Video 5.webm",
-    "/videos/Video 6.webm",
-    "/videos/Video 7.webm",
-    "/videos/Video 8.webm",
+    "/videos/Video_1.webm",
+    "/videos/Video_2.webm",
+    "/videos/Video_3.webm",
+    "/videos/Video_4.webm",
+    "/videos/Video_5.webm",
+    "/videos/Video_6.webm",
+    "/videos/Video_7.webm",
+    "/videos/Video_8.webm",
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);

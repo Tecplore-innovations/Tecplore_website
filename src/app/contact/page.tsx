@@ -68,7 +68,7 @@ const ContactPage = () => {
       {/* Subtle background pattern */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-40 pointer-events-none"
-        style={{ backgroundImage: "url('/patterns/contact_us_bg.jpg')" }}
+        style={{ backgroundImage: "url('/patterns/contact_us_bg.avif')" }}
       />
 
       <div className="relative w-full max-w-lg space-y-12">

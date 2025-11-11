@@ -10,7 +10,7 @@ const CareersPage: React.FC = () => {
       {/* Full-page Hero Image */}
       <div className="relative w-full h-screen">
         <Image
-          src="/photos/career1.jpg" // replace with your hero image
+          src="/photos/career1.avif" 
           alt="Careers at Tecplore"
           fill
           className="object-cover"

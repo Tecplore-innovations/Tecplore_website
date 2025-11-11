@@ -24,7 +24,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Aeronautics-Flight Dynamics",
     level: "Grade 6-8",
-    thumbnail: "/teacher-resources/images/physics8_thumb.jpg",
+    thumbnail: "/teacher-resources/images/physics8_thumb.avif",
     contentUrl: "/teacher-resources/articles/Make a Straw Plane.pdf",
   }),
   createResource({
@@ -33,7 +33,7 @@ export const resources: Resource[] = [
     type: "video",
     subject: "Chemistry-Lab",
     level: "High School",
-    thumbnail: "/teacher-resources/images/chem_safety_thumb.jpg",
+    thumbnail: "/teacher-resources/images/chem_safety_thumb.avif",
     contentUrl: "https://www.youtube.com/watch?v=PhwyPQ0_5K0&pp=ygUnY2hlbWlzdHJ5IGxhYiBzYWZldHkgcnVsZXMgZm9yIHN0dWRlbnRz",
   }),
   createResource({
@@ -42,7 +42,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Mathematics",
     level: "High School",
-    thumbnail: "/teacher-resources/images/math_lesson_thumb.jpg",
+    thumbnail: "/teacher-resources/images/math_lesson_thumb.avif",
     contentUrl: "/teacher-resources/articles/Maths of Planet Earth.pdf",
   }),
    createResource({
@@ -51,7 +51,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Astronomy",
     level: "Grade 9-10",
-    thumbnail: "/teacher-resources/images/universe.jpg",
+    thumbnail: "/teacher-resources/images/universe.avif",
     contentUrl: "/teacher-resources/articles/What is the Universe.pdf",
   }),
    createResource({
@@ -60,7 +60,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Astronomy",
     level: "Grade 9-10",
-    thumbnail: "/teacher-resources/images/solar system and beyond.jpg",
+    thumbnail: "/teacher-resources/images/solar system and beyond.avif",
     contentUrl: "/teacher-resources/articles/Our Solar System and Beyond.pdf",
   }),
    createResource({
@@ -69,7 +69,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Astronomy",
     level: "Grade 9-10",
-    thumbnail: "/teacher-resources/images/birth of universe.jpg",
+    thumbnail: "/teacher-resources/images/birth of universe.avif",
     contentUrl: "/teacher-resources/articles/The Beginning of the Universe.pdf",
   }),
    createResource({
@@ -78,7 +78,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Astronomy",
     level: "High School",
-    thumbnail: "/teacher-resources/images/light year.jpg",
+    thumbnail: "/teacher-resources/images/light year.avif",
     contentUrl: "/teacher-resources/articles/Light-Years and Time Travel.pdf",
   }),
    createResource({
@@ -87,7 +87,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Astronomy",
     level: "High School",
-    thumbnail: "/teacher-resources/images/aliens.jpg",
+    thumbnail: "/teacher-resources/images/aliens.avif",
     contentUrl: "/teacher-resources/articles/The Search for Life.pdf",
   }),
 
@@ -97,7 +97,7 @@ export const resources: Resource[] = [
     type: "document",
     subject: "Physics-Units",
     level: "Grade 6-8",
-    thumbnail: "/teacher-resources/images/rulers.jpeg",
+    thumbnail: "/teacher-resources/images/rulers.avif",
     contentUrl: "/teacher-resources/articles/Imperial vs Metric.pdf",
   }),
 

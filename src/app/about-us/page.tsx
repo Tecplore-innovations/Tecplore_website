@@ -27,25 +27,25 @@ const scaleUp: Variants = {
 const teamMembers = [
   {
     name: "Vivek Devaraj",  
-    imageUrl: "/photos/aboutus/Vivek.jpeg",
+    imageUrl: "/photos/aboutus/Vivek.avif",
     linkedin: "https://www.linkedin.com/in/vdevaraj",
     bio: "A mechanical engineer with a Master's from Eindhoven University of Technology, Netherlands. Formerly at Renault-Nissan, where I designed advanced automotive systems across Europe. Now, I channel that experience into building maker spaces - places where students don't just learn engineering, they build it."
   },
   {
     name: "Prasanna G",
-    imageUrl: "/photos/aboutus/Prasanna.jpeg",
+    imageUrl: "/photos/aboutus/Prasanna.avif",
     linkedin: "https://www.linkedin.com/in/prasanna-g-57284012",
     bio: "I spent two decades at ISRO, launching satellites - now I launch young minds into orbit. I bring the same precision used in space engineering to craft hands-on experiments that make physics truly click."
   },
   {
     name: "Dhamodharan K",
-    imageUrl: "/photos/aboutus/Dhomodharan.jpeg",
+    imageUrl: "/photos/aboutus/Dhomodharan.avif",
     linkedin: "https://www.linkedin.com/in/dhamodarankkp",
     bio: "An engineer turned community educator who believes science should feel like play, not pressure. After years with NGOs designing learning spaces, I focus on helping kids discover science naturally - through curiosity, not curriculum."
   },
   {
     name: "Arunkumar R",
-    imageUrl: "/photos/aboutus/Arunkumar.jpeg",
+    imageUrl: "/photos/aboutus/Arunkumar.avif",
     linkedin: "https://www.linkedin.com/in/arunkumar--r",
     bio: "An Physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I blend scientific rigor with creative storytelling to design learning experiences that truly resonate."
   }
@@ -77,7 +77,7 @@ export default function AboutPage() {
       <section
         className="relative text-white py-20 px-6 overflow-hidden"
         style={{
-          backgroundImage: "url('/patterns/pattern_pink.jpg')",
+          backgroundImage: "url('/patterns/pattern_pink.avif')",
           backgroundRepeat: "repeat",
           backgroundSize: "auto",
           backgroundPosition: "center center",
@@ -133,9 +133,7 @@ export default function AboutPage() {
       <section className="py-16 px-6 bg-white relative">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-5"
-          style={{
-            backgroundImage: "url('/photos/stat cards.jpg')",
-          }}
+      
         ></div>
 
         <motion.div

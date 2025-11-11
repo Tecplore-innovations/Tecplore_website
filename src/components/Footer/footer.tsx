@@ -49,7 +49,7 @@ const Footer = () => {
                   className="flex items-center justify-center sm:justify-start gap-3 hover:opacity-80 transition-opacity"
                 >
                   <Image
-                    src="/photos/Tecplore logo.jpg"
+                    src="/photos/Tecplore_logo.avif"
                     alt="Tecplore Logo"
                     width={40}
                     height={40}

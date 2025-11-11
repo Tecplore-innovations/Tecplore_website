@@ -54,7 +54,7 @@ const TeacherResources: React.FC = () => {
     <div 
         className="relative w-full bg-white border-b border-gray-200"
         style={{
-            backgroundImage: "url('/teacher-resources/images/teacher_res.png')",
+            backgroundImage: "url('/teacher-resources/images/teacher_res.avif')",
             // Optional: Adjust background properties for a good pattern display
             backgroundRepeat: 'repeat', 
             backgroundSize: 'auto', // or 'cover' if you want it to fill the container
@@ -527,6 +527,18 @@ const TeacherResources: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
+
+     <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6">
+      <div className="max-w-none text-gray-600 text-sm leading-relaxed text-center md:text-left">
+        <p>
+          <strong className="text-gray-700">Note:</strong>  At Tecplore, we aim to empower educators with engaging STEM learning tools. 
+          This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities. 
+          While we ensure accuracy and relevance, some materials may link to external sources credited to their respective authors. 
+          All third-party resources are shared for educational, non-commercial purposes. 
+          For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
+        </p>
+      </div>
+    </footer>
     </div>
   );
 };

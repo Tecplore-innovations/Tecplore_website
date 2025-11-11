@@ -14,7 +14,7 @@ const sections = [
     button: "Create Lesson",
     href: "/tecplore-studio/teacher",
     banner: "Creator Studio",
-    img: "/photos/teacher.png",
+    img: "/photos/teacher.avif",
     imageLeft: true,
   },
   {
@@ -27,7 +27,7 @@ const sections = [
     button: "Start Teaching",
     href: "/tecplore-studio/student",
     banner: "Classroom Mode",
-    img: "/photos/student.png",
+    img: "/photos/student.avif",
     imageLeft: false,
   },
 ];

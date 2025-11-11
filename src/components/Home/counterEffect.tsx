@@ -68,7 +68,7 @@ const CounterEffectStats = () => {
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/photos/stat card bg.jpg')" }}
+          style={{ backgroundImage: "url('/photos/stat_card_bg.avif')" }}
         />
       
         
@@ -125,7 +125,7 @@ export default function InspiringYoungMindsSection() {
             <div
               className="hidden lg:block absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: "url('/photos/stat cards.jpg')",
+                backgroundImage: "url('/photos/stat_cards.avif')",
               }}
             >
               <div className="absolute inset-0 bg-black/30"></div>
