@@ -566,7 +566,7 @@ const TeacherResources: React.FC = () => {
                   className="flex-shrink-0 p-1.5 hover:bg-gray-100 rounded transition-colors text-gray-600"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </button> 
               </div>
 
               <div className="p-4">
