@@ -48,7 +48,7 @@ const teamMembers = [
     name: "Arunkumar R",
     imageUrl: "/photos/aboutus/Arunkumar.avif",
     linkedin: "https://www.linkedin.com/in/arunkumar--r",
-    bio: "n Physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I blend scientific rigor with creative storytelling to design learning experiences that truly resonate."
+    bio: "A Physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I blend scientific rigor with creative storytelling to design learning experiences that truly resonate."
   }
 ];
 
