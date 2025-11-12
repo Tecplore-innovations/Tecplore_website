@@ -14,13 +14,45 @@ const TeacherResources: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const subjects = Array.from(new Set(resources.map(r => r.subject)));
-  const levels = Array.from(new Set(resources.map(r => r.level)));
+  const [languageFilter, setLanguageFilter] = useState<string>("All");
+  const [originFilter, setOriginFilter] = useState<string>("All"); // origin = content: "Tecplore" | "Community"
+
+  // derive lists from resources (unique)
+  const subjects = Array.from(new Set(resources.map(r => r.subject))).filter(Boolean);
+  const levels = Array.from(new Set(resources.map(r => r.level))).filter(Boolean);
+  const languages = Array.from(new Set(resources.map(r => r.language))).filter(Boolean);
+  const origins = Array.from(new Set(resources.map(r => r.content))).filter(Boolean);
+
+  // helper: robust youtube id -> embed URL
+  const getYouTubeEmbedUrl = (url: string) => {
+    try {
+      const u = new URL(url);
+      // youtube.com/watch?v=...
+      if (u.hostname.includes("youtube.com")) {
+        const v = u.searchParams.get("v");
+        if (v) return `https://www.youtube.com/embed/${v}`;
+        // sometimes urls are /embed/<id>
+        const parts = u.pathname.split("/");
+        const embedIndex = parts.indexOf("embed");
+        if (embedIndex !== -1 && parts[embedIndex + 1]) return `https://www.youtube.com/embed/${parts[embedIndex + 1]}`;
+      }
+      // youtu.be/<id>
+      if (u.hostname === "youtu.be") {
+        const id = u.pathname.replace("/", "");
+        if (id) return `https://www.youtube.com/embed/${id}`;
+      }
+    } catch (e) {
+      // not a valid URL, ignore
+    }
+    return null;
+  };
 
   const filteredResources = resources
     .filter(r => (subjectFilter === "All" || r.subject === subjectFilter))
     .filter(r => (levelFilter === "All" || r.level === levelFilter))
     .filter(r => (typeFilter === "All" || r.type === typeFilter))
+    .filter(r => (languageFilter === "All" || r.language === languageFilter))
+    .filter(r => (originFilter === "All" || r.content === originFilter))
     .filter(r => searchQuery === "" || r.title.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) => {
       const dateA = new Date(a.createdAt).getTime();
@@ -28,74 +60,74 @@ const TeacherResources: React.FC = () => {
       return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
     });
 
-  const activeFilterCount = [subjectFilter, levelFilter, typeFilter].filter(f => f !== "All").length;
+  // active filter count includes subject, level, type, language, origin (but not search)
+  const activeFilterCount = [subjectFilter, levelFilter, typeFilter, languageFilter, originFilter].filter(f => f !== "All").length;
 
-  // Auto-hide filters when a filter is selected
+  // Auto-hide filters when any filter is selected (keeps previous behavior but with all filters included)
   useEffect(() => {
     if (activeFilterCount > 0) {
       setShowFilters(false);
     }
-  }, [subjectFilter, levelFilter, typeFilter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subjectFilter, levelFilter, typeFilter, languageFilter, originFilter]);
 
   const clearAllFilters = () => {
     setSubjectFilter("All");
     setLevelFilter("All");
     setTypeFilter("All");
+    setLanguageFilter("All");
+    setOriginFilter("All");
     setSearchQuery("");
     setShowFilters(false);
+    setSortOrder("newest");
   };
 
   const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
 
-
   return (
     <div className="min-h-screen bg-gray-50">
-    {/* Hero Section - Minimal Professional */}
-    <div 
+      {/* Hero Section - Minimal Professional */}
+      <div
         className="relative w-full bg-white border-b border-gray-200"
         style={{
-            backgroundImage: "url('/teacher-resources/images/teacher_res.avif')",
-            // Optional: Adjust background properties for a good pattern display
-            backgroundRepeat: 'repeat', 
-            backgroundSize: 'auto', // or 'cover' if you want it to fill the container
-            backgroundPosition: 'center center',
+          backgroundImage: "url('/teacher-resources/images/teacher_res.avif')",
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'auto',
+          backgroundPosition: 'center center',
         }}
-    >
-        {/* Optional: Add an overlay div for better text readability */}
+      >
         <div className="absolute inset-0 bg-white opacity-90"></div>
-        
-        {/* Content Container (make sure this is relative so it sits above the background) */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-            <div className="text-center">
-                <div className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 rounded text-xs font-medium text-gray-700 mb-3">
-                    <Award className="w-3.5 h-3.5" />
-                    Premium Teacher Resources
-                </div>
-                
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 text-gray-900">
-                    Teacher Resources Portal
-                </h1>
-                
-                <p className="text-base sm:text-lg max-w-2xl mx-auto text-gray-600 mb-6">
-                    Access curated training materials and teaching resources
-                </p>
-
-                {/* Search Bar */}
-                <div className="max-w-xl mx-auto">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search resources..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
-                        />
-                    </div>
-                </div>
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1 rounded text-xs font-medium text-gray-700 mb-3">
+              <Award className="w-3.5 h-3.5" />
+              Premium Teacher Resources
             </div>
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 text-gray-900">
+              Teacher Resources Portal
+            </h1>
+
+            <p className="text-base sm:text-lg max-w-2xl mx-auto text-gray-600 mb-6">
+              Access curated training materials and teaching resources
+            </p>
+
+            {/* Search Bar */}
+            <div className="max-w-xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search resources..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
       {/* Stats Bar - Compact */}
       <div className="bg-white border-b border-gray-200">
@@ -134,7 +166,7 @@ const TeacherResources: React.FC = () => {
               </span>
             )}
           </div>
-          
+
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -221,6 +253,30 @@ const TeacherResources: React.FC = () => {
                     <option value="oldest">Oldest First</option>
                   </select>
 
+                  {/* Language filter */}
+                  <select
+                    value={languageFilter}
+                    onChange={e => setLanguageFilter(e.target.value)}
+                    className="w-full rounded px-2 py-1.5 text-xs bg-gray-50 border border-gray-300 text-gray-700 hover:border-gray-400 cursor-pointer"
+                  >
+                    <option value="All">All Languages</option>
+                    {languages.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+
+                  {/* Origin / Content filter */}
+                  <select
+                    value={originFilter}
+                    onChange={e => setOriginFilter(e.target.value)}
+                    className="w-full rounded px-2 py-1.5 text-xs bg-gray-50 border border-gray-300 text-gray-700 hover:border-gray-400 cursor-pointer"
+                  >
+                    <option value="All">All Content</option>
+                    {origins.map(origin => (
+                      <option key={origin} value={origin}>{origin}</option>
+                    ))}
+                  </select>
+
                   {activeFilterCount > 0 && (
                     <button
                       onClick={clearAllFilters}
@@ -296,6 +352,28 @@ const TeacherResources: React.FC = () => {
                       <option value="oldest">Oldest First</option>
                     </select>
 
+                    <select
+                      value={languageFilter}
+                      onChange={e => setLanguageFilter(e.target.value)}
+                      className="w-full rounded px-2 py-1.5 text-xs bg-gray-50 border border-gray-300 text-gray-700 hover:border-gray-400 cursor-pointer"
+                    >
+                      <option value="All">All Languages</option>
+                      {languages.map(lang => (
+                        <option key={lang} value={lang}>{lang}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={originFilter}
+                      onChange={e => setOriginFilter(e.target.value)}
+                      className="w-full rounded px-2 py-1.5 text-xs bg-gray-50 border border-gray-300 text-gray-700 hover:border-gray-400 cursor-pointer"
+                    >
+                      <option value="All">All Content</option>
+                      {origins.map(origin => (
+                        <option key={origin} value={origin}>{origin}</option>
+                      ))}
+                    </select>
+
                     {activeFilterCount > 0 && (
                       <button
                         onClick={clearAllFilters}
@@ -329,8 +407,8 @@ const TeacherResources: React.FC = () => {
                 <>
                   {/* Desktop Grid View */}
                   <div className={`hidden sm:grid gap-3 ${
-                    showFilters 
-                      ? 'grid-cols-2 xl:grid-cols-3' 
+                    showFilters
+                      ? 'grid-cols-2 xl:grid-cols-3'
                       : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                   }`}>
                     {filteredResources.map((resource) => (
@@ -345,7 +423,7 @@ const TeacherResources: React.FC = () => {
                             alt={resource.title}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                          
+
                           <div className="absolute top-1.5 left-1.5">
                             {resource.type === "video" ? (
                               <div className="bg-gray-900 text-white px-1.5 py-0.5 rounded flex items-center gap-0.5 text-[10px] font-medium">
@@ -366,11 +444,18 @@ const TeacherResources: React.FC = () => {
                             {resource.title}
                           </h3>
                           <div className="flex items-center justify-between text-[10px]">
-                            <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">
-                              {resource.level}
-                            </span>
+                            <div className="flex items-center gap-1">
+                              <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">
+                                {resource.level}
+                              </span>
+                              {resource.language && (
+                                <span className="font-medium text-gray-700 bg-gray-50 px-1.5 py-0.5 rounded">
+                                  {resource.language}
+                                </span>
+                              )}
+                            </div>
                             <span className="text-gray-600">{resource.subject}</span>
-                          </div>
+                          </div>                         
                         </div>
                       </div>
                     ))}
@@ -391,7 +476,7 @@ const TeacherResources: React.FC = () => {
                             alt={resource.title}
                             className="w-full h-full object-cover"
                           />
-                          
+
                           <div className="absolute top-1 left-1">
                             {resource.type === "video" ? (
                               <div className="bg-gray-900 text-white px-1 py-0.5 rounded flex items-center gap-0.5 text-[9px] font-medium">
@@ -409,13 +494,18 @@ const TeacherResources: React.FC = () => {
                         <div className="flex-1 p-2.5 min-w-0">
                           <h3 className="font-medium text-xs text-gray-900 mb-1 line-clamp-2 leading-tight">
                             {resource.title}
-                          </h3>
-                          <div className="flex items-center gap-2 text-[10px]">
-                            <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">
-                              {resource.level}
+                          </h3>                          
+                          <div className="flex items-center gap-1.5 text-[10px]">
+                          <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">
+                            {resource.level}
+                          </span>
+                          {resource.language && (
+                            <span className="font-medium text-gray-700 bg-gray-50 px-1.5 py-0.5 rounded">
+                              {resource.language}
                             </span>
-                            <span className="text-gray-600 truncate">{resource.subject}</span>
-                          </div>
+                          )}
+                          <span className="text-gray-600 truncate">{resource.subject}</span>
+                        </div>
                         </div>
                       </div>
                     ))}
@@ -432,7 +522,6 @@ const TeacherResources: React.FC = () => {
           </div>
         </div>
       </div>
-
 
       {/* Resource Modal - Clean Professional */}
       <AnimatePresence>
@@ -461,7 +550,13 @@ const TeacherResources: React.FC = () => {
                     <span className="bg-gray-100 px-2 py-0.5 rounded font-medium text-gray-700">
                       {selectedResource.subject}
                     </span>
-                    <span className="bg-gray-900 text-white px-2 py-0.5 rounded font-medium">
+                    <span className="bg-gray-100 px-2 py-0.5 rounded font-medium text-gray-700">
+                      {selectedResource.language}
+                    </span>
+                    <span className="bg-gray-100 px-2 py-0.5 rounded font-medium text-gray-700">
+                      {selectedResource.content === "Tecplore" ? "Original" : "Community"}
+                    </span>
+                    <span className="bg-gray-100 px-2 py-0.5 rounded font-medium text-gray-700">
                       {selectedResource.type === "video" ? "Video" : "Document"}
                     </span>
                   </div>
@@ -477,68 +572,73 @@ const TeacherResources: React.FC = () => {
               <div className="p-4">
                 {selectedResource.type === "video" && (
                   <div className="w-full aspect-video rounded overflow-hidden bg-black">
-                    {selectedResource.contentUrl.includes("youtube.com") ||
-                     selectedResource.contentUrl.includes("youtu.be") ? (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${new URL(selectedResource.contentUrl).searchParams.get('v')}`}
-                        title={selectedResource.title}
-                        width="100%"
-                        height="100%"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    ) : (
-                      <video
-                        src={selectedResource.contentUrl}
-                        controls
-                        className="w-full h-full"
-                      />
-                    )}
+                    {(() => {
+                      const embed = getYouTubeEmbedUrl(selectedResource.contentUrl);
+                      if (embed) {
+                        return (
+                          <iframe
+                            src={embed}
+                            title={selectedResource.title}
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        );
+                      }
+                      // fallback to direct video tag
+                      return (
+                        <video
+                          src={selectedResource.contentUrl}
+                          controls
+                          className="w-full h-full"
+                        />
+                      );
+                    })()}
                   </div>
                 )}
 
-             
-             {selectedResource.type === "document" && (
-              <>
-                {isMobile ? (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <p className="text-gray-600 mb-4">PDF preview unavailable on mobile.</p>
-                    <a
-                      href={selectedResource.contentUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                    >
-                      Open PDF in Full Screen
-                    </a>
-                  </div>
-                ) : (
-                  <iframe
-                    src={selectedResource.contentUrl}
-                    className="w-full h-[75vh] rounded border border-gray-200"
-                    title={selectedResource.title}
-                  />
+                {selectedResource.type === "document" && (
+                  <>
+                    {isMobile ? (
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <p className="text-gray-600 mb-4">PDF preview unavailable on mobile.</p>
+                        <a
+                          href={selectedResource.contentUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                        >
+                          Open PDF in Full Screen
+                        </a>
+                      </div>
+                    ) : (
+                      <iframe
+                        src={selectedResource.contentUrl}
+                        className="w-full h-[75vh] rounded border border-gray-200"
+                        title={selectedResource.title}
+                      />
+                    )}
+                  </>
                 )}
-              </>
-            )}
-            </div>
+              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-     <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6">
-      <div className="max-w-none text-gray-600 text-sm leading-relaxed text-center md:text-left">
-        <p>
-          <strong className="text-gray-700">Note:</strong>  At Tecplore, we aim to empower educators with engaging STEM learning tools. 
-          This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities. 
-          While we ensure accuracy and relevance, some materials may link to external sources credited to their respective authors. 
-          All third-party resources are shared for educational, non-commercial purposes. 
-          For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
-        </p>
-      </div>
-    </footer>
+      <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6">
+        <div className="max-w-none text-gray-600 text-sm leading-relaxed text-center md:text-left">
+          <p>
+            <strong className="text-gray-700">Note:</strong>  At Tecplore, we aim to empower educators with engaging STEM learning tools. 
+            This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities. 
+            While we ensure accuracy and relevance, some materials may link to external sources credited to their respective authors. 
+            All third-party resources are shared for educational, non-commercial purposes. 
+            For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

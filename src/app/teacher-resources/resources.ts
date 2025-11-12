@@ -7,6 +7,8 @@ export interface Resource {
   thumbnail: string;
   contentUrl: string;
   createdAt: string; 
+  language: string;  
+  content: "Tecplore" | "Community";
 }
 
 // Helper to create a resource and auto-add createdAt
@@ -26,6 +28,8 @@ export const resources: Resource[] = [
     level: "Grade 6-8",
     thumbnail: "/teacher-resources/images/physics8_thumb.avif",
     contentUrl: "/teacher-resources/articles/Make a Straw Plane.pdf",
+    language: "English",
+    content: "Community"
   }),
   createResource({
     id: 2,
@@ -35,6 +39,8 @@ export const resources: Resource[] = [
     level: "High School",
     thumbnail: "/teacher-resources/images/chem_safety_thumb.avif",
     contentUrl: "https://www.youtube.com/watch?v=PhwyPQ0_5K0&pp=ygUnY2hlbWlzdHJ5IGxhYiBzYWZldHkgcnVsZXMgZm9yIHN0dWRlbnRz",
+    language: "English",
+    content: "Community"
   }),
   createResource({
     id: 3,
@@ -44,6 +50,8 @@ export const resources: Resource[] = [
     level: "High School",
     thumbnail: "/teacher-resources/images/math_lesson_thumb.avif",
     contentUrl: "/teacher-resources/articles/Maths of Planet Earth.pdf",
+    language: "English",
+    content: "Community"
   }),
    createResource({
     id: 4,
@@ -53,6 +61,8 @@ export const resources: Resource[] = [
     level: "Grade 9-10",
     thumbnail: "/teacher-resources/images/universe.avif",
     contentUrl: "/teacher-resources/articles/What is the Universe.pdf",
+    language: "Tamil",
+    content: "Community"
   }),
    createResource({
     id: 5,
@@ -62,6 +72,8 @@ export const resources: Resource[] = [
     level: "Grade 9-10",
     thumbnail: "/teacher-resources/images/solar system and beyond.avif",
     contentUrl: "/teacher-resources/articles/Our Solar System and Beyond.pdf",
+    language: "Tamil",
+    content: "Community"
   }),
    createResource({
     id: 6,
@@ -71,6 +83,8 @@ export const resources: Resource[] = [
     level: "Grade 9-10",
     thumbnail: "/teacher-resources/images/birth of universe.avif",
     contentUrl: "/teacher-resources/articles/The Beginning of the Universe.pdf",
+    language: "Tamil",
+    content: "Community"
   }),
    createResource({
     id: 7,
@@ -80,6 +94,8 @@ export const resources: Resource[] = [
     level: "High School",
     thumbnail: "/teacher-resources/images/light year.avif",
     contentUrl: "/teacher-resources/articles/Light-Years and Time Travel.pdf",
+    language: "Tamil",
+    content: "Community"
   }),
    createResource({
     id: 8,
@@ -89,6 +105,8 @@ export const resources: Resource[] = [
     level: "High School",
     thumbnail: "/teacher-resources/images/aliens.avif",
     contentUrl: "/teacher-resources/articles/The Search for Life.pdf",
+    language: "Tamil",
+    content: "Community"
   }),
 
     createResource({
@@ -99,6 +117,8 @@ export const resources: Resource[] = [
     level: "Grade 6-8",
     thumbnail: "/teacher-resources/images/rulers.avif",
     contentUrl: "/teacher-resources/articles/Imperial vs Metric.pdf",
+    language: "English",
+    content: "Tecplore"
   }),
 
   
