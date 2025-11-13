@@ -29,7 +29,7 @@ const teamMembers = [
   name: "Vivek Devaraj",
   imageUrl: "/photos/aboutus/Vivek.avif",
   linkedin: "https://www.linkedin.com/in/vdevaraj",
-  bio: "Mechanical engineer with a Master's from Eindhoven University of Technology. With years of global R&D experience in product development and two patents, I now focus on building maker spaces that help students explore ideas, create prototypes, and learn engineering by doing."
+  bio: "Engineer, maker, and educator with a Master's from Eindhoven University of Technology. With years of global R&D experience in product development and two patents, I now focus on building maker spaces that help students explore ideas, create prototypes, and learn engineering by doing."
   },
   {
     name: "Prasanna G",
