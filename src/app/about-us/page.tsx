@@ -29,26 +29,26 @@ const teamMembers = [
   name: "Vivek Devaraj",
   imageUrl: "/photos/aboutus/Vivek.avif",
   linkedin: "https://www.linkedin.com/in/vdevaraj",
-  bio: "Mechanical engineer with a Masters from Eindhoven University of Technology. After working with Renault-Nissan on automotive systems, I now focus on creating maker spaces that help students explore and apply engineering through hands-on learning."
+  bio: "Mechanical engineer with a Master's from Eindhoven University of Technology. With years of global R&D experience in product development and two patents, I now focus on building maker spaces that help students explore ideas, create prototypes, and learn engineering by doing."
   },
   {
     name: "Prasanna G",
     imageUrl: "/photos/aboutus/Prasanna.avif",
     linkedin: "https://www.linkedin.com/in/prasanna-g-57284012",
-    bio: "With over two decades at ISRO working on national projects, I now design learning experiences that make science tangible and engaging for students."
+    bio: "After over two decades at ISRO working on space systems, I now bring the same precision and creativity to education, designing practical science experiences that make learning exciting and meaningful for students."
   },
 
   {
     name: "Dhamodharan K",
     imageUrl: "/photos/aboutus/Dhomodharan.avif",
     linkedin: "https://www.linkedin.com/in/dhamodarankkp",
-    bio: "An engineer turned community educator who believes science should feel like play, not pressure. After years with NGOs designing learning spaces, I focus on helping kids discover science naturally - through curiosity, not curriculum."
+    bio: "An engineer turned community educator who believes science should feel like play, not pressure. After years with NGOs creating learning spaces, I now focus on helping children explore science through fun, hands-on experiences."
   },
   {
     name: "Arunkumar R",
     imageUrl: "/photos/aboutus/Arunkumar.avif",
     linkedin: "https://www.linkedin.com/in/arunkumar--r",
-    bio: "A Physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I blend scientific rigor with creative storytelling to design learning experiences that truly resonate."
+    bio: "A physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I now combine science and creativity to design digital content and experiences that make learning engaging and accessible."
   }
 ];
 
