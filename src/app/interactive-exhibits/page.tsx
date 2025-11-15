@@ -116,7 +116,7 @@ const GalleryImageModal = ({
       onClick={onClose} // Click on backdrop closes modal
     >
       <div
-        className="relative max-w-full max-h-full flex items-center justify-center w-full h-full"
+        className="relative max-w-full max-h-full flex items-center justify-center"
         onClick={e => e.stopPropagation()} // Prevent modal/inner click from closing
       >
         <motion.img
@@ -141,13 +141,7 @@ const GalleryImageModal = ({
               className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-gray-100/80 hover:bg-white text-black shadow-lg flex items-center justify-center transition-all"
             >
               <ArrowRight className="w-7 h-7" />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); onClose(); }}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all shadow-md"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            </button>           
           </>
         )}
       </div>
