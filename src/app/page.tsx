@@ -107,6 +107,15 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
   return (
     <main className="w-full overflow-x-hidden bg-black">
    <section className="relative min-h-[0] lg:min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
+
+      {/* Tecplore Branding - Bottom Right */}
+      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-12 z-50">
+        <h2 className="text-2xl sm:text-2xl lg:text-2xl font-light bg-gradient-to-r from-[#4f46e5] via-[#00c6ff] to-[#2563EB] bg-clip-text text-transparent">
+          Tecplore
+        </h2>
+
+      </div>
+
         {/* BG blobs */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -174,27 +183,37 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 ))}
               </div>
 
-              {/* Text below video and dots */}
-              <div className="w-full px-4 pb-8 flex flex-col items-center">
-                <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white text-center">
-                  Learn Science Through
-                  <div className="mt-1 bg-gradient-to-r from-[#4f46e5] via-white/90 to-[#00c6ff] bg-clip-text text-transparent">
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={currentWord}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.5 }}
-                        className="inline-block"
-                      >
-                        {words[currentWord]}
-                      </motion.span>
-                    </AnimatePresence>
-                  </div>
-                </h1>
-                {/* Get Started button hidden on mobile/tablet */}
-              </div>
+         {/* Text below video and dots */}
+<div className="w-full px-4 pb-8 flex flex-col items-center">
+  <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white text-center">
+    Learn Science Through
+    <div
+      className="mt-1 bg-clip-text text-transparent"
+      style={{
+        background: "linear-gradient(90deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text"
+      }}
+    >
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={currentWord}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+          className="inline-block"
+        >
+          {words[currentWord]}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  </h1>
+  {/* Get Started button hidden on mobile/tablet */}
+</div>
+
+             
             </div>
           ) : (
             // Desktop layout code here

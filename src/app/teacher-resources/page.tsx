@@ -15,7 +15,12 @@ const TeacherResources: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [languageFilter, setLanguageFilter] = useState<string>("All");
   const [originFilter, setOriginFilter] = useState<string>("All");
+  const [filterHistoryActive, setFilterHistoryActive] = useState(false);
 
+
+
+  
+  
 
   const subjects = Array.from(new Set(resources.map(r => r.subject)));
   const levels = Array.from(new Set(resources.map(r => r.level)));
@@ -29,36 +34,97 @@ const TeacherResources: React.FC = () => {
     .filter(r => (typeFilter === "All" || r.type === typeFilter))
     .filter(r => (languageFilter === "All" || r.language === languageFilter))
     .filter(r => (originFilter === "All" || r.content === originFilter))
-    .filter(r => searchQuery === "" || r.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-    });
+    .filter(r => {
+                  if (searchQuery === "") return true;
+                  
+                  const query = searchQuery.toLowerCase().replace(/\s+/g, '');
+                  
+                  const matchesText = 
+                    r.title.toLowerCase().replace(/\s+/g, '').includes(query) ||
+                    r.subject.toLowerCase().replace(/\s+/g, '').includes(query) ||
+                    r.language.toLowerCase().replace(/\s+/g, '').includes(query) ||
+                    r.level.toLowerCase().replace(/\s+/g, '').includes(query);
+                  
+                  let matchesGrade = r.level.toLowerCase().includes(searchQuery.toLowerCase());
+                  
+                  const searchMatches = searchQuery.match(/\d+/);
+                  if (searchMatches) {
+                    const searchNumber = parseInt(searchMatches[0]);
+                    const gradeNumbers = r.level.match(/\d+/g);
+                    
+                    if (gradeNumbers && gradeNumbers.length >= 2) {
+                      const min = parseInt(gradeNumbers[0]);
+                      const max = parseInt(gradeNumbers[1]);
+                      matchesGrade = matchesGrade || (searchNumber >= min && searchNumber <= max);
+                    } else if (gradeNumbers && gradeNumbers.length === 1) {
+                      matchesGrade = matchesGrade || (searchNumber === parseInt(gradeNumbers[0]));
+                    }
+                  }
+                  
+                  return matchesText || matchesGrade;
+                })
+                .sort((a, b) => {
+                  const dateA = new Date(a.createdAt).getTime();
+                  const dateB = new Date(b.createdAt).getTime();
+                  return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+                });
+
 
     const activeFilterCount = [subjectFilter, levelFilter, typeFilter, languageFilter, originFilter].filter(f => f !== "All").length;
 
 
-  // Auto-hide filters when a filter is selected
-  useEffect(() => {
-    if (activeFilterCount > 0) {
-      setShowFilters(false);
-    }
-  }, [subjectFilter, levelFilter, typeFilter]);
 
-  const clearAllFilters = () => {
-    setSubjectFilter("All");
-    setLevelFilter("All");
-    setTypeFilter("All");
-    setLanguageFilter("All");
-    setOriginFilter("All");
-    setSearchQuery("");
-    setShowFilters(false);
-    setSortOrder("newest");
+const clearAllFilters = () => {
+  setSubjectFilter("All");
+  setLevelFilter("All");
+  setTypeFilter("All");
+  setLanguageFilter("All");
+  setOriginFilter("All");
+  setSearchQuery("");
+  setShowFilters(false);
+  setSortOrder("newest");
+  if (filterHistoryActive) {
+    window.history.back(); // Go back since extra entry exists from opening sidebar or applying filter
+    setFilterHistoryActive(false);
+  }
+};
+
+useEffect(() => {
+  
+  // Push history ONLY when sidebar opens or filters/search are active
+  if (showFilters && !filterHistoryActive && activeFilterCount === 0 && searchQuery === "") {
+    window.history.pushState({ filtersActive: true }, '', window.location.pathname);
+    setFilterHistoryActive(true);
+  }
+
+  // If sidebar is manually closed (user clicks filter button again) with NO filters/search, remove history entry
+  if (!showFilters && filterHistoryActive && activeFilterCount === 0 && searchQuery === "") {
+    window.history.back(); // Remove the last history entry
+    setFilterHistoryActive(false);
+  }
+
+  const handlePopState = (e: PopStateEvent) => {
+    if (filterHistoryActive) {
+      e.preventDefault();
+      setShowFilters(false);
+      setSubjectFilter("All");
+      setLevelFilter("All");
+      setTypeFilter("All");
+      setLanguageFilter("All");
+      setOriginFilter("All");
+      setSearchQuery("");
+      setSortOrder("newest");
+      setFilterHistoryActive(false);
+    }
   };
 
-  const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
+  window.addEventListener('popstate', handlePopState);
+  return () => window.removeEventListener('popstate', handlePopState);
+}, [showFilters, activeFilterCount, searchQuery, filterHistoryActive]);
 
+
+
+const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -363,7 +429,7 @@ const TeacherResources: React.FC = () => {
                         onClick={clearAllFilters}
                         className="w-full text-xs text-gray-700 font-medium py-1 hover:bg-gray-100 rounded transition-colors"
                       >
-                        Clear all filters
+                        Clear all
                       </button>
                     )}
                   </div>
@@ -611,17 +677,18 @@ const TeacherResources: React.FC = () => {
         )}
       </AnimatePresence>
 
-     <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6">
-      <div className="max-w-none text-gray-600 text-sm leading-relaxed text-center md:text-left">
-        <p>
-          <strong className="text-gray-700">Note:</strong>  At Tecplore, we aim to empower educators with engaging STEM learning tools. 
-          This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities. 
-          While we ensure accuracy and relevance, some materials may link to external sources credited to their respective authors. 
-          All third-party resources are shared for educational, non-commercial purposes. 
-          For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
-        </p>
-      </div>
-    </footer>
+   <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6">
+  <div className="max-w-none text-gray-600 text-xs sm:text-sm leading-relaxed text-center md:text-left">
+    <p>
+      <strong className="text-gray-700">Note:</strong>  At Tecplore, we aim to empower educators with engaging STEM learning tools.
+      This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities.
+      While we ensure accuracy and relevance, some materials may link to external sources credited to their respective authors.
+      All third-party resources are shared for educational, non-commercial purposes.
+      For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
+    </p>
+  </div>
+</footer>
+
     </div>
   );
 };

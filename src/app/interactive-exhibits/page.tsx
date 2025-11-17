@@ -349,31 +349,35 @@ export default function InteractiveExhibits() {
       {/*  Explore Exhibits  */}
       <section className="bg-gray-100 text-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header + Filters + View Tabs */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold">Explore Exhibits</h3>
+        {/* Header + Filters + View Tabs */}
+<div className="flex flex-col items-center justify-center gap-4 mb-8">
+  <h3 className="text-2xl md:text-3xl font-bold text-center">Explore Exhibits</h3>
 
-            {/* View Mode Tabs */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setViewMode("exhibit")}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  viewMode === "exhibit" ? "border border-blue-500 bg-gray-100 text-slate-700" : " border border-gray-500 bg-gray-100 text-black hover:bg-gray-200"
-                }`}
-              >
-                Exhibit View
-              </button>
-              <button
-                onClick={() => setViewMode("gallery")}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  viewMode === "gallery" ? "border border-blue-500 bg-gray-100 text-slate-700" : " border border-gray-500 bg-gray-100 text-black hover:bg-gray-200"
-                }`}
-              >
-                Gallery View
-              </button>
-            </div>
+  {/* View Mode Tabs */}
+  <div className="flex items-center gap-4 justify-center">
+    <button
+      onClick={() => setViewMode("exhibit")}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+        viewMode === "exhibit"
+          ? "border border-blue-500 bg-gray-100 text-slate-700"
+          : "border border-gray-500 bg-gray-100 text-black hover:bg-gray-200"
+      }`}
+    >
+      Exhibit View
+    </button>
+    <button
+      onClick={() => setViewMode("gallery")}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+        viewMode === "gallery"
+          ? "border border-blue-500 bg-gray-100 text-slate-700"
+          : "border border-gray-500 bg-gray-100 text-black hover:bg-gray-200"
+      }`}
+    >
+      Gallery View
+    </button>
+  </div>
+</div>
 
-          </div>
 
       {/* Category Filters - only visible in EXHIBIT mode */}
         {viewMode === "exhibit" && (
