@@ -3,7 +3,7 @@ import React from "react";
 
 const MakerSpacePage: React.FC = () => {
   return (
-          <div className="min-h-screen bg-white text-gray-900 font-sans">
+          <div className="min-h-screen bg-white text-gray-900">
           {/* Hero Section */}
         <section className="relative w-full h-[60vh] flex items-center justify-center text-center overflow-hidden bg-gray-900">
           {/* Background Image */}
@@ -20,7 +20,7 @@ const MakerSpacePage: React.FC = () => {
 
             {/* Text Content */}
             <div className="relative z-10 px-6 max-w-3xl">
-              <h1 className="text-4xl md:text-6xl font-light mb-6 text-white">
+              <h1 className="text-4xl md:text-4xl font-light mb-6 text-white">
                 Maker Space Solutions
               </h1>
               <div className="w-20 h-0.5 bg-white/60 mx-auto mb-8" />

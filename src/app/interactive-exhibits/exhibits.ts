@@ -58,7 +58,7 @@ export const showcases: Showcase[] = [
   },
   {
     id: 3,
-    title: "Static Rocket Model",
+    title: "Model Rocket",
     images: [
       "/photos/interactive-exhibits/RocketModel1.avif",
       "/photos/interactive-exhibits/RocketModel2.avif",

@@ -2,18 +2,19 @@
 
 import Link from "next/link";
 
+
 const sections = [
   {
       
     desc: (
       <>      
-      Utilize the <b className="text-slate-700">Creator Studio</b> to load a youtube video,
-      embed interactive elements like quizzes at precise points, and save the lesson as a JSON file.
+      Utilize the <b className="text-slate-700">Creator Mode</b> to make lesson out of youtube content.
+      <br/>Embed interactive elements like quizzes at precise points, and save the lesson.
       </>
     ),
     button: "Create Lesson",
     href: "/tecplore-studio/teacher",
-    banner: "Creator Studio",
+    banner: "Creator Mode",
     img: "/photos/teacher.avif",
     imageLeft: true,
   },
@@ -21,7 +22,7 @@ const sections = [
    
     desc: (
       <>
-      Load the JSON file in <b className="text-slate-700">Classroom Mode</b>, the video auto-plays, pauses for questions, and resumes after responses and gives an summary at end.
+      Utilize the <b className="text-slate-700">Classroom Mode</b> to make every lesson more interactive and dramatically improve retention.
       </>
     ),
     button: "Start Teaching",
@@ -35,17 +36,30 @@ const sections = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white font-inter">
-      {/* HERO */}
+    <div className="min-h-screen bg-whiter ">
+    
+       {/* HERO */}
+     
       <section className="pt-12 pb-8 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
-        <h1 className="text-5xl md:text-5xl font-black text-slate-700 leading-tig   mb-4 ">
+        <h1 className="text-4xl md:text-4xl font-light mb-6 text-slate-700">
           Tecplore Studio
         </h1>
-        <p className="text-lg md:text-1.5xl text-blue-700/75 mt-4 max-w-3xl mx-auto leading-relaxed ">
-          Transform YouTube videos into classroom learning experiences with interaction, questions, and learning checkpoints.
+
+        <p className="text-lg md:text-xl text-blue-700/75 mt-4 max-w-3xl mx-auto leading-relaxed">
+          Transform YouTube videos into classroom learning experiences with
+          interaction, questions, and learning checkpoints.
         </p>
-      
-      
+
+        {/* WHY WE CREATED TECPLORE STUDIO */}
+        <div className="mt-12 max-w-6xl mx-auto">
+          <img
+           src="/photos/studio_banner_info.avif"
+            alt="Tecplore Studio Banner"
+            className="w-full rounded-2xl shadow-lg object-cover"
+          />
+        </div>
+
+     
       </section>
 
      <main className="max-w-6xl mx-auto py-10 px-4">

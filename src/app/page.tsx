@@ -184,36 +184,34 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
               </div>
 
          {/* Text below video and dots */}
-<div className="w-full px-4 pb-8 flex flex-col items-center">
-  <h1 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white text-center">
-    Learn Science Through
-    <div
-      className="mt-1 bg-clip-text text-transparent"
-      style={{
-        background: "linear-gradient(90deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        backgroundClip: "text"
-      }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={currentWord}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="inline-block"
-        >
-          {words[currentWord]}
-        </motion.span>
-      </AnimatePresence>
-    </div>
-  </h1>
-  {/* Get Started button hidden on mobile/tablet */}
-</div>
-
-             
+          <div className="w-full px-4 pb-8 flex flex-col items-center">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-light text-white text-center">
+              Learn Science Through
+              <div
+                className="mt-1 bg-clip-text text-transparent"
+                style={{
+                  background: "linear-gradient(90deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text"
+                }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentWord}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="inline-block"
+                  >
+                    {words[currentWord]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </h1>
+            {/* Get Started button hidden on mobile/tablet */}
+          </div>             
             </div>
           ) : (
             // Desktop layout code here
@@ -226,7 +224,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 transition={{ duration: 0.8 }}
                 className="text-white space-y-6 lg:space-y-8"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-tight">
                   Learn Science Through
                   <div className="mt-2 bg-gradient-to-r from-[#4f46e5] via-white/90 to-[#00c6ff] bg-clip-text text-transparent">
                     <AnimatePresence mode="wait">

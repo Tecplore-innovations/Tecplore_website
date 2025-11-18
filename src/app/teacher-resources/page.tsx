@@ -150,7 +150,7 @@ const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator
                     Premium Teacher Resources
                 </div>
                 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 text-gray-900">
+               <h1 className="text-4xl md:text-4xl font-light mb-6 text-slate-700">
                     Teacher Resources Portal
                 </h1>
                 

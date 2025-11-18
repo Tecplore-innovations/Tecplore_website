@@ -95,7 +95,7 @@ export default function AboutPage() {
           variants={fadeIn}
         >
           <motion.h1
-            className="text-4xl md:text-4xl font-bold mb-6 text-white"
+            className="text-4xl md:text-4xl font-light mb-6 text-white"
             variants={fadeInUp}
           >
             About Tecplore
@@ -116,7 +116,7 @@ export default function AboutPage() {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeIn}
         >
-          <h2 className="text-3xl md:text-3xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-3xl font-light text-white mb-6">
             Our Mission
           </h2>
           <p className="text-lg md:text-xl text-blue-100 leading-relaxed">
@@ -144,7 +144,7 @@ export default function AboutPage() {
           viewport={{ once: true, margin: "-100px" }}
         >
           <motion.div className="text-center mb-12" variants={fadeIn}>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-light text-slate-900 mb-4">
               Our Core Values
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">

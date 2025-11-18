@@ -40,7 +40,7 @@ export default function FAQPage() {
         {/* Heading */}
         <div className="flex items-center gap-3 mb-6">
           <HelpCircle className="h-8 w-8 text-blue-600" />
-          <h1 className="text-3xl font-bold">Frequently Asked Questions</h1>
+          <h1 className="text-3xl font-semi">Frequently Asked Questions</h1>
         </div>
 
         <p className="text-gray-600 mb-8 text-sm">

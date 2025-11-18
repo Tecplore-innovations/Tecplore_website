@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
-import { Upload, CheckCircle, Video } from "lucide-react"; // Using lucide-react for modern icons
-
+import { Upload, CheckCircle, Video } from "lucide-react"; 
+import { PRE_LESSONS, PreLesson } from "./pre_lessons";
 // --- Types ---
 type Question = {
   id: string;
@@ -45,6 +45,11 @@ export default function StudentPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showBrandVideo, setShowBrandVideo] = useState(true);
 
+  
+  const [selectedPreLesson, setSelectedPreLesson] = useState<PreLesson | null>(null);
+  const [preLessonLoading, setPreLessonLoading] = useState(false);
+
+
   // --- Handlers ---
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,13 +61,12 @@ export default function StudentPage() {
     reader.onload = (ev) => {
       try {
         const data: Lesson = JSON.parse(ev.target?.result as string);
-        setPendingLesson(data); // Set pending lesson, not the main lesson
+        setPendingLesson(data);
       } catch (error) {
         console.error("Error parsing lesson JSON:", error);
-        // Using a more subtle error indication instead of alert()
         console.error("Invalid Lesson JSON file.");
         setFileName(null);
-        setPendingLesson(null); // Clear pending on error
+        setPendingLesson(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
       }
     };
@@ -76,7 +80,7 @@ export default function StudentPage() {
       autoPlay
       muted
       playsInline
-      onEnded={() => setShowBrandVideo(false)} // move to lesson when finished
+      onEnded={() => setShowBrandVideo(false)}
       className="w-full h-auto max-h-[80vh] object-contain"
     />
     <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-700" />
@@ -84,14 +88,13 @@ export default function StudentPage() {
 );
 
 
-  // --- New handler to start the lesson ---
-const handleProceedToLesson = () => {
+  const handleProceedToLesson = () => {
   if (!pendingLesson) return;
-  setShowBrandVideo(true); // show intro first
+  setShowBrandVideo(true);
 
-  // Delay lesson start until after brand video
   setTimeout(() => {
     setLesson(pendingLesson);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setPendingLesson(null);
     setCurrentQuestionIndex(null);
     setShowAnswer(false);
@@ -199,7 +202,7 @@ const handleProceedToLesson = () => {
       intervalRef.current = undefined;
     }
     setLesson(null);
-    setPendingLesson(null); // Clear pending lesson on reset
+    setPendingLesson(null);
     setFileName(null);
     setLessonEnded(false);
     setSummaryVisible(false);
@@ -226,19 +229,17 @@ const handleProceedToLesson = () => {
   const renderFileUploader = () => (
     <div className="p-8 rounded-xl bg-white/95 backdrop-blur-sm shadow-lg max-w-2xl w-full transition duration-300">
     
-      {/* --- Updated Help Text Section --- */}
       <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-        <h3 className="font-bold text-lg mb-2 text-blue-800">
+        <h3 className="font-light text-lg mb-2 text-blue-800">
           How To Use!
         </h3>
       <p className="text-gray-600">
-        Use the <strong>Creator Studio</strong> to design your lesson - pick any YouTube video, add questions at chosen timestamps, and save it as a <code>.json</code> file. <br /><br />
+        Use the <strong>Creator Mode</strong> to design your lesson - pick any YouTube video, add questions at chosen timestamps, and save it as a lesson<code>(.json)</code>file. <br /><br />
         Then upload the file here and click <em>Proceed</em>. 
         The system will play the video, pause for questions, resume on answer, and end with a summary of all Q&As.
       </p>
        
       </div>
-      {/* --- Upload/Proceed Logic --- */}
       {!pendingLesson ? (
         <label
           htmlFor="lesson-upload"
@@ -263,33 +264,31 @@ const handleProceedToLesson = () => {
             <CheckCircle className="w-4 h-4" />
             <span className="text-sm font-medium">Loaded: {fileName}</span>
           </div>
-          {/* --- Updated Button Styling --- */}
           <button
-  onClick={handleProceedToLesson}
-  className="w-full px-6 py-3 bg-transparent border-2 rounded-lg 
-             text-lg font-medium 
-             border-blue-400 text-blue-600
-             hover:border-green-600 hover:text-blue-600"
->
-  Proceed to Lesson
-</button>
+            onClick={handleProceedToLesson}
+            className="w-full px-6 py-3 bg-transparent border-2 rounded-lg 
+                      text-lg font-medium 
+                      border-blue-400 text-blue-600
+                      hover:border-green-600 hover:text-blue-600"
+          >
+            Proceed to Lesson
+          </button>
         </div>
       )}
     </div>
   );
 
   const renderLessonSummary = () => (
-    <div className="p-4 sm:p-8 border rounded-xl max-w-4xl mx-auto bg-white shadow-xl flex flex-col gap-6">
-    <h2 className="font-medium text-3xl text-gray-800 border-b pb-3 flex flex-col items-start gap-1">
-  <div className="flex items-center gap-2">
-    <Video className="w-6 h-6 text-blue-400" />
-    Lesson Summary
-  </div>
-  <span className="text-blue-400 text-lg font-normal mt-1">
-    {lesson?.title}
-  </span>
-</h2>
-
+      <div className="p-4 sm:p-8 border rounded-xl max-w-4xl mx-auto bg-white shadow-xl flex flex-col gap-6">
+      <h2 className="font-medium text-3xl text-gray-800 border-b pb-3 flex flex-col items-start gap-1">
+          <div className="flex items-center gap-2">
+            <Video className="w-6 h-6 text-blue-400" />
+            Lesson Summary
+          </div>
+          <span className="text-blue-400 text-lg font-normal mt-1">
+            {lesson?.title}
+          </span>
+      </h2>
 
       <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-2 sm:pr-4">
         {lesson?.questions.map((q, i) => (
@@ -313,7 +312,7 @@ const handleProceedToLesson = () => {
       </div>
 
       <button
-        className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-lg font-light hover:bg-gray-800 transition shadow-md self-end"
+        className="mt-4 px-4 py-2 bg-blue-400 text-white rounded-lg font-light hover:bg-blue-600 transition shadow-md self-end"
         onClick={completeLesson}
       >
         Return Home
@@ -332,9 +331,7 @@ const handleProceedToLesson = () => {
     const questionData = lesson.questions[currentQuestionIndex];
 
     return (
-      // --- Updated Modal Container for Responsiveness ---
       <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 z-20">
-        {/* --- Updated Modal Content Card --- */}
         
         <div className="bg-white rounded-xl p-6 question-modal shadow-2xl flex flex-col gap-5 relative z-30 border-t-4 border-blue-600 overflow-y-auto">
 
@@ -375,14 +372,13 @@ const handleProceedToLesson = () => {
     <div className="absolute inset-0 bg-black/95 flex flex-col justify-center items-center p-6 z-20 text-center">
       <div className="text-white">
         <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
-        <h3 className="font-extrabold text-4xl mb-6">Lesson Completed!</h3>
+        <h3 className="font-light text-4xl text-white mb-6">Lesson Completed!</h3>
        <button
-  className="px-4 py-2 border-2 border-blue-600 text-slate-600 rounded-lg font-semibold hover:bg-blue-50 transition shadow-sm text-lg"
-  onClick={viewSummary}
->
-  View Summary
-</button>
-
+          className="px-4 py-2 border-2 border-blue-500 text-white rounded-lg font-light hover:bg-white hover:text-black transition shadow-sm text-lg"
+          onClick={viewSummary}
+        >
+          View Summary
+        </button>
       </div>
     </div>
   );
@@ -392,7 +388,7 @@ const handleProceedToLesson = () => {
     <div
       className="video-wrapper rounded-xl overflow-hidden shadow-2xl bg-black relative"
       style={{
-        height: "80vh", // Limit height
+        height: "80vh",
         maxHeight: "80vh",
       }}
     >
@@ -422,7 +418,7 @@ const handleProceedToLesson = () => {
 
       {isPaused && currentQuestionIndex === null && !lessonEnded && (
         <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none flex items-center justify-center">
-          <span className="text-white text-4xl font-bold opacity-75">
+          <span className="text-white text-4xl font-light opacity-75">
             Paused
           </span>
         </div>
@@ -431,7 +427,7 @@ const handleProceedToLesson = () => {
       {lessonEnded && renderLessonCompletedScreen()}
       {renderQuestionModal()}
     </div>
-    <h1 className="text-2xl font-bold text-gray-800 text-center sm:text-left">
+    <h1 className="text-2xl font-light text-gray-800 text-center sm:text-left">
       {lesson?.title}
     </h1>
   </div>
@@ -440,32 +436,115 @@ const handleProceedToLesson = () => {
 
   // --- Main Render ---
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col gap-8">
-      {!lesson && !summaryVisible && (
-        <div
-          className="min-h-[80vh] flex items-center justify-center rounded-xl overflow-hidden relative p-4"
-          style={{
-            backgroundImage: "url('/photos/studio_creator.avif')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Background overlay for readability */}
-          <div className="absolute inset-0 bg-black/40 z-0"></div>
-
-          {/* Uploader card is placed above the overlay */}
-          <div className="relative z-10">
-            {renderFileUploader()}
-          </div>
+ <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col gap-8 items-center">
+  {!lesson && !summaryVisible && (
+    <>
+    
+      {/* Banner (full image, no black strips) */}
+      <div className="w-full flex justify-center">
+        <div className="relative w-full max-w-6xl rounded-xl overflow-hidden">
+          <img
+            src="/photos/studio_banner.avif"
+            alt="Tecplore Studio Banner"
+            className="w-full h-auto object-contain rounded-xl"
+          />
         </div>
-      )}
+      </div>
+     
+
+      {/* File Uploader */}
+      <div className="w-full flex justify-center">
+        {renderFileUploader()}
+      </div>
+
+      <div className="mt-8 w-full max-w-6xl px-2 sm:px-4">
+          <h3 className="font-semibold text-lg mb-8 text-blue-800 text-center">
+            Start with a Ready-Made Lesson
+          </h3>
+      <div className="flex gap-6 overflow-x-auto pb-2">
+        {PRE_LESSONS.map(preLesson => (
+   
+        <div
+          key={preLesson.id}
+          className={`flex-none w-56 bg-white rounded-2xl overflow-hidden shadow-md border transition cursor-pointer
+            ${selectedPreLesson?.id === preLesson.id ? "border-blue-500 shadow-lg" : "border-gray-200"} 
+            hover:shadow-lg`}
+          onClick={() => setSelectedPreLesson(preLesson)}
+        >
+          <div className="w-full aspect-[4/3]">
+              <img
+                src={preLesson.thumbnail}
+                alt={preLesson.title}
+                className="w-full h-full object-cover"
+              />
+          </div>
+
+            <div className="p-3">
+              <h4 className="font-semibold text-base mb-2">{preLesson.title}</h4>
+             <div className="text-gray-600 text-sm mb-3 h-14 overflow-hidden">
+              {preLesson.description}
+            </div>
+
+
+            <button
+                  className={`w-full px-3 py-1 rounded transition font-medium 
+                  ${selectedPreLesson?.id === preLesson.id
+                    ? "bg-blue-600 text-white"
+                    : "bg-blue-100 text-blue-700 cursor-not-allowed opacity-50"
+                  }`}
+
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    if (selectedPreLesson?.id !== preLesson.id) return;
+
+                    setPreLessonLoading(true);
+
+                    try {
+                      const res = await fetch(preLesson.jsonFile);
+                      if (!res.ok) throw new Error("Failed to load lesson");
+                      const data = await res.json();
+
+                      setShowBrandVideo(true);
+                      setTimeout(() => {
+                        setLesson(data);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setPendingLesson(null);
+                        setCurrentQuestionIndex(null);
+                        setShowAnswer(false);
+                        setLessonEnded(false);
+                        setSummaryVisible(false);
+                        setAnsweredQuestions(new Set());
+                        setTriggeredQuestions(new Set());
+                        setIsPaused(false);
+                        setSelectedPreLesson(null);
+                      }, 0);
+
+                    } catch {
+                      alert("Error loading lesson file.");
+                    } finally {
+                      setPreLessonLoading(false);
+                    }
+                  }}
+                  disabled={preLessonLoading || selectedPreLesson?.id !== preLesson.id}
+                >
+                  {preLessonLoading && selectedPreLesson?.id === preLesson.id
+                    ? "Loading..."
+                    : "Start Lesson"}
+                </button>
+
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </>
+)}
 
    {lesson && !summaryVisible && (
   <>
     {showBrandVideo ? renderBrandVideo() : renderVideoPlayer()}
   </>
 )}
-
 
       {summaryVisible && lesson && renderLessonSummary()}
     </div>

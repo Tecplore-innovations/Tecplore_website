@@ -559,7 +559,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Video Lesson Creator</h1>
+            <h1 className="text-2xl font-light text-gray-900">Video Lesson Creator</h1>
             <p className="text-sm text-gray-600 mt-1">Create interactive lessons from YouTube videos</p>
           </div>
           {videoLoaded && (
@@ -723,7 +723,7 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
                     <span className="text-sm font-medium text-gray-700">Time</span>
                     <div className="flex items-center gap-2">
                       <button onClick={() => adjustQuestionTime(-0.5)} className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm">-0.5s</button>
-                      <span className="font-mono font-bold text-purple-700">{formatTime(questionTime)}</span>
+                      <span className="font-mono font-semibold text-purple-700">{formatTime(questionTime)}</span>
                       <button onClick={() => adjustQuestionTime(0.5)} className="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm">+0.5s</button>
                     </div>
                   </div>
@@ -781,10 +781,10 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
               <div className="bg-blue-50 rounded-xl border border-blue-200 p-6">
                 <h3 className="text-sm font-semibold text-blue-900 mb-3">Quick Start Guide</h3>
                 <ol className="space-y-2 text-sm text-blue-800">
-                  <li className="flex gap-2"><span className="font-bold">1.</span><span>Enter a lesson title and YouTube URL</span></li>
-                  <li className="flex gap-2"><span className="font-bold">2.</span><span>Choose to use full video or trim a section</span></li>
-                  <li className="flex gap-2"><span className="font-bold">3.</span><span>Play the video and add questions at key moments</span></li>
-                  <li className="flex gap-2"><span className="font-bold">4.</span><span>Save your lesson as a JSON file</span></li>
+                  <li className="flex gap-2"><span className="font-light">1.</span><span>Enter a lesson title and YouTube URL</span></li>
+                  <li className="flex gap-2"><span className="font-light">2.</span><span>Choose to use full video or trim a section</span></li>
+                  <li className="flex gap-2"><span className="font-light">3.</span><span>Play the video and add questions at key moments</span></li>
+                  <li className="flex gap-2"><span className="font-light">4.</span><span>Save your lesson as a JSON file</span></li>
                 </ol>
               </div>
             )}
@@ -794,11 +794,11 @@ const onStateChange: YouTubeProps['onStateChange'] = (event) => {
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">
                 <h3 className="text-sm font-semibold text-gray-900 mb-4">Lesson Stats</h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Video Duration</span><span className="font-mono font-bold text-gray-900">{formatTime(videoDuration)}</span></div>
+                  <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Video Duration</span><span className="font-mono font-light text-gray-900">{formatTime(videoDuration)}</span></div>
                   {videoMode === "trim" && trimEnd != null && trimStart != null && (
-                    <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Trimmed Duration</span><span className="font-mono font-bold text-purple-700">{formatTime(trimEnd - trimStart)}</span></div>
+                    <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Trimmed Duration</span><span className="font-mono font-light text-purple-700">{formatTime(trimEnd - trimStart)}</span></div>
                   )}
-                  <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Questions Added</span><span className="font-bold text-blue-600 text-lg">{lesson.questions.length}</span></div>
+                  <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Questions Added</span><span className="font-light text-blue-600 text-lg">{lesson.questions.length}</span></div>
                   {lesson.questions.length > 0 && (
                     <div className="flex justify-between items-center"><span className="text-sm text-gray-600">Avg. Time Between</span><span className="font-mono font-medium text-gray-900">{formatTime(lesson.questions.length > 1 ? (lesson.questions[lesson.questions.length - 1].time - lesson.questions[0].time) / (lesson.questions.length - 1) : 0)}</span></div>
                   )}

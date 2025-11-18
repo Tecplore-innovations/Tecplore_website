@@ -9,7 +9,7 @@ export default function TermsOfUsePage() {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <FileText className="h-8 w-8 text-blue-600" />
-          <h1 className="text-3xl font-bold">Terms of Use</h1>
+          <h1 className="text-3xl font-semibold">Terms of Use</h1>
         </div>
 
         <p className="text-sm text-gray-600 mb-8">
