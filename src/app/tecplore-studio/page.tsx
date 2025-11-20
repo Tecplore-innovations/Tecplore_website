@@ -97,7 +97,7 @@ export default function HomePage() {
           </div>
 
           {/* Text Panel */}
-          <div className="md:w-1/2 w-full flex flex-col justify-center p-8 md:pl-10 md:pr-10">
+    <div className={`md:w-1/2 w-full flex flex-col justify-center p-8 ${card.imageLeft ? "text-clip-right" : "text-clip-left"}`}>
             <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-6">
               {card.desc}
             </p>
@@ -112,6 +112,68 @@ export default function HomePage() {
         </section>
       ))}
     </main>
+
+        {/* localization / translation section */}
+        <section className="max-w-6xl mx-auto mb-24 px-4">
+          <div className="rounded-3xl bg-gradient-to-br from-violet-100 via-purple-50 to-pink-50 p-10 shadow-lg border border-violet-200/40">
+
+            {/* top title + transform text */}
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Transform global YouTube videos into lessons in 
+                <b className="text-purple-700"> your students' language</b> using 
+                synced voiceovers for localized learning.
+              </p>
+            </div>
+
+            {/* image + nativesync explainer */}
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+
+              {/* image left */}
+              <div className="w-full h-72 rounded-3xl overflow-hidden shadow-xl border border-purple-200/40">
+                <img
+                  src="/photos/translate.avif"
+                  alt="localization flow"
+                  className="w-full h-full object-cover"
+                  draggable={false}
+                />
+              </div>
+
+              {/* text right */}
+              <div className="flex flex-col justify-center">
+
+                {/* prerequisite note */}
+                <div className="bg-white/60 border-l-4 border-purple-500 p-4 mb-4 rounded-lg shadow-sm">
+                  <p className="text-sm text-gray-800 leading-relaxed">
+                  Have a useful YouTube video in foreign language and want to teach it in your students’ native language? <br/> <br/>Just translate the transcript and prepare a native voiceover. You can either record it yourself or generate it using any online tool.
+                  </p>
+                </div>
+
+                {/* nativesync flow */}
+                <div className="bg-white/70 border-r-4 border-purple-500 p-4 rounded-lg shadow-sm">
+                  <p className="text-sm text-gray-800 leading-relaxed">
+                    Bring your audio into <span className="font-semibold text-purple-700">NativeSync</span> to align it perfectly with the YouTube visuals. Export the synced track, build lessons in <span className="font-semibold text-purple-700">Creator Mode</span>, and present them to your class through <span className="font-semibold text-purple-700">Classroom Mode</span>.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            {/* cta button */}
+            <div className="mt-8 text-center">
+              <Link href="/tecplore-studio/localization">
+                <span className="inline-block border-2 border-purple-400 text-purple-700 px-7 py-2 rounded-full font-medium text-lg shadow-sm hover:border-purple-600 hover:text-purple-900 transition">
+                  Start Localization
+                </span>
+              </Link>
+              <p className="text-xs text-gray-500 mt-2">
+                Opens NativeSync
+              </p>
+            </div>
+
+          </div>
+        </section>
+
 
       {/* Footer */}
       <footer className="mt-12 text-center px-2">
@@ -143,6 +205,27 @@ export default function HomePage() {
         .clip-right {
           clip-path: polygon(5% 0, 100% 0, 100% 100%, 15% 100%);
         }
+         /* Desktop only: text card clips */
+        @media (min-width: 768px) {
+          .text-clip-right {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 10% 100%, 0 90%);
+            border-top-right-radius: 24px;
+            border-bottom-right-radius: 24px;
+            border: 2px solid #a78bfa;
+            border-left: none;
+            background: white;
+          }
+          .text-clip-left {
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            border-top-left-radius: 24px;
+            border-bottom-left-radius: 24px;
+            border: 2px solid #a78bfa;
+            border-right: none;
+            background: white;
+          }
+        }
+
+
       `}</style>
     </div>
   );

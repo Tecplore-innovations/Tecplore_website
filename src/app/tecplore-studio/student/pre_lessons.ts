@@ -1,10 +1,11 @@
-
 export interface PreLesson {
   id: string;
   title: string;
   description: string;
   thumbnail: string;
   jsonFile: string;
+  isTranslated?: boolean; // New Field
+  audioFile?: string;     // New Field
 }
 
 export const PRE_LESSONS: PreLesson[] = [
@@ -15,14 +16,17 @@ export const PRE_LESSONS: PreLesson[] = [
       "A thrilling wildlife documentary that reveals how animals run, survive, and thrive in nature.",
     thumbnail: "/photos/pre_lesson/born_to_run.avif",
     jsonFile: "/photos/pre_lesson/born_to_run.json",
+    isTranslated: false
   },
   {
     id: "math_fractions",
-    title: "Fun with Fractions",
+    title: "Fun with Fractions (Hindi)", // Example of translated
     description:
-      "Learn fractions using real-life examples and visual quizzes.",
+      "Learn fractions using real-life examples and visual quizzes. (Translated Audio)",
     thumbnail: "/photos/pre_lesson/fractions.avif",
     jsonFile: "/photos/pre_lesson/fractions.json",
+    isTranslated: true,
+    audioFile: "/audio/pre_lesson/fractions_hindi.mp3" // Path to audio file
   },
   {
     id: "space_moon",
