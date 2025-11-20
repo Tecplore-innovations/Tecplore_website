@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
-import { Upload, CheckCircle, Video, Music, VolumeX } from "lucide-react"; 
+import { Upload, CheckCircle, Video, Music, VolumeX, X } from "lucide-react"; 
 import { PRE_LESSONS, PreLesson } from "./pre_lessons";
 
 // --- Constants ---
@@ -144,6 +144,31 @@ export default function StudentPage() {
     }, 150);
   };
 
+  // New: Handler to remove the JSON lesson file
+  const handleRemoveLesson = () => {
+    setPendingLesson(null);
+    setFileName(null);
+    setRequiresAudio(false);
+    
+    // Also clear audio if lesson is removed
+    setAudioFileName(null);
+    setCustomAudioSrc(null);
+    setUploadProgress(0);
+    setIsUploadingAudio(false);
+    
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (audioInputRef.current) audioInputRef.current.value = "";
+  };
+
+  // New: Handler to remove the Audio file
+  const handleRemoveAudio = () => {
+    setAudioFileName(null);
+    setCustomAudioSrc(null);
+    setUploadProgress(0);
+    setIsUploadingAudio(false);
+    if (audioInputRef.current) audioInputRef.current.value = "";
+  };
+
   const handleProceedToLesson = () => {
     if (!pendingLesson) return;
     if (requiresAudio && !customAudioSrc) {
@@ -236,12 +261,7 @@ export default function StudentPage() {
       // 3. SMART RESUME with MICRO-REWIND
       if (lesson?.translatedAudio && customAudioRef.current && playerRef.current) {
          const vidTime = playerRef.current.getCurrentTime();
-         
-         // Fix: Rewind audio slightly (0.15s) relative to video time on resume.
-         // This ensures we catch the start of the word ("Sah-") that might have 
-         // been cut off by the pause reaction time.
          const syncTime = Math.max(0, vidTime - RESUME_REWIND_OFFSET);
-         
          customAudioRef.current.currentTime = syncTime;
          customAudioRef.current.play().catch(e => console.log("Audio play error", e));
       }
@@ -280,11 +300,8 @@ export default function StudentPage() {
       if (!playerRef.current.isMuted()) playerRef.current.mute();
 
       const audioTime = customAudioRef.current.currentTime;
-      // Calculate drift against the raw video time (ignoring our resume offset)
-      // We want to stay close to the real video time during playback.
       const drift = Math.abs(audioTime - currentTime);
 
-      // If drift > 0.25s, snap audio to video
       if (drift > SYNC_THRESHOLD) {
         customAudioRef.current.currentTime = currentTime;
       }
@@ -402,9 +419,19 @@ export default function StudentPage() {
         </label>
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="p-3 bg-green-50 text-green-700 border border-green-200 rounded-md flex items-center gap-2">
-            <CheckCircle className="w-4 h-4" />
-            <span className="text-sm font-medium">Loaded Lesson: {fileName}</span>
+          {/* Lesson File Display with Remove Button */}
+          <div className="p-3 bg-green-50 text-green-700 border border-green-200 rounded-md flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              <span className="text-sm font-medium">Loaded Lesson: {fileName}</span>
+            </div>
+            <button 
+              onClick={handleRemoveLesson}
+              className="p-1 hover:bg-green-100 rounded-full text-green-600 transition-colors"
+              title="Remove Lesson"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
 
           {requiresAudio && (
@@ -439,9 +466,19 @@ export default function StudentPage() {
                  />
                </label>
               ) : (
-                <div className="p-3 bg-purple-50 text-purple-700 border border-purple-200 rounded-md flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span className="text-sm font-medium">Loaded Audio: {audioFileName}</span>
+                /* Audio File Display with Remove Button */
+                <div className="p-3 bg-purple-50 text-purple-700 border border-purple-200 rounded-md flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="text-sm font-medium">Loaded Audio: {audioFileName}</span>
+                  </div>
+                  <button 
+                    onClick={handleRemoveAudio}
+                    className="p-1 hover:bg-purple-100 rounded-full text-purple-600 transition-colors"
+                    title="Remove Audio"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
               )}
             </div>
