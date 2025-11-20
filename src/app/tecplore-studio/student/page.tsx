@@ -5,6 +5,10 @@ import YouTube, { YouTubeProps } from "react-youtube";
 import { Upload, CheckCircle, Video, Music, VolumeX } from "lucide-react"; 
 import { PRE_LESSONS, PreLesson } from "./pre_lessons";
 
+// --- Constants ---
+// Threshold for drift correction during active playback
+const SYNC_THRESHOLD = 0.25; 
+
 // --- Types ---
 type Question = {
   id: string;
@@ -17,7 +21,7 @@ type Lesson = {
   title: string;
   youtubeLink: string;
   youtubeId: string;
-  translatedAudio: boolean; // Check this field
+  translatedAudio: boolean; 
   trimStart: number;
   trimEnd?: number;
   questions: Question[];
@@ -51,6 +55,9 @@ export default function StudentPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const customAudioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // This ref tracks playback status instantly, avoiding React state closure issues in loops
+  const isPlayingRef = useRef(false);
 
   // Pre-lesson State
   const [selectedPreLesson, setSelectedPreLesson] = useState<PreLesson | null>(null);
@@ -61,12 +68,12 @@ export default function StudentPage() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (customAudioSrc) URL.revokeObjectURL(customAudioSrc);
+      isPlayingRef.current = false;
     };
   }, [customAudioSrc]);
 
   // --- Handlers ---
 
-  // 1. JSON Upload Handler
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -79,10 +86,9 @@ export default function StudentPage() {
         const data: Lesson = JSON.parse(ev.target?.result as string);
         setPendingLesson(data);
         
-        // Check if this lesson requires translated audio
         if (data.translatedAudio) {
           setRequiresAudio(true);
-          setAudioFileName(null); // Reset audio file
+          setAudioFileName(null);
           if (audioInputRef.current) audioInputRef.current.value = "";
         } else {
           setRequiresAudio(false);
@@ -99,7 +105,6 @@ export default function StudentPage() {
     reader.readAsText(file);
   };
 
-  // 2. Audio Upload Handler
   const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -111,20 +116,14 @@ export default function StudentPage() {
 
   const handleProceedToLesson = () => {
     if (!pendingLesson) return;
-    
-    // Validate audio requirement
     if (requiresAudio && !customAudioSrc) {
       alert("Please upload the translated audio file to proceed.");
       return;
     }
-
     setShowBrandVideo(true);
-
     setTimeout(() => {
       setLesson(pendingLesson);
       window.scrollTo({ top: 0, behavior: "smooth" });
-      
-      // Reset states
       setPendingLesson(null);
       setCurrentQuestionIndex(null);
       setShowAnswer(false);
@@ -133,6 +132,7 @@ export default function StudentPage() {
       setAnsweredQuestions(new Set());
       setTriggeredQuestions(new Set());
       setIsPaused(false);
+      isPlayingRef.current = false;
     });
   };
 
@@ -146,91 +146,97 @@ export default function StudentPage() {
         onEnded={() => setShowBrandVideo(false)}
         className="w-full h-auto max-h-[80vh] object-contain"
       />
-      {/* Note: Custom audio does NOT play here. It only plays when YouTube starts. */}
-      <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-700" />
     </div>
   );
 
-  // --- Sync Logic ---
+  // --- REFINED SYNC LOGIC ---
+
+  const startInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(checkVideoTime, 200);
+  };
+
+  const stopInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
+    }
+  };
 
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     playerRef.current = event.target;
     const startTime = lesson?.trimStart ?? 0;
     
-    // If translated, mute YouTube
     if (lesson?.translatedAudio) {
       event.target.mute();
     }
 
     playerRef.current?.seekTo(startTime, true);
     playerRef.current?.playVideo();
-
-    setTimeout(() => {
-      startInterval();
-    }, 500);
+    // We let onStateChange(PLAYING) handle the interval start
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
     const state = event.data;
 
-    // Always enforce mute if translated
     if (lesson?.translatedAudio) {
       event.target.mute();
     }
 
     if (state === YT.PlayerState.ENDED) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
-      
-      if (customAudioRef.current) customAudioRef.current.pause();
-      
+      isPlayingRef.current = false;
+      stopInterval();
+      customAudioRef.current?.pause();
       setCurrentQuestionIndex(null);
       setLessonEnded(true);
       setIsPaused(false);
 
     } else if (state === YT.PlayerState.PAUSED) {
+      // 1. STRICT PAUSE: Update ref immediately to block loop
+      isPlayingRef.current = false;
       setIsPaused(true);
-      if (customAudioRef.current) customAudioRef.current.pause();
+      stopInterval();
       
-      // FIX: Stop the sync loop immediately to prevent "fighting" audio
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      // 2. FORCE AUDIO STOP: This prevents "ghost running" in background
+      if (customAudioRef.current) {
+          customAudioRef.current.pause();
+      }
 
     } else if (state === YT.PlayerState.PLAYING) {
+      isPlayingRef.current = true;
       setIsPaused(false);
-      // Sync Audio Start
-      if (lesson?.translatedAudio && customAudioRef.current) {
-        customAudioRef.current.play().catch(e => console.log("Audio play catch", e));
+      
+      // 3. STRICT RESUME: Sync immediately. Do not wait.
+      // This forces audio to jump exactly to where video is (e.g. 15s), 
+      // correcting any drift or "25s" issues from the pause duration.
+      if (lesson?.translatedAudio && customAudioRef.current && playerRef.current) {
+         const vidTime = playerRef.current.getCurrentTime();
+         customAudioRef.current.currentTime = vidTime;
+         customAudioRef.current.play().catch(e => console.log("Audio play error", e));
       }
-      // FIX: Start the loop only when playing
+      
       startInterval();
     
     } else if (state === YT.PlayerState.BUFFERING) {
-      if (customAudioRef.current) customAudioRef.current.pause();
-      // FIX: Stop sync loop while buffering
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      isPlayingRef.current = false;
+      stopInterval();
+      customAudioRef.current?.pause();
     }
-  };
-
-  // Main Loop for Logic (Questions + Audio Sync)
-  const startInterval = () => {
-    if (!lesson || !playerRef.current) return;
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
-    }
-    intervalRef.current = setInterval(checkVideoTime, 200); // 200ms check
   };
 
   const checkVideoTime = () => {
-    if (!lesson || !playerRef.current) return;
-
-    // FIX: Direct safety check. If YouTube isn't playing, do NOT force audio logic.
-    // This prevents the loop from firing if the interval hasn't cleared yet.
-    const playerState = playerRef.current.getPlayerState();
-    if (playerState !== YT.PlayerState.PLAYING) {
+    // Safety: If the ref says we shouldn't be playing, stop everything.
+    if (!isPlayingRef.current || !lesson || !playerRef.current) {
         if (customAudioRef.current && !customAudioRef.current.paused) {
             customAudioRef.current.pause();
         }
+        return;
+    }
+
+    // Double Safety: Check YouTube state
+    const ytState = playerRef.current.getPlayerState();
+    if (ytState !== YT.PlayerState.PLAYING && ytState !== YT.PlayerState.BUFFERING) {
+        customAudioRef.current?.pause();
         return;
     }
 
@@ -238,37 +244,36 @@ export default function StudentPage() {
     const duration = playerRef.current.getDuration();
     const endTime = lesson.trimEnd ?? duration;
 
-    // --- 1. Translated Audio Sync Logic ---
+    // --- 1. Sync Logic ---
     if (lesson.translatedAudio && customAudioRef.current) {
-      // Force mute YouTube
       if (!playerRef.current.isMuted()) playerRef.current.mute();
 
-      // Check drift (if > 0.25s difference, snap audio to video)
       const audioTime = customAudioRef.current.currentTime;
-      if (Math.abs(audioTime - currentTime) > 0.25) {
+      const drift = Math.abs(audioTime - currentTime);
+
+      // If drift > 0.25s, snap audio to video
+      if (drift > SYNC_THRESHOLD) {
         customAudioRef.current.currentTime = currentTime;
       }
 
-      // Sync Play/Pause state safety
-      // We removed !isPaused check here because the top-level check handles it safely now
-      if (customAudioRef.current.paused) {
+      // Ensure audio is playing if we are in the playing loop
+      if (customAudioRef.current.paused && isPlayingRef.current) {
         customAudioRef.current.play().catch(() => {});
       }
     }
 
-    // --- 2. Video End Logic ---
+    // --- 2. End Check ---
     if (duration && lesson.trimEnd && currentTime >= endTime - 0.5) {
       playerRef.current.pauseVideo();
-      if (customAudioRef.current) customAudioRef.current.pause();
-      
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
+      customAudioRef.current?.pause();
+      isPlayingRef.current = false;
+      stopInterval();
       setLessonEnded(true);
       setCurrentQuestionIndex(null);
       return;
     }
 
-    // --- 3. Question Logic ---
+    // --- 3. Questions Check ---
     for (let i = 0; i < lesson.questions.length; i++) {
       if (
         !answeredQuestions.has(i) &&
@@ -276,17 +281,19 @@ export default function StudentPage() {
         currentTime >= lesson.questions[i].time
       ) {
         playerRef.current.pauseVideo();
-        if (customAudioRef.current) customAudioRef.current.pause();
+        customAudioRef.current?.pause();
+        isPlayingRef.current = false;
+        stopInterval();
 
         setCurrentQuestionIndex(i);
         setShowAnswer(false);
         setTriggeredQuestions((prev) => new Set(prev).add(i));
-        clearInterval(intervalRef.current);
-        intervalRef.current = undefined;
         return;
       }
     }
   };
+
+  // --- UI Actions ---
 
   const revealAnswer = () => setShowAnswer(true);
 
@@ -302,11 +309,7 @@ export default function StudentPage() {
     setCurrentQuestionIndex(null);
     setShowAnswer(false);
     
-    // Resume playback
     playerRef.current?.playVideo();
-    // Audio will resume via onStateChange listener
-    
-    startInterval();
   };
 
   const viewSummary = () => {
@@ -315,10 +318,9 @@ export default function StudentPage() {
   };
 
   const completeLesson = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
-    }
+    stopInterval();
+    isPlayingRef.current = false;
+    
     setLesson(null);
     setPendingLesson(null);
     setFileName(null);
@@ -337,32 +339,24 @@ export default function StudentPage() {
     if (audioInputRef.current) audioInputRef.current.value = "";
   };
 
-  // --- Component Renders ---
+  // --- Renders ---
 
   const renderFileUploader = () => (
     <div className="p-8 rounded-xl bg-white/95 backdrop-blur-sm shadow-lg max-w-2xl w-full transition duration-300">
-    
       <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-        <h3 className="font-light text-lg mb-2 text-blue-800">
-          How To Use!
-        </h3>
-       <p className="text-gray-600">
-  Upload your lesson file (.json) to continue. If you don’t have one yet, create a lesson in Creator Mode, and then upload the file here. 
-  If your lesson uses <strong>translated audio</strong>, you’ll also be prompted to upload its associated MP3 file.
-</p>
-
+        <h3 className="font-light text-lg mb-2 text-blue-800">How To Use!</h3>
+        <p className="text-gray-600">
+          Upload your lesson file (.json) to continue. If you don’t have one yet, create a lesson in Creator Mode.
+        </p>
       </div>
 
-      {/* 1. JSON Upload */}
       {!pendingLesson ? (
         <label
           htmlFor="lesson-upload"
           className="flex flex-col items-center justify-center p-6 border-2 border-blue-100 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
         >
           <Upload className="w-6 h-6 text-blue-600 mb-2" />
-          <span className="font-medium text-blue-600">
-            Click to Select Lesson File (.json)
-          </span>
+          <span className="font-medium text-blue-600">Click to Select Lesson File (.json)</span>
           <input
             id="lesson-upload"
             ref={fileInputRef}
@@ -379,7 +373,6 @@ export default function StudentPage() {
             <span className="text-sm font-medium">Loaded Lesson: {fileName}</span>
           </div>
 
-          {/* 2. Conditional Audio Upload */}
           {requiresAudio && (
             <div className="animate-fade-in">
               {!audioFileName ? (
@@ -388,9 +381,7 @@ export default function StudentPage() {
                  className="flex flex-col items-center justify-center p-6 border-2 border-purple-100 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
                >
                  <Music className="w-6 h-6 text-purple-600 mb-2" />
-                 <span className="font-medium text-purple-600">
-                   Upload Translated Audio (.mp3/wav)
-                 </span>
+                 <span className="font-medium text-purple-600">Upload Translated Audio (.mp3/wav)</span>
                  <input
                    id="audio-upload"
                    ref={audioInputRef}
@@ -432,9 +423,7 @@ export default function StudentPage() {
             <Video className="w-6 h-6 text-blue-400" />
             Lesson Summary
           </div>
-          <span className="text-blue-400 text-lg font-normal mt-1">
-            {lesson?.title}
-          </span>
+          <span className="text-blue-400 text-lg font-normal mt-1">{lesson?.title}</span>
       </h2>
 
       <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-2 sm:pr-4">
@@ -442,17 +431,14 @@ export default function StudentPage() {
           <div
             key={q.id}
             className={`border-l-4 p-4 rounded-r-lg shadow-sm ${
-              answeredQuestions.has(i)
-                ? "border-green-500 bg-green-50"
-                : "border-gray-300 bg-gray-50"
+              answeredQuestions.has(i) ? "border-green-500 bg-green-50" : "border-gray-300 bg-gray-50"
             }`}
           >
             <p className="font-medium text-lg text-gray-800 mb-1">
               Q{i + 1} ({q.time.toFixed(2)}s): {q.question}
             </p>
             <p className="text-gray-600 ml-2 border-l pl-3">
-              <span className="font-medium text-gray-700">Answer:</span>{" "}
-              {q.answer}
+              <span className="font-medium text-gray-700">Answer:</span> {q.answer}
             </p>
           </div>
         ))}
@@ -468,26 +454,14 @@ export default function StudentPage() {
   );
 
   const renderQuestionModal = () => {
-    if (
-      currentQuestionIndex === null ||
-      !lesson ||
-      !lesson.questions[currentQuestionIndex]
-    )
-      return null;
-
+    if (currentQuestionIndex === null || !lesson || !lesson.questions[currentQuestionIndex]) return null;
     const questionData = lesson.questions[currentQuestionIndex];
 
     return (
       <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 z-20">
-        
         <div className="bg-white rounded-xl p-6 question-modal shadow-2xl flex flex-col gap-5 relative z-30 border-t-4 border-blue-600 overflow-y-auto">
-
-          <h3 className="font-light text-1xl text-blue-600">
-           Question
-          </h3>
-          <p className="text-gray-800 text-lg border-b pb-3">
-            {questionData.question}
-          </p>
+          <h3 className="font-light text-1xl text-blue-600">Question</h3>
+          <p className="text-gray-800 text-lg border-b pb-3">{questionData.question}</p>
 
           {!showAnswer ? (
             <button
@@ -532,13 +506,7 @@ export default function StudentPage() {
 
   const renderVideoPlayer = () => (
     <div className="relative flex flex-col gap-4 w-full max-w-7xl mx-auto landscape-container">
-      <div
-        className="video-wrapper rounded-xl overflow-hidden shadow-2xl bg-black relative"
-        style={{
-          height: "80vh",
-          maxHeight: "80vh",
-        }}
-      >
+      <div className="video-wrapper rounded-xl overflow-hidden shadow-2xl bg-black relative" style={{ height: "80vh", maxHeight: "80vh" }}>
         <YouTube
           videoId={lesson!.youtubeId}
           opts={{
@@ -563,12 +531,10 @@ export default function StudentPage() {
           className="w-full h-full"
         />
 
-        {/* Hidden Audio Player for Translated Lessons */}
         {lesson?.translatedAudio && customAudioSrc && (
           <audio ref={customAudioRef} src={customAudioSrc} preload="auto" />
         )}
 
-        {/* Overlay Icon for Translated Audio */}
         {lesson?.translatedAudio && !isPaused && !lessonEnded && (
            <div className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white flex items-center gap-2 backdrop-blur-md z-10 pointer-events-none">
              <VolumeX className="w-4 h-4 text-gray-400" />
@@ -578,48 +544,31 @@ export default function StudentPage() {
 
         {isPaused && currentQuestionIndex === null && !lessonEnded && (
           <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none flex items-center justify-center">
-            <span className="text-white text-4xl font-light opacity-75">
-              Paused
-            </span>
+            <span className="text-white text-4xl font-light opacity-75">Paused</span>
           </div>
         )}
 
         {lessonEnded && renderLessonCompletedScreen()}
         {renderQuestionModal()}
       </div>
-      <h1 className="text-2xl font-light text-gray-800 text-center sm:text-left">
-        {lesson?.title}
-      </h1>
+      <h1 className="text-2xl font-light text-gray-800 text-center sm:text-left">{lesson?.title}</h1>
     </div>
   );
 
-
-  // --- Main Render ---
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col gap-8 items-center">
       {!lesson && !summaryVisible && (
         <>
-          {/* Banner */}
           <div className="w-full flex justify-center">
             <div className="relative w-full max-w-6xl rounded-xl overflow-hidden">
-              <img
-                src="/photos/studio_banner.avif"
-                alt="Tecplore Studio Banner"
-                className="w-full h-auto object-contain rounded-xl"
-              />
+              <img src="/photos/studio_banner.avif" alt="Banner" className="w-full h-auto object-contain rounded-xl" />
             </div>
           </div>
 
-          {/* Manual File Uploader */}
-          <div className="w-full flex justify-center">
-            {renderFileUploader()}
-          </div>
+          <div className="w-full flex justify-center">{renderFileUploader()}</div>
 
-          {/* Pre-made Lessons */}
           <div className="mt-8 w-full max-w-6xl px-2 sm:px-4">
-            <h3 className="font-semibold text-lg mb-8 text-blue-800 text-center">
-              Start with a Ready-Made Lesson
-            </h3>
+            <h3 className="font-semibold text-lg mb-8 text-blue-800 text-center">Start with a Ready-Made Lesson</h3>
             <div className="flex gap-6 overflow-x-auto pb-4">
               {PRE_LESSONS.map((preLesson) => (
                 <div
@@ -629,50 +578,34 @@ export default function StudentPage() {
                     hover:shadow-lg`}
                   onClick={() => setSelectedPreLesson(preLesson)}
                 >
-                  
-                  {/* Translated Badge */}
                   {preLesson.isTranslated && (
                     <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md">
                       <Music className="w-3 h-3" /> Translated
                     </div>
                   )}
-
                   <div className="w-full aspect-[4/3]">
-                    <img
-                      src={preLesson.thumbnail}
-                      alt={preLesson.title}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={preLesson.thumbnail} alt={preLesson.title} className="w-full h-full object-cover" />
                   </div>
-
                   <div className="p-3 flex flex-col h-[150px]">
                     <h4 className="font-semibold text-base mb-2 leading-tight line-clamp-2">{preLesson.title}</h4>
                     <div className="text-gray-600 text-sm mb-3 flex-grow overflow-hidden">
                       <p className="line-clamp-3">{preLesson.description}</p>
                     </div>
-
                     <button
                       className={`w-full px-3 py-2 rounded transition font-medium text-sm mt-auto
-                      ${selectedPreLesson?.id === preLesson.id
-                        ? "bg-blue-600 text-white"
-                        : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                      }`}
+                      ${selectedPreLesson?.id === preLesson.id ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600 hover:bg-blue-100"}`}
                       onClick={async (e) => {
                         e.stopPropagation();
                         if (selectedPreLesson?.id !== preLesson.id) {
                           setSelectedPreLesson(preLesson);
                           return;
                         }
-
                         setPreLessonLoading(true);
-
                         try {
-                          // 1. Fetch JSON
                           const res = await fetch(preLesson.jsonFile);
                           if (!res.ok) throw new Error("Failed to load lesson JSON");
                           const data: Lesson = await res.json();
 
-                          // 2. Fetch Audio if Translated
                           if (preLesson.isTranslated && preLesson.audioFile) {
                              const audioRes = await fetch(preLesson.audioFile);
                              if (!audioRes.ok) throw new Error("Failed to load audio file");
@@ -683,7 +616,6 @@ export default function StudentPage() {
                              setCustomAudioSrc(null);
                           }
 
-                          // 3. Start
                           setShowBrandVideo(true);
                           setTimeout(() => {
                             setLesson(data);
@@ -696,6 +628,7 @@ export default function StudentPage() {
                             setAnsweredQuestions(new Set());
                             setTriggeredQuestions(new Set());
                             setIsPaused(false);
+                            isPlayingRef.current = false;
                             setSelectedPreLesson(null);
                           }, 0);
 
@@ -708,9 +641,7 @@ export default function StudentPage() {
                       }}
                       disabled={preLessonLoading}
                     >
-                      {preLessonLoading && selectedPreLesson?.id === preLesson.id
-                        ? "Loading..."
-                        : "Start Lesson"}
+                      {preLessonLoading && selectedPreLesson?.id === preLesson.id ? "Loading..." : "Start Lesson"}
                     </button>
                   </div>
                 </div>
