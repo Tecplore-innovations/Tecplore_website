@@ -121,7 +121,7 @@ export default function HomePage() {
             <div className="max-w-3xl mx-auto text-center mb-8">
               <p className="text-lg text-gray-700 leading-relaxed">
                 Transform global YouTube videos into lessons in 
-                <b className="text-purple-700"> your students &apos; language</b> using 
+                <b className="text-purple-700"> your students&apos; language</b> using 
                 synced voiceovers for localized learning.
               </p>
             </div>

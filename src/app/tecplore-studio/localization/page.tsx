@@ -50,10 +50,11 @@ interface WaveSurferInstance {
 
 declare global {
   interface Window {
-    // Fix: Use specific types or unknown/Record for external globals instead of strict 'any'
-    YT: { Player: new (id: string, config: any) => YTPlayer }; 
+    // Fix: Replaced 'any' with 'Record<string, unknown>'
+    YT: { Player: new (id: string, config: Record<string, unknown>) => YTPlayer }; 
     onYouTubeIframeAPIReady: () => void;
-    WaveSurfer: { create: (config: any) => WaveSurferInstance };
+    // Fix: Replaced 'any' with 'Record<string, unknown>'
+    WaveSurfer: { create: (config: Record<string, unknown>) => WaveSurferInstance };
     webkitAudioContext: typeof AudioContext;
   }
 }
@@ -227,7 +228,6 @@ const NativeYouTubePlayer = React.memo(({
 
       if (window.YT && window.YT.Player) {
         try {
-         /*  // @ts-expect-error YT types are loose in window context */
           playerRef.current = new window.YT.Player(divId.current, {
             videoId: videoId,
             height: '100%',
@@ -260,8 +260,7 @@ const NativeYouTubePlayer = React.memo(({
       if (playerRef.current) {
         try {
           playerRef.current.destroy();
-        // Fix: Unused variable '_e'
-        } catch(_e) { /* ignore */ }
+        } catch { /* ignore */ } // Fix: Removed unused variable
         playerRef.current = null;
       }
     };
@@ -381,12 +380,6 @@ export default function NativeSync() {
        masterPlayerRef.current.load(url);
        masterPlayerRef.current.once('ready', () => {
           // Ensure playhead is exactly where visual needle is
-          // Note: using 'currentTime' state variable directly here is fine 
-          // because the function is recreated when videoDuration changes, but maybe not currentTime.
-          // To be safe, we just don't rely on exact currentTime sync during render complete,
-          // or we add currentTime to deps (which might trigger frequent re-defs).
-          // A better approach is not to seek immediately or accept a slight drift until next tick.
-          // However, for this fix, we keep logic similar.
           if (masterPlayerRef.current) {
              // masterPlayerRef.current.setTime(currentTime); // Optional: sync time
              setIsRendering(false);
