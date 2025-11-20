@@ -191,6 +191,9 @@ export default function StudentPage() {
     } else if (state === YT.PlayerState.PAUSED) {
       setIsPaused(true);
       if (customAudioRef.current) customAudioRef.current.pause();
+      
+      // FIX: Stop the sync loop immediately to prevent "fighting" audio
+      if (intervalRef.current) clearInterval(intervalRef.current);
 
     } else if (state === YT.PlayerState.PLAYING) {
       setIsPaused(false);
@@ -198,9 +201,13 @@ export default function StudentPage() {
       if (lesson?.translatedAudio && customAudioRef.current) {
         customAudioRef.current.play().catch(e => console.log("Audio play catch", e));
       }
+      // FIX: Start the loop only when playing
+      startInterval();
     
     } else if (state === YT.PlayerState.BUFFERING) {
       if (customAudioRef.current) customAudioRef.current.pause();
+      // FIX: Stop sync loop while buffering
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
   };
 
@@ -217,6 +224,16 @@ export default function StudentPage() {
   const checkVideoTime = () => {
     if (!lesson || !playerRef.current) return;
 
+    // FIX: Direct safety check. If YouTube isn't playing, do NOT force audio logic.
+    // This prevents the loop from firing if the interval hasn't cleared yet.
+    const playerState = playerRef.current.getPlayerState();
+    if (playerState !== YT.PlayerState.PLAYING) {
+        if (customAudioRef.current && !customAudioRef.current.paused) {
+            customAudioRef.current.pause();
+        }
+        return;
+    }
+
     const currentTime = playerRef.current.getCurrentTime();
     const duration = playerRef.current.getDuration();
     const endTime = lesson.trimEnd ?? duration;
@@ -226,14 +243,15 @@ export default function StudentPage() {
       // Force mute YouTube
       if (!playerRef.current.isMuted()) playerRef.current.mute();
 
-      // Check drift (if > 0.2s difference, snap audio to video)
+      // Check drift (if > 0.25s difference, snap audio to video)
       const audioTime = customAudioRef.current.currentTime;
       if (Math.abs(audioTime - currentTime) > 0.25) {
         customAudioRef.current.currentTime = currentTime;
       }
 
       // Sync Play/Pause state safety
-      if (!isPaused && customAudioRef.current.paused) {
+      // We removed !isPaused check here because the top-level check handles it safely now
+      if (customAudioRef.current.paused) {
         customAudioRef.current.play().catch(() => {});
       }
     }
