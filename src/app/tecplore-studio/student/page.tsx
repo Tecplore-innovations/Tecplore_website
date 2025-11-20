@@ -8,6 +8,8 @@ import { PRE_LESSONS, PreLesson } from "./pre_lessons";
 // --- Constants ---
 // Threshold for drift correction during active playback
 const SYNC_THRESHOLD = 0.25; 
+// Amount to rewind audio on resume to recover lost syllables (prevent skipping words)
+const RESUME_REWIND_OFFSET = 0.15; 
 
 // --- Types ---
 type Question = {
@@ -38,6 +40,10 @@ export default function StudentPage() {
   const [requiresAudio, setRequiresAudio] = useState(false);
   const [audioFileName, setAudioFileName] = useState<string | null>(null);
   const [customAudioSrc, setCustomAudioSrc] = useState<string | null>(null);
+  
+  // Loading State for Audio
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
 
   // Playback State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null);
@@ -89,6 +95,9 @@ export default function StudentPage() {
         if (data.translatedAudio) {
           setRequiresAudio(true);
           setAudioFileName(null);
+          setCustomAudioSrc(null);
+          setUploadProgress(0);
+          setIsUploadingAudio(false);
           if (audioInputRef.current) audioInputRef.current.value = "";
         } else {
           setRequiresAudio(false);
@@ -110,8 +119,29 @@ export default function StudentPage() {
     if (!file) return;
 
     setAudioFileName(file.name);
-    const url = URL.createObjectURL(file);
-    setCustomAudioSrc(url);
+    setIsUploadingAudio(true);
+    setUploadProgress(0);
+    setCustomAudioSrc(null); // Ensure button is disabled
+
+    // Simulate upload progress for better UX
+    let currentProgress = 0;
+    const timer = setInterval(() => {
+      currentProgress += Math.random() * 15 + 5;
+      if (currentProgress >= 100) {
+        currentProgress = 100;
+        clearInterval(timer);
+        setUploadProgress(100);
+        
+        // Small delay at 100% before "finishing"
+        setTimeout(() => {
+          const url = URL.createObjectURL(file);
+          setCustomAudioSrc(url);
+          setIsUploadingAudio(false);
+        }, 500);
+      } else {
+        setUploadProgress(currentProgress);
+      }
+    }, 150);
   };
 
   const handleProceedToLesson = () => {
@@ -173,7 +203,6 @@ export default function StudentPage() {
 
     playerRef.current?.seekTo(startTime, true);
     playerRef.current?.playVideo();
-    // We let onStateChange(PLAYING) handle the interval start
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
@@ -192,12 +221,10 @@ export default function StudentPage() {
       setIsPaused(false);
 
     } else if (state === YT.PlayerState.PAUSED) {
-      // 1. STRICT PAUSE: Update ref immediately to block loop
+      // 1. STRICT PAUSE
       isPlayingRef.current = false;
       setIsPaused(true);
       stopInterval();
-      
-      // 2. FORCE AUDIO STOP: This prevents "ghost running" in background
       if (customAudioRef.current) {
           customAudioRef.current.pause();
       }
@@ -206,12 +233,16 @@ export default function StudentPage() {
       isPlayingRef.current = true;
       setIsPaused(false);
       
-      // 3. STRICT RESUME: Sync immediately. Do not wait.
-      // This forces audio to jump exactly to where video is (e.g. 15s), 
-      // correcting any drift or "25s" issues from the pause duration.
+      // 3. SMART RESUME with MICRO-REWIND
       if (lesson?.translatedAudio && customAudioRef.current && playerRef.current) {
          const vidTime = playerRef.current.getCurrentTime();
-         customAudioRef.current.currentTime = vidTime;
+         
+         // Fix: Rewind audio slightly (0.15s) relative to video time on resume.
+         // This ensures we catch the start of the word ("Sah-") that might have 
+         // been cut off by the pause reaction time.
+         const syncTime = Math.max(0, vidTime - RESUME_REWIND_OFFSET);
+         
+         customAudioRef.current.currentTime = syncTime;
          customAudioRef.current.play().catch(e => console.log("Audio play error", e));
       }
       
@@ -225,7 +256,7 @@ export default function StudentPage() {
   };
 
   const checkVideoTime = () => {
-    // Safety: If the ref says we shouldn't be playing, stop everything.
+    // Safety checks
     if (!isPlayingRef.current || !lesson || !playerRef.current) {
         if (customAudioRef.current && !customAudioRef.current.paused) {
             customAudioRef.current.pause();
@@ -249,6 +280,8 @@ export default function StudentPage() {
       if (!playerRef.current.isMuted()) playerRef.current.mute();
 
       const audioTime = customAudioRef.current.currentTime;
+      // Calculate drift against the raw video time (ignoring our resume offset)
+      // We want to stay close to the real video time during playback.
       const drift = Math.abs(audioTime - currentTime);
 
       // If drift > 0.25s, snap audio to video
@@ -256,7 +289,6 @@ export default function StudentPage() {
         customAudioRef.current.currentTime = currentTime;
       }
 
-      // Ensure audio is playing if we are in the playing loop
       if (customAudioRef.current.paused && isPlayingRef.current) {
         customAudioRef.current.play().catch(() => {});
       }
@@ -335,6 +367,8 @@ export default function StudentPage() {
     setTriggeredQuestions(new Set());
     playerRef.current = null;
     setIsPaused(false);
+    setIsUploadingAudio(false);
+    setUploadProgress(0);
     if (fileInputRef.current) fileInputRef.current.value = "";
     if (audioInputRef.current) audioInputRef.current.value = "";
   };
@@ -375,7 +409,20 @@ export default function StudentPage() {
 
           {requiresAudio && (
             <div className="animate-fade-in">
-              {!audioFileName ? (
+              {isUploadingAudio ? (
+                <div className="p-4 bg-purple-50 border border-purple-100 rounded-lg flex flex-col gap-2">
+                   <div className="flex justify-between text-xs font-medium text-purple-700">
+                      <span>Uploading {audioFileName}...</span>
+                      <span>{Math.round(uploadProgress)}%</span>
+                   </div>
+                   <div className="w-full bg-purple-200 rounded-full h-2.5 overflow-hidden">
+                      <div 
+                         className="bg-purple-600 h-2.5 rounded-full transition-all duration-200 ease-out" 
+                         style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                   </div>
+                </div>
+              ) : !audioFileName ? (
                  <label
                  htmlFor="audio-upload"
                  className="flex flex-col items-center justify-center p-6 border-2 border-purple-100 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
@@ -402,14 +449,14 @@ export default function StudentPage() {
 
           <button
             onClick={handleProceedToLesson}
-            disabled={requiresAudio && !audioFileName}
+            disabled={requiresAudio && (!customAudioSrc || isUploadingAudio)}
             className={`w-full px-6 py-3 bg-transparent border-2 rounded-lg 
                       text-lg font-medium transition-all
-                      ${(requiresAudio && !audioFileName) 
+                      ${(requiresAudio && (!customAudioSrc || isUploadingAudio)) 
                         ? "border-gray-300 text-gray-400 cursor-not-allowed" 
                         : "border-blue-400 text-blue-600 hover:border-green-600 hover:text-blue-600"}`}
           >
-            Proceed to Lesson
+            {isUploadingAudio ? "Processing Audio..." : "Proceed to Lesson"}
           </button>
         </div>
       )}
