@@ -14,7 +14,6 @@ import {
   RotateCcw,
   FastForward,
   Rewind,
-  MousePointer2,
   Smartphone
 } from "lucide-react";
 
@@ -639,7 +638,7 @@ export default function NativeSync() {
         </div>
 
         <p className="text-lg text-slate-300 leading-relaxed mb-8">
-          The NativeSync editor requires precise timeline control that isn't possible on touch devices.
+          The NativeSync editor requires precise timeline control that isn&apos;t possible on touch devices.
         </p>
 
         <div className="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 text-sm text-purple-200">

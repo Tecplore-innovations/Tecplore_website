@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import YouTube, { YouTubeProps } from "react-youtube";
+import YouTube, { YouTubeProps, YouTubeEvent } from "react-youtube";
 import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -33,6 +33,7 @@ type Lesson = {
 type AlertType = "success" | "error" | "info" | "warning";
 type AlertState = { message: string; type: AlertType } | null;
 type AudioMode = "original" | "translated" | null;
+
 
 // --- Helpers ---
 function extractYouTubeId(url: string): string {
@@ -198,7 +199,9 @@ const VideoProgressBar = ({
             title={formatTime(q.time)}
             onClick={(e) => {
               e.stopPropagation();
-              onSeek && onSeek(q.time);
+             if (onSeek) {
+                onSeek(q.time); 
+              }
             }}
           />
         ))}
@@ -219,7 +222,7 @@ const VideoProgressBar = ({
 export default function Page() {
   // Step state
   const [step, setStep] = useState(1);
-
+  type YouTubePlayer = YouTubeEvent["target"];
   // Lesson state
   const [lesson, setLesson] = useState<Lesson>({
     title: "",
@@ -255,7 +258,7 @@ export default function Page() {
 
   // Alert & Refs
   const [alert, setAlert] = useState<AlertState>(null);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
   const intervalRef = useRef<number | null>(null);
 
   // New: lessonEnded flag to avoid race conditions & immediate UI updates after manual finish
