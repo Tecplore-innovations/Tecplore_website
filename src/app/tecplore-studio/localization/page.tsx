@@ -1,6 +1,22 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { 
+  Volume2, 
+  VolumeX, 
+  Scissors, 
+  Trash2, 
+  Plus, 
+  Monitor, 
+  Download, 
+  Play, 
+  Pause, 
+  RotateCcw,
+  FastForward,
+  Rewind,
+  MousePointer2,
+  Smartphone
+} from "lucide-react";
 
 // --- TYPES ---
 type Clip = {
@@ -11,6 +27,8 @@ type Clip = {
   audioOffset: number; 
   duration: number;    
   color: string;
+  gain: number;    // 0.0 to 1.0
+  isMuted: boolean; 
 };
 
 type Gap = {
@@ -19,7 +37,7 @@ type Gap = {
   duration: number;
 };
 
-// Fix: Defined specific interfaces for external libraries
+// Interfaces
 interface YTPlayer {
   playVideo: () => void;
   pauseVideo: () => void;
@@ -28,6 +46,7 @@ interface YTPlayer {
   getCurrentTime: () => number;
   getDuration: () => number;
   destroy: () => void;
+  getPlayerState: () => number;
 }
 
 interface YTEvent {
@@ -50,10 +69,8 @@ interface WaveSurferInstance {
 
 declare global {
   interface Window {
-    // Fix: Replaced 'any' with 'Record<string, unknown>'
-    YT: { Player: new (id: string, config: Record<string, unknown>) => YTPlayer }; 
+    YT: { Player: new (id: string, config: Record<string, unknown>) => YTPlayer, PlayerState: { ENDED: number, PLAYING: number, PAUSED: number } }; 
     onYouTubeIframeAPIReady: () => void;
-    // Fix: Replaced 'any' with 'Record<string, unknown>'
     WaveSurfer: { create: (config: Record<string, unknown>) => WaveSurferInstance };
     webkitAudioContext: typeof AudioContext;
   }
@@ -82,7 +99,7 @@ const getRandomColor = () => {
 };
 
 // --- DRAWING HELPER ---
-const drawWaveform = (buffer: AudioBuffer, canvas: HTMLCanvasElement, color: string, start: number, duration: number) => {
+const drawWaveform = (buffer: AudioBuffer, canvas: HTMLCanvasElement, color: string, start: number, duration: number, gain: number, isMuted: boolean) => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   
@@ -106,7 +123,14 @@ const drawWaveform = (buffer: AudioBuffer, canvas: HTMLCanvasElement, color: str
   const amp = height / 2;
 
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = color;
+  
+  if (isMuted) {
+      ctx.fillStyle = "#cbd5e1"; 
+  } else {
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.4 + (gain * 0.6); 
+  }
+
   ctx.beginPath();
 
   for (let i = 0; i < width; i++) {
@@ -120,8 +144,10 @@ const drawWaveform = (buffer: AudioBuffer, canvas: HTMLCanvasElement, color: str
         if (datum > max) max = datum;
       }
     }
-    ctx.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+    const scale = isMuted ? 0.3 : Math.max(0.2, gain); 
+    ctx.fillRect(i, (1 + min * scale) * amp, 1, Math.max(1, (max - min) * scale * amp));
   }
+  ctx.globalAlpha = 1.0;
 };
 
 // --- COMPONENTS ---
@@ -135,11 +161,7 @@ const GapItem = ({ gap, pxPerSec }: { gap: Gap, pxPerSec: number }) => {
         width: `${gap.duration * pxPerSec}px`,
         backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)`
       }}
-    >
-      {gap.duration > 2 && (
-        <span className="text-[10px] text-slate-300 font-medium italic select-none">Empty</span>
-      )}
-    </div>
+    />
   );
 };
 
@@ -160,19 +182,20 @@ const ClipItem = ({
 
   useEffect(() => {
     if (canvasRef.current) {
-      drawWaveform(clip.buffer, canvasRef.current, "#6d28d9", clip.audioOffset, clip.duration);
+      drawWaveform(clip.buffer, canvasRef.current, "#7c3aed", clip.audioOffset, clip.duration, clip.gain, clip.isMuted);
     }
-  }, [clip.buffer, clip.audioOffset, clip.duration, pxPerSec]);
+  }, [clip.buffer, clip.audioOffset, clip.duration, pxPerSec, clip.gain, clip.isMuted]);
 
   return (
     <div
-      className={`absolute top-1 bottom-1 rounded-md cursor-grab active:cursor-grabbing select-none group border border-black/10 flex flex-col
-        ${isSelected ? 'ring-2 ring-yellow-400 shadow-lg z-20' : 'shadow-sm hover:shadow-md z-10'}
+      className={`absolute top-1 bottom-1 rounded-md cursor-grab active:cursor-grabbing select-none group border flex flex-col overflow-hidden transition-all
+        ${isSelected ? 'ring-2 ring-yellow-400 shadow-lg z-20 border-yellow-400' : 'shadow-sm hover:shadow-md z-10 border-black/10'}
+        ${clip.isMuted ? 'opacity-80' : ''}
       `}
       style={{
         left: `${clip.startOffset * pxPerSec}px`,
         width: `${Math.max(2, clip.duration * pxPerSec)}px`,
-        backgroundColor: clip.color,
+        backgroundColor: clip.isMuted ? '#f1f5f9' : clip.color,
       }}
       onMouseDown={onMouseDown}
     >
@@ -183,6 +206,13 @@ const ClipItem = ({
            height={60} 
            className="w-full h-full opacity-60 pointer-events-none"
          />
+         
+         {clip.isMuted && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <VolumeX size={16} />
+            </div>
+         )}
+         
          <div 
            className="absolute top-0 bottom-0 left-0 w-4 cursor-w-resize hover:bg-black/20 z-30 flex items-center justify-center group-hover:opacity-100 opacity-0 transition-opacity"
            onMouseDown={(e) => onResizeStart(e, 'left')}
@@ -200,7 +230,6 @@ const ClipItem = ({
   );
 };
 
-// --- FIX: WRAPPED YOUTUBE PLAYER TO PREVENT NODE REMOVAL ERROR ---
 const NativeYouTubePlayer = React.memo(({ 
   videoId, 
   onReady,
@@ -208,22 +237,17 @@ const NativeYouTubePlayer = React.memo(({
   className 
 }: { 
   videoId: string; 
-  // Fix: Typed callbacks
   onReady: (player: YTPlayer) => void;
   onStateChange: (event: YTEvent) => void;
   className?: string;
 }) => {
-  // We use a ref for the container ID to ensure we don't lose track of it
   const divId = useRef(`yt-player-${Math.random().toString(36).substr(2, 9)}`);
-  // Fix: Typed Ref
   const playerRef = useRef<YTPlayer | null>(null);
 
   useEffect(() => {
     if (!videoId) return;
 
     const initPlayer = () => {
-      // If player exists, just load new video, don't destroy/recreate if not needed
-      // But since we unmount on reset, destruction is handled in cleanup
       if (playerRef.current) return; 
 
       if (window.YT && window.YT.Player) {
@@ -232,9 +256,16 @@ const NativeYouTubePlayer = React.memo(({
             videoId: videoId,
             height: '100%',
             width: '100%',
-            playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, showinfo: 0, disablekb: 1, fs: 0 },
+            playerVars: { 
+                autoplay: 0, 
+                controls: 0, 
+                modestbranding: 1, 
+                rel: 0, 
+                showinfo: 0, 
+                disablekb: 1, 
+                fs: 0 
+            },
             events: {
-              // Fix: Typed Events
               onReady: (event: { target: YTPlayer }) => onReady(event.target),
               onStateChange: (event: YTEvent) => onStateChange(event)
             },
@@ -255,21 +286,14 @@ const NativeYouTubePlayer = React.memo(({
       };
     } else { initPlayer(); }
 
-    // Cleanup: Destroy player instance when component unmounts (e.g. on Reset)
     return () => {
       if (playerRef.current) {
-        try {
-          playerRef.current.destroy();
-        } catch { /* ignore */ } // Fix: Removed unused variable
+        try { playerRef.current.destroy(); } catch { /* ignore */ }
         playerRef.current = null;
       }
     };
-    // Fix: Added dependencies onReady and onStateChange
   }, [videoId, onReady, onStateChange]);
 
-  // FIX: Extra wrapper div. 
-  // React manages the outer div. YouTube replaces the inner div. 
-  // When unmounting, React removes the outer div safely.
   return (
     <div className={className}>
       <div id={divId.current} className="w-full h-full" />
@@ -287,6 +311,7 @@ export default function NativeSync() {
   const [videoId, setVideoId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
   
   const [videoDuration, setVideoDuration] = useState(60); 
   const [currentTime, setCurrentTime] = useState(0);
@@ -305,7 +330,6 @@ export default function NativeSync() {
 
   // Refs
   const clipsRef = useRef(clips); 
-  // Fix: Typed Refs
   const youtubePlayer = useRef<YTPlayer | null>(null);
   const audioContext = useRef<AudioContext | null>(null);
   const masterPlayerRef = useRef<WaveSurferInstance | null>(null);
@@ -316,20 +340,24 @@ export default function NativeSync() {
   // Drag State
   const dragRef = useRef<{ 
     isDragging: boolean;
+    hasMoved: boolean; 
     mode: 'move' | 'resize-left' | 'resize-right'; 
     clipId: string | null; 
     startX: number; 
     originalStartOffset: number;
     originalAudioOffset: number;
     originalDuration: number;
+    trailingClipIds: { id: string, originalStart: number }[];
   }>({ 
     isDragging: false, 
+    hasMoved: false,
     mode: 'move',
     clipId: null, 
     startX: 0, 
     originalStartOffset: 0,
     originalAudioOffset: 0,
-    originalDuration: 0
+    originalDuration: 0,
+    trailingClipIds: []
   });
 
   // Sync Ref
@@ -343,15 +371,15 @@ export default function NativeSync() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fix: Move renderMasterMix UP before it is used in useEffect
-  // Fix: Wrapped in useCallback for dependency stability
+  // --- RENDERING ENGINE ---
   const renderMasterMix = useCallback(async (currentClips: Clip[]) => {
     if (currentClips.length === 0 || !audioContext.current) return;
     
-    // Stop playback before rendering to avoid "ghosting" old buffer
-    setIsPlaying(false);
-    if (youtubePlayer.current) youtubePlayer.current.pauseVideo();
-    if (masterPlayerRef.current) masterPlayerRef.current.pause();
+    if (isPlaying) {
+      setIsPlaying(false);
+      if (youtubePlayer.current) youtubePlayer.current.pauseVideo();
+      if (masterPlayerRef.current) masterPlayerRef.current.pause();
+    }
 
     setIsRendering(true);
 
@@ -363,7 +391,10 @@ export default function NativeSync() {
     currentClips.forEach(clip => {
       const src = offlineCtx.createBufferSource();
       src.buffer = clip.buffer;
-      src.connect(offlineCtx.destination);
+      const gainNode = offlineCtx.createGain();
+      gainNode.gain.value = clip.isMuted ? 0 : clip.gain;
+      src.connect(gainNode);
+      gainNode.connect(offlineCtx.destination);
       src.start(clip.startOffset, clip.audioOffset, clip.duration);
     });
 
@@ -375,22 +406,16 @@ export default function NativeSync() {
     setMasterBlobUrl(url);
 
     if (masterPlayerRef.current) {
-       // We use the ref for currentTime to get the very latest value without adding it to deps
-       // But since we want to be safe, we can just use 0 or the last known state
        masterPlayerRef.current.load(url);
        masterPlayerRef.current.once('ready', () => {
-          // Ensure playhead is exactly where visual needle is
-          if (masterPlayerRef.current) {
-             // masterPlayerRef.current.setTime(currentTime); // Optional: sync time
-             setIsRendering(false);
-          }
+          setIsRendering(false);
        });
     } else {
       setIsRendering(false);
     }
-  }, [videoDuration, masterBlobUrl]); // Added dependencies
+  }, [videoDuration, masterBlobUrl, isPlaying]);
 
-  // --- INIT ---
+  // --- INIT & HANDLERS ---
   useEffect(() => {
     const init = async () => {
       await loadScript("https://unpkg.com/wavesurfer.js@7.8.6/dist/wavesurfer.min.js");
@@ -414,20 +439,21 @@ export default function NativeSync() {
     };
     init();
     
-    // GLOBAL HANDLERS
     const handleMouseUp = () => {
       if (dragRef.current.isDragging) {
          dragRef.current.isDragging = false;
+         if (dragRef.current.hasMoved) {
+            renderMasterMix(clipsRef.current); 
+         }
          dragRef.current.clipId = null;
-         // Re-render on drop to fix audio glitches
-         renderMasterMix(clipsRef.current); 
+         dragRef.current.hasMoved = false;
       }
     };
     
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragRef.current.isDragging || !dragRef.current.clipId) return;
+      dragRef.current.hasMoved = true;
       
-      // Pausing interaction to prevent ghost audio
       if (isPlaying) {
         setIsPlaying(false);
         youtubePlayer.current?.pauseVideo();
@@ -441,7 +467,7 @@ export default function NativeSync() {
       if (dragRef.current.mode === 'move' && tracksContainerRef.current) {
           const containerRect = tracksContainerRef.current.getBoundingClientRect();
           const relativeY = e.clientY - containerRect.top;
-          if (relativeY > 72) { // Header + Video Track offset
+          if (relativeY > 72) { 
              targetTrackIndex = Math.ceil((relativeY - 72) / 64);
              targetTrackIndex = Math.max(1, Math.min(4, targetTrackIndex));
           }
@@ -470,6 +496,16 @@ export default function NativeSync() {
            }
            return updated;
         }
+
+        // Ripple Edit Logic
+        const trailing = dragRef.current.trailingClipIds.find(t => t.id === c.id);
+        if (dragRef.current.mode === 'move' && trailing) {
+             return {
+                 ...c,
+                 startOffset: Math.max(0, trailing.originalStart + deltaSec)
+             };
+        }
+
         return c;
       });
 
@@ -505,7 +541,6 @@ export default function NativeSync() {
        window.removeEventListener('mousemove', handleMouseMove);
        window.removeEventListener('keydown', handleKeyDown);
     };
-    // Fix: Added renderMasterMix to dependencies
   }, [pxPerSec, isPlaying, renderMasterMix]); 
 
   // --- SYNC LOOP ---
@@ -535,143 +570,8 @@ export default function NativeSync() {
     return () => clearInterval(timer);
   }, [isPlaying, currentTime]);
 
-  // --- LOGIC ---
-  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f || !audioContext.current) return;
-    if (audioContext.current.state === 'suspended') await audioContext.current.resume();
-
-    setIsEditing(true);
-    const arrayBuffer = await f.arrayBuffer();
-    const audioBuffer = await audioContext.current.decodeAudioData(arrayBuffer);
-
-    let targetTrack = 1;
-    const used = new Set(clips.map(c => c.trackIndex));
-    for(let i=1; i<=4; i++) { if(!used.has(i)) { targetTrack=i; break; } }
-    if(targetTrack>4) targetTrack=4;
-
-    const newClip: Clip = {
-      id: Math.random().toString(36).substr(2, 9),
-      trackIndex: targetTrack,
-      buffer: audioBuffer,
-      startOffset: 0,
-      audioOffset: 0,
-      duration: audioBuffer.duration,
-      color: getRandomColor(),
-    };
-
-    setClips(prev => {
-       const next = [...prev, newClip];
-       requestAnimationFrame(() => renderMasterMix(next));
-       return next;
-    });
-  };
-
-  const splitClipAtPlayhead = () => {
-    if (!selectedClipId) { alert("Select a clip first."); return; }
-    const original = clips.find(c => c.id === selectedClipId);
-    if (!original) return;
-
-    if (currentTime <= original.startOffset + 0.1 || currentTime >= original.startOffset + original.duration - 0.1) {
-       alert("Playhead not inside selected clip range");
-       return;
-    }
-
-    const splitRel = currentTime - original.startOffset;
-    const clipA: Clip = { ...original, duration: splitRel };
-    const clipB: Clip = { 
-       ...original, 
-       id: Math.random().toString(36).substr(2,9),
-       startOffset: currentTime,
-       audioOffset: original.audioOffset + splitRel,
-       duration: original.duration - splitRel,
-       color: getRandomColor()
-    };
-
-    const nextClips = clips.filter(c => c.id !== selectedClipId).concat([clipA, clipB]);
-    setClips(nextClips);
-    clipsRef.current = nextClips; 
-    setSelectedClipId(clipB.id);
-    renderMasterMix(nextClips);
-  };
-
-  const deleteSelectedClip = () => {
-     if(!selectedClipId) return;
-     const nextClips = clips.filter(c => c.id !== selectedClipId);
-     setClips(nextClips);
-     clipsRef.current = nextClips;
-     setSelectedClipId(null);
-     renderMasterMix(nextClips);
-  };
-
-  // --- RESET HANDLER ---
-  const resetEditor = () => {
-    // Stop players
-    setIsPlaying(false);
-    if (youtubePlayer.current) {
-      try { youtubePlayer.current.pauseVideo(); } catch {}
-    }
-    if (masterPlayerRef.current) {
-      masterPlayerRef.current.pause();
-      masterPlayerRef.current.empty(); // Clear waveform
-    }
-
-    // Clear state
-    setClips([]);
-    setVideoId(""); // This triggers NativeYouTubePlayer unmount
-    setYoutubeUrl("");
-    setIsEditing(false);
-    setShowExportModal(false);
-    setExportStep('input');
-    setCurrentTime(0);
-    setMasterBlobUrl(null);
-    setSelectedClipId(null);
-  };
-
-  // --- CONTROLS ---
-  const canPlay = videoId && clips.length > 0 && !isRendering;
-
-  const togglePlayback = async () => {
-    if (!canPlay) return;
-    if (audioContext.current?.state === 'suspended') await audioContext.current.resume();
-
-    if (isPlaying) {
-      if (youtubePlayer.current) youtubePlayer.current.pauseVideo();
-      if (masterPlayerRef.current) masterPlayerRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      if (youtubePlayer.current) {
-         youtubePlayer.current.mute(); 
-         youtubePlayer.current.playVideo();
-      }
-      if (masterPlayerRef.current) masterPlayerRef.current.play();
-      setIsPlaying(true);
-    }
-  };
+  // --- HOOKS MOVED UP HERE TO PREVENT CRASH ---
   
-  const seekRelative = (sec: number) => {
-      const t = Math.max(0, currentTime + sec);
-      setCurrentTime(t);
-      youtubePlayer.current?.seekTo(t, true);
-      masterPlayerRef.current?.setTime(t);
-  };
-
-  // --- EXPORT FLOW ---
-  const handleExportClick = () => {
-    setExportStep('input');
-    setShowExportModal(true);
-  };
-
-  const executeDownload = () => {
-    if (!masterBlobUrl) return;
-    const a = document.createElement('a');
-    a.href = masterBlobUrl;
-    a.download = `${exportName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.wav`;
-    a.click();
-    setExportStep('success');
-  };
-
-  // --- VISUALS ---
   const gaps = useMemo(() => {
       const result: Gap[] = [];
       for (let track = 1; track <= 4; track++) {
@@ -701,34 +601,227 @@ export default function NativeSync() {
       ));
   }, [videoDuration, pxPerSec]);
 
-  // Fix: useCallback for YouTube Handlers to maintain stability for child useEffect
+  const activeClip = useMemo(() => clips.find(c => c.id === selectedClipId), [clips, selectedClipId]);
+
   const onPlayerReady = useCallback((p: YTPlayer) => { 
     youtubePlayer.current = p; 
     setVideoDuration(p.getDuration()); 
   }, []);
 
   const onPlayerStateChange = useCallback((e: YTEvent) => {
-    if(e.data === 1) setIsPlaying(true);
+    if(e.data === 1) { 
+        setIsPlaying(true);
+        setVideoEnded(false);
+    }
     if(e.data === 2) setIsPlaying(false);
+    if(e.data === 0) { 
+        setIsPlaying(false);
+        setVideoEnded(true); 
+        if (masterPlayerRef.current) masterPlayerRef.current.pause();
+    }
  }, []);
 
- if (isMobile) {
-  return (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-6">
-  <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl text-center p-8 max-w-md">
-    <div className="text-7xl mb-6">🖥️</div>
-    <h1 className="text-2xl font-bold text-white mb-2">Desktop Required</h1>
-    <p className="text-slate-300 leading-relaxed">
-      NativeSync is a precision audio mixing tool.<br />
-      Please open on a <span className="text-violet-300 font-semibold">desktop</span> or 
-      <span className="text-violet-300 font-semibold"> tablet</span> for the best editing experience.
-    </p>
-  </div>
-</div>
+  // --- SAFE TO RETURN EARLY NOW ---
+  
+  if (isMobile) {
+    return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white">
+      <div className="max-w-md w-full bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl text-center">
+        <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
+            <Monitor className="w-12 h-12 text-purple-400" />
+        </div>
+        
+        <h1 className="text-3xl font-bold mb-3 tracking-tight">Desktop Required</h1>
+        
+        <div className="flex items-center justify-center gap-3 text-slate-400 mb-8">
+            <Smartphone className="w-5 h-5 line-through opacity-50" />
+            <span className="text-sm uppercase tracking-widest font-medium">Not Supported</span>
+        </div>
 
-  );
-}
+        <p className="text-lg text-slate-300 leading-relaxed mb-8">
+          The NativeSync editor requires precise timeline control that isn't possible on touch devices.
+        </p>
 
+        <div className="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 text-sm text-purple-200">
+          Please open this link on a <span className="font-bold text-white">Desktop</span> or <span className="font-bold text-white">Laptop</span>.
+        </div>
+      </div>
+    </div>
+    );
+  }
+
+  // --- ACTIONS ---
+
+  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f || !audioContext.current) return;
+    if (audioContext.current.state === 'suspended') await audioContext.current.resume();
+
+    setIsEditing(true);
+    const arrayBuffer = await f.arrayBuffer();
+    const audioBuffer = await audioContext.current.decodeAudioData(arrayBuffer);
+
+    let targetTrack = 1;
+    const used = new Set(clips.map(c => c.trackIndex));
+    for(let i=1; i<=4; i++) { if(!used.has(i)) { targetTrack=i; break; } }
+    if(targetTrack>4) targetTrack=4;
+
+    const newClip: Clip = {
+      id: Math.random().toString(36).substr(2, 9),
+      trackIndex: targetTrack,
+      buffer: audioBuffer,
+      startOffset: 0,
+      audioOffset: 0,
+      duration: audioBuffer.duration,
+      color: getRandomColor(),
+      gain: 1.0,
+      isMuted: false
+    };
+
+    setClips(prev => {
+       const next = [...prev, newClip];
+       requestAnimationFrame(() => renderMasterMix(next));
+       return next;
+    });
+  };
+
+  const splitClipAtPlayhead = () => {
+    if (!selectedClipId) { alert("Select a clip first."); return; }
+    const original = clips.find(c => c.id === selectedClipId);
+    if (!original) return;
+
+    if (currentTime <= original.startOffset + 0.1 || currentTime >= original.startOffset + original.duration - 0.1) {
+       alert("Playhead not inside selected clip range");
+       return;
+    }
+
+    const splitRel = currentTime - original.startOffset;
+    const clipA: Clip = { ...original, duration: splitRel };
+    const clipB: Clip = { 
+       ...original, 
+       id: Math.random().toString(36).substr(2,9),
+       startOffset: currentTime,
+       audioOffset: original.audioOffset + splitRel,
+       duration: original.duration - splitRel,
+       color: getRandomColor(),
+       gain: original.gain,
+       isMuted: original.isMuted
+    };
+
+    const nextClips = clips.filter(c => c.id !== selectedClipId).concat([clipA, clipB]);
+    setClips(nextClips);
+    clipsRef.current = nextClips; 
+    setSelectedClipId(clipB.id);
+    renderMasterMix(nextClips);
+  };
+
+  const updateSelectedClipVolume = (gain: number) => {
+    if(!selectedClipId) return;
+    const nextClips = clips.map(c => {
+        if(c.id === selectedClipId) return { ...c, gain, isMuted: false }; 
+        return c;
+    });
+    setClips(nextClips);
+    clipsRef.current = nextClips;
+  };
+
+  const commitVolumeChange = () => {
+      renderMasterMix(clipsRef.current);
+  };
+
+  const toggleSelectedClipMute = () => {
+    if(!selectedClipId) return;
+    const nextClips = clips.map(c => {
+        if(c.id === selectedClipId) return { ...c, isMuted: !c.isMuted };
+        return c;
+    });
+    setClips(nextClips);
+    clipsRef.current = nextClips;
+    renderMasterMix(nextClips);
+  };
+
+  const deleteSelectedClip = () => {
+     if(!selectedClipId) return;
+     const nextClips = clips.filter(c => c.id !== selectedClipId);
+     setClips(nextClips);
+     clipsRef.current = nextClips;
+     setSelectedClipId(null);
+     renderMasterMix(nextClips);
+  };
+
+  const resetEditor = () => {
+    setIsPlaying(false);
+    setVideoEnded(false);
+    if (youtubePlayer.current) {
+      try { youtubePlayer.current.pauseVideo(); } catch {}
+    }
+    if (masterPlayerRef.current) {
+      masterPlayerRef.current.pause();
+      masterPlayerRef.current.empty(); 
+    }
+    setClips([]);
+    setVideoId("");
+    setYoutubeUrl("");
+    setIsEditing(false);
+    setShowExportModal(false);
+    setExportStep('input');
+    setCurrentTime(0);
+    setMasterBlobUrl(null);
+    setSelectedClipId(null);
+  };
+
+  const canPlay = videoId && clips.length > 0 && !isRendering;
+
+  const togglePlayback = async () => {
+    if (!canPlay) return;
+    if (audioContext.current?.state === 'suspended') await audioContext.current.resume();
+
+    if (videoEnded) {
+        setVideoEnded(false);
+        seekRelative(-10000); 
+        setTimeout(() => {
+            if (youtubePlayer.current) youtubePlayer.current.playVideo();
+            if (masterPlayerRef.current) masterPlayerRef.current.play();
+            setIsPlaying(true);
+        }, 100);
+        return;
+    }
+
+    if (isPlaying) {
+      if (youtubePlayer.current) youtubePlayer.current.pauseVideo();
+      if (masterPlayerRef.current) masterPlayerRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      if (youtubePlayer.current) {
+         youtubePlayer.current.mute(); 
+         youtubePlayer.current.playVideo();
+      }
+      if (masterPlayerRef.current) masterPlayerRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+  
+  const seekRelative = (sec: number) => {
+      const t = Math.max(0, currentTime + sec);
+      setVideoEnded(false); 
+      setCurrentTime(t);
+      youtubePlayer.current?.seekTo(t, true);
+      masterPlayerRef.current?.setTime(t);
+  };
+
+  const handleExportClick = () => {
+    setExportStep('input');
+    setShowExportModal(true);
+  };
+
+  const executeDownload = () => {
+    if (!masterBlobUrl) return;
+    const a = document.createElement('a');
+    a.href = masterBlobUrl;
+    a.download = `${exportName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.wav`;
+    a.click();
+    setExportStep('success');
+  };
 
   return (
     <div className="h-screen w-full bg-slate-50 font-sans text-slate-900 flex flex-col overflow-hidden select-none">
@@ -745,7 +838,7 @@ export default function NativeSync() {
              className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-1.5 rounded-full text-sm font-semibold disabled:opacity-50 transition-all shadow-sm flex items-center gap-2"
         >
              <span>Export Mix</span>
-             <span>⬇</span>
+             <Download size={16} />
         </button>
       </header>
 
@@ -763,17 +856,28 @@ export default function NativeSync() {
                        onReady={onPlayerReady}
                        onStateChange={onPlayerStateChange}
                      />
-                     {/* Transparent Overlay to prevent direct YouTube Interaction */}
                      <div 
                         className="absolute inset-0 z-10 bg-transparent cursor-default"
                         onClick={(e) => {
                           e.preventDefault();
-                          // Optional: Blink the play button to hint user where controls are
                           const btn = document.getElementById('main-play-btn');
                           btn?.classList.add('ring-4');
                           setTimeout(() => btn?.classList.remove('ring-4'), 200);
                         }}
                      />
+                     
+                     {videoEnded && (
+                        <div className="absolute inset-0 z-20 bg-black/90 flex flex-col items-center justify-center animate-in fade-in duration-300">
+                             <RotateCcw className="w-16 h-16 text-white mb-4 opacity-80" />
+                             <h3 className="text-white text-xl font-bold mb-6">Video Finished</h3>
+                             <button 
+                                onClick={togglePlayback}
+                                className="px-6 py-2 bg-purple-600 text-white rounded-full font-bold hover:bg-purple-700 transition"
+                             >
+                                Replay Video
+                             </button>
+                        </div>
+                     )}
                    </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full text-white/30 bg-slate-900">
@@ -790,7 +894,7 @@ export default function NativeSync() {
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">1. Source Video</label>
                     <input 
                       className="w-full p-3 border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none transition-all" 
-                      placeholder="Paste YouTube Link (e.g. youtube.com/watch?v=...)" 
+                      placeholder="Paste YouTube Link" 
                       value={youtubeUrl} 
                       onChange={(e) => {
                         setYoutubeUrl(e.target.value);
@@ -805,7 +909,6 @@ export default function NativeSync() {
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">2. Native Audio</label>
                     <label className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-purple-200 bg-purple-50/50 text-purple-600 rounded-lg cursor-pointer hover:bg-purple-50 hover:border-purple-400 transition-all">
                       <span className="font-medium">Click to Upload Audio File</span>
-                      <span className="text-xs opacity-70 mt-1">MP3, WAV, AAC supported</span>
                       <input type="file" accept="audio/*" className="hidden" onChange={handleAudioUpload} />
                     </label>
                   </div>
@@ -814,8 +917,12 @@ export default function NativeSync() {
 
              {/* TRANSPORT CONTROLS */}
              <div className="flex gap-6 mt-2 items-center bg-white px-8 py-3 rounded-2xl shadow-sm border border-slate-200">
-                <button onClick={() => seekRelative(-1000)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="Start">⏮</button>
-                <button onClick={() => seekRelative(-5)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="-5s">⏪</button>
+                <button onClick={() => seekRelative(-1000)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="Start">
+                    <Rewind size={20} />
+                </button>
+                <button onClick={() => seekRelative(-5)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="-5s">
+                    <span className="text-xs font-bold">-5s</span>
+                </button>
                 
                 <button 
                    id="main-play-btn"
@@ -826,14 +933,18 @@ export default function NativeSync() {
                    `}
                 >
                    {isRendering ? (
-                     <span className="text-sm font-bold animate-pulse">SYNC</span>
+                     <span className="text-sm font-bold animate-pulse">...</span>
                    ) : (
-                     isPlaying ? "⏸" : "▶"
+                     isPlaying ? <Pause fill="white" /> : <Play fill="white" className="ml-1" />
                    )}
                 </button>
                 
-                <button onClick={() => seekRelative(5)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="+5s">⏩</button>
-                <button onClick={() => seekRelative(1000)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="End">⏭</button>
+                <button onClick={() => seekRelative(5)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="+5s">
+                    <span className="text-xs font-bold">+5s</span>
+                </button>
+                <button onClick={() => seekRelative(1000)} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" title="End">
+                    <FastForward size={20} />
+                </button>
              </div>
              <div className="mt-3 text-sm font-mono text-slate-400 font-medium">
                 {new Date(currentTime * 1000).toISOString().substr(14, 5)} / {new Date(videoDuration * 1000).toISOString().substr(14, 5)}
@@ -846,24 +957,66 @@ export default function NativeSync() {
         <div className="h-[340px] bg-white border-t flex flex-col z-30 shadow-[0_-5px_30px_rgba(0,0,0,0.08)] flex-shrink-0 relative">
             
             {/* Toolbar */}
-            <div className="h-12 border-b bg-slate-50 flex items-center px-4 justify-between text-xs">
-                <div className="flex gap-3">
-                   <div className="flex bg-white rounded-lg border p-1 shadow-sm">
-                     <button id="btn-split" onClick={splitClipAtPlayhead} className="px-3 py-1 hover:bg-orange-50 rounded text-slate-700 font-medium flex items-center gap-2" title="Shortcut: S">
-                       <span>✂️</span> Split
+            <div className="h-14 border-b bg-slate-50 flex items-center px-4 justify-between text-xs">
+                <div className="flex gap-4 items-center">
+                   {/* Standard Tools */}
+                   <div className="flex bg-white rounded-lg border p-1 shadow-sm items-center">
+                     <button id="btn-split" onClick={splitClipAtPlayhead} className="px-3 py-1.5 hover:bg-orange-50 rounded text-slate-700 font-medium flex items-center gap-2" title="Split Clip (S)">
+                       <Scissors size={14} /> Split
                      </button>
-                     <div className="w-[1px] bg-slate-200 mx-1"></div>
-                     <button id="btn-delete" onClick={deleteSelectedClip} className="px-3 py-1 hover:bg-red-50 rounded text-slate-700 font-medium flex items-center gap-2" title="Shortcut: Del">
-                       <span>🗑</span> Delete
+                     <div className="w-[1px] h-4 bg-slate-200 mx-1"></div>
+                     <button id="btn-delete" onClick={deleteSelectedClip} className="px-3 py-1.5 hover:bg-red-50 rounded text-slate-700 font-medium flex items-center gap-2" title="Delete Clip (Del)">
+                       <Trash2 size={14} /> Delete
                      </button>
                    </div>
-                   <label className="px-3 py-1 bg-white border rounded-lg hover:bg-blue-50 shadow-sm cursor-pointer flex items-center gap-2 text-blue-600 font-medium">
-                      <span>+ Add Track</span>
+
+                   <div className="w-[1px] h-6 bg-slate-300 mx-2"></div>
+
+                   {/* VOLUME TOOLS - VISIBLE ONLY WHEN CLIP SELECTED */}
+                   <div className={`flex items-center gap-3 transition-opacity duration-200 ${selectedClipId ? 'opacity-100' : 'opacity-30 pointer-events-none'}`}>
+                      <button 
+                         onClick={toggleSelectedClipMute}
+                         className={`p-2 rounded-md border transition-colors ${
+                            activeClip?.isMuted 
+                                ? 'bg-red-100 border-red-300 text-red-600' 
+                                : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                         }`}
+                         title="Mute Selection"
+                      >
+                         {activeClip?.isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                      </button>
+                      
+                      <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                         <span className="text-slate-400 font-bold uppercase text-[10px]">Vol</span>
+                         <input 
+                            type="range" 
+                            min="0" 
+                            max="1" 
+                            step="0.01"
+                            value={activeClip?.isMuted ? 0 : (activeClip?.gain ?? 1)}
+                            onChange={(e) => updateSelectedClipVolume(parseFloat(e.target.value))}
+                            onMouseUp={commitVolumeChange} 
+                            onTouchEnd={commitVolumeChange}
+                            className="w-24 h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                            disabled={activeClip?.isMuted}
+                         />
+                         <span className="text-[10px] font-mono w-8 text-right">
+                            {activeClip?.isMuted ? "MUTE" : `${Math.round((activeClip?.gain ?? 1) * 100)}%`}
+                         </span>
+                      </div>
+                   </div>
+
+                   <div className="w-[1px] h-6 bg-slate-300 mx-2"></div>
+
+                   <label className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 cursor-pointer flex items-center gap-2 text-blue-700 font-medium">
+                      <Plus size={14} />
+                      <span>Track</span>
                       <input type="file" accept="audio/*" className="hidden" onChange={handleAudioUpload} />
                    </label>
                 </div>
+
                 <div className="text-slate-400 flex gap-4 items-center font-medium">
-                   {isRendering && <span className="text-purple-500 flex items-center gap-2"><span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"/> Syncing Audio Engine...</span>}
+                   {isRendering && <span className="text-purple-500 flex items-center gap-2"><span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"/> Syncing...</span>}
                    <span>Ctrl + Scroll to Zoom</span>
                 </div>
             </div>
@@ -879,7 +1032,7 @@ export default function NativeSync() {
                {/* Track Headers */}
                <div className="w-12 border-r bg-slate-50 flex-shrink-0 z-20 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
                   <div className="h-8 border-b bg-slate-100"></div>
-                  <div className="h-14 border-b bg-slate-50 flex items-center justify-center border-l-4 border-l-blue-400"><span className="text-lg grayscale opacity-70">📺</span></div>
+                  <div className="h-14 border-b bg-slate-50 flex items-center justify-center border-l-4 border-l-blue-400"><Monitor size={18} className="text-slate-400" /></div>
                   {[1, 2, 3, 4].map(id => <div key={id} className="h-16 border-b bg-white flex items-center justify-center text-xs font-bold text-slate-300">{id}</div>)}
                </div>
 
@@ -890,6 +1043,8 @@ export default function NativeSync() {
                      className="flex-1 overflow-x-auto overflow-y-hidden relative bg-white custom-scrollbar"
                      onClick={(e) => {
                         if ((e.target as HTMLElement).closest('.group')) return;
+                        if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                        if ((e.target as HTMLElement).tagName === 'INPUT') return;
                         const rect = e.currentTarget.getBoundingClientRect();
                         const clickX = e.clientX - rect.left + e.currentTarget.scrollLeft;
                         const t = Math.max(0, clickX / pxPerSec);
@@ -907,7 +1062,7 @@ export default function NativeSync() {
                             <div className="absolute top-2 h-10 bg-blue-50 border border-blue-200 rounded flex items-center overflow-hidden opacity-80"
                                  style={{ width: videoDuration * pxPerSec, left: 0 }}>
                                <div className="w-full h-full opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent 0, transparent 40px, #000 41px)' }}></div>
-                               <span className="ml-2 text-xs text-blue-400 font-medium sticky left-2">Video Source</span>
+                               <span className="ml-2 text-xs text-blue-400 font-medium sticky left-2 flex items-center gap-1"><Monitor size={10} /> Source Video</span>
                             </div>
                          </div>
 
@@ -926,19 +1081,30 @@ export default function NativeSync() {
                                     onMouseDown={(e) => {
                                        e.stopPropagation();
                                        setSelectedClipId(clip.id);
+                                       
+                                       const trailing = clipsRef.current
+                                            .filter(c => c.trackIndex === clip.trackIndex && c.startOffset > clip.startOffset)
+                                            .map(c => ({ id: c.id, originalStart: c.startOffset }));
+
                                        dragRef.current = {
-                                          isDragging: true, mode: 'move', clipId: clip.id,
+                                          isDragging: true, 
+                                          hasMoved: false,
+                                          mode: 'move', clipId: clip.id,
                                           startX: e.clientX, originalStartOffset: clip.startOffset,
-                                          originalAudioOffset: clip.audioOffset, originalDuration: clip.duration
+                                          originalAudioOffset: clip.audioOffset, originalDuration: clip.duration,
+                                          trailingClipIds: trailing
                                        };
                                     }}
                                     onResizeStart={(e, edge) => {
                                        e.stopPropagation();
                                        setSelectedClipId(clip.id);
                                        dragRef.current = {
-                                          isDragging: true, mode: edge === 'left' ? 'resize-left' : 'resize-right', clipId: clip.id,
+                                          isDragging: true, 
+                                          hasMoved: false,
+                                          mode: edge === 'left' ? 'resize-left' : 'resize-right', clipId: clip.id,
                                           startX: e.clientX, originalStartOffset: clip.startOffset,
-                                          originalAudioOffset: clip.audioOffset, originalDuration: clip.duration
+                                          originalAudioOffset: clip.audioOffset, originalDuration: clip.duration,
+                                          trailingClipIds: []
                                        };
                                     }}
                                   />
@@ -981,8 +1147,12 @@ export default function NativeSync() {
                            className="flex-1 p-2 outline-none text-slate-700"
                            autoFocus
                          />
-                         <span className="bg-slate-100 px-3 py-2 text-slate-500 border-l text-sm">.wav</span>
+                         <span className="bg-slate-100 px-3 py-2 text-slate-500 border-l text-sm font-mono">.wav</span>
                       </div>
+                      <p className="text-xs text-slate-400 mb-4">
+                         * Exported as High-Quality WAV. <br/>
+                         Volume adjustments & mutes are applied to the export.
+                      </p>
                       <button 
                         onClick={executeDownload}
                         className="w-full bg-purple-600 text-white py-2.5 rounded-lg font-bold hover:bg-purple-700 transition-colors"
