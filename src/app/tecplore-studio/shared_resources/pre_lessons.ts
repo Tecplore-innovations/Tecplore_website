@@ -28,7 +28,6 @@ export const PRE_LESSONS: PreLesson[] = [
       "A thrilling wildlife documentary that reveals how animals thrive in nature.",
     thumbnail: "/photos/pre_lesson/born_to_run.avif",
     jsonFile: "/photos/pre_lesson/Born_To_Run.json",
-    isTranslated: false
   },
 
 {
