@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 import { Upload, CheckCircle, Video, Music, VolumeX, X } from "lucide-react";
 import { PRE_LESSONS, PreLesson } from "../shared_resources/pre_lessons";
-import PreLessonList from "../shared_resources/preLessonList";
 
 import { useSearchParams } from "next/navigation";
 
@@ -67,10 +66,6 @@ export default function StudentPage() {
   // Tracking playback status
   const isPlayingRef = useRef(false);
 
-  // Pre-lesson State
-  const [selectedPreLesson, setSelectedPreLesson] = useState<PreLesson | null>(null);
-  const [preLessonLoading, setPreLessonLoading] = useState(false);
-
   // --- PROGRESS BAR STATE ---
   const [showProgressBar, setShowProgressBar] = useState(true);
   const [playerDuration, setPlayerDuration] = useState(0);
@@ -96,7 +91,7 @@ useEffect(() => {
 
 
 async function loadPreLesson(preLesson: PreLesson) {
-  setPreLessonLoading(true);
+
   try {
     const res = await fetch(preLesson.jsonFile);
     if (!res.ok) throw new Error("Failed to load lesson JSON");
@@ -129,9 +124,7 @@ async function loadPreLesson(preLesson: PreLesson) {
   } catch (e) {
     console.error(e);
     alert("Error loading lesson resources.");
-  } finally {
-    setPreLessonLoading(false);
-  }
+  } 
 }
 
 
