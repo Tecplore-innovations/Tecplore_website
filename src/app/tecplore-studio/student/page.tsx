@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 import { Upload, CheckCircle, Video, Music, VolumeX, X } from "lucide-react";
 import { PRE_LESSONS, PreLesson } from "../shared_resources/pre_lessons";
+
 
 import { useSearchParams } from "next/navigation";
 
@@ -31,7 +32,7 @@ type Lesson = {
 };
 
 // --- Main Component ---
-export default function StudentPage() {
+ function StudentContent() {
   // Lesson State
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [pendingLesson, setPendingLesson] = useState<Lesson | null>(null);
@@ -91,8 +92,7 @@ useEffect(() => {
 
 
 async function loadPreLesson(preLesson: PreLesson) {
-
-  try {
+   try {
     const res = await fetch(preLesson.jsonFile);
     if (!res.ok) throw new Error("Failed to load lesson JSON");
     const data: Lesson = await res.json();
@@ -124,7 +124,7 @@ async function loadPreLesson(preLesson: PreLesson) {
   } catch (e) {
     console.error(e);
     alert("Error loading lesson resources.");
-  } 
+  }
 }
 
 
@@ -962,5 +962,15 @@ async function loadPreLesson(preLesson: PreLesson) {
 
       {summaryVisible && lesson && renderLessonSummary()}
     </div>
+  );
+}
+
+
+export default function StudentPage() {
+  return (
+    // You can customize the fallback to be a spinner or skeleton loader
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <StudentContent />
+    </Suspense>
   );
 }
