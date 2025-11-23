@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import PreLessonList from "./shared_resources/preLessonList";
+import { useRouter } from "next/navigation";
 
 
 const sections = [
@@ -34,30 +36,38 @@ const sections = [
 ];
 
 
+
+
 export default function HomePage() {
+
+  
+const router = useRouter();
+
   return (
+
+    
     <div className="min-h-screen bg-whiter ">
     
        {/* HERO */}
      
       <section className="pt-12 pb-8 px-6 bg-gradient-to-b from-blue-50 to-white text-center">
-        <h1 className="text-4xl md:text-4xl font-light mb-6 text-slate-700">
+        <h1 className="text-4xl md:text-4xl font-semibold mb-6 text-purple-700/75">
           Tecplore Studio
         </h1>
 
-        <p className="text-lg md:text-xl text-blue-700/75 mt-4 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-slate-700 mt-4 max-w-3xl mx-auto leading-relaxed">
           Transform YouTube videos into classroom learning experiences with
           interaction, questions, and learning checkpoints.
         </p>
 
         {/* WHY WE CREATED TECPLORE STUDIO */}
-        <div className="mt-12 max-w-6xl mx-auto">
+    {/*     <div className="mt-12 max-w-6xl mx-auto">
           <img
            src="/photos/studio_banner_info.avif"
             alt="Tecplore Studio Banner"
             className="w-full rounded-2xl shadow-lg object-cover"
           />
-        </div>
+        </div> */}
 
      
       </section>
@@ -88,7 +98,7 @@ export default function HomePage() {
                 className={`
                 absolute top-4 
                 ${card.imageLeft ? "left-4" : "right-4"}
-                bg-blue-700 text-white uppercase py-1 px-4 rounded-full shadow text-xs font-semibold tracking-wider
+                bg-purple-500/75 text-white uppercase py-1 px-4 rounded-full shadow text-xs font-semibold tracking-wider
               `}
               >
                 {card.banner}
@@ -113,7 +123,19 @@ export default function HomePage() {
       ))}
     </main>
 
+
+ {/* 🔥 SHOW YOUR LESSON CARDS HERE */}
+      <div className="mt-10 mb-5 max-w-6xl mx-auto px-4">
+        <PreLessonList
+          onSelect={(lesson) => {
+            router.push(`/tecplore-studio/student?lesson=${lesson.id}`);
+          }}
+        />
+      </div>
+      
         {/* localization / translation section */}
+
+        {false && (
         <section className="max-w-6xl mx-auto mb-24 px-4">
           <div className="rounded-3xl bg-gradient-to-br from-violet-100 via-purple-50 to-pink-50 p-10 shadow-lg border border-violet-200/40">
 
@@ -167,16 +189,18 @@ export default function HomePage() {
                 </span>
               </Link>
               <p className="text-xs text-gray-500 mt-2">
-                Opens NativeSync
+                Opens NativeSync  
               </p>
             </div>
 
           </div>
         </section>
 
+        )}
 
       {/* Footer */}
-      <footer className="mt-12 text-center px-2">
+      <footer className="mt-12 text-center px-2"
+      >
         <p className="text-gray-800 text-base sm:text-lg mb-4 leading-snug">
           Join educators transforming YouTube content into powerful classroom experiences
         </p>

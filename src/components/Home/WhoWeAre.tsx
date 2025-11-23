@@ -30,7 +30,7 @@ const WhoWeAre = () => {
 
       {/* Animated background pattern */}
       <motion.div 
-        className="absolute inset-0 z-0"
+       className="absolute inset-0 z-0 opacity-30"
         style={{ 
           backgroundImage: 'url("/patterns/webb.png")',
           backgroundRepeat: 'repeat',
@@ -42,12 +42,12 @@ const WhoWeAre = () => {
 
       {/* Floating gradient orbs */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-blue-400/20 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-blue-400/10 rounded-full blur-3xl"
         animate={{ x: [0, 80, 0], y: [0, -40, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-green-400/20 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-green-400/10 rounded-full blur-3xl"
         animate={{ x: [0, -80, 0], y: [0, 40, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -66,7 +66,7 @@ const WhoWeAre = () => {
           >
            <div className="inline-flex items-center gap-3 sm:gap-4">
           <motion.div 
-            className="h-0.5 bg-gradient-to-r from-blue-600 to-green-600 w-16 sm:w-20"
+            className="h-1 bg-gradient-to-r from-blue-600 to-green-600 w-16 sm:w-20"
             initial={{ scaleX: 0 }}
             animate={titleInView ? { scaleX: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -92,7 +92,7 @@ const WhoWeAre = () => {
               } : {}}
               className="text-gray-800 break-words"
             >
-              We build <span className="italic text-blue-600">interactive science exhibits</span>
+              We build <span className="font-light text-blue-600">interactive science exhibits</span>
             </motion.div>
             
             <motion.div

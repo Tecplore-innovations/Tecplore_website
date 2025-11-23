@@ -42,9 +42,11 @@ const MakerSpacePage: React.FC = () => {
           </section>
                   
     {/* Ideal For */}
-      <section className="bg-gray-50 py-8 px-6"
+      <section className="bg-gray-60 py-8 px-6"
        style={{
-    backgroundImage: "url('/patterns/embossed-diamond.webp')",
+    backgroundImage: "url('/patterns/webb.png')",
+    backgroundRepeat: 'repeat',
+    backgroundSize: 'auto',
     backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
   }}
   >
@@ -61,8 +63,8 @@ const MakerSpacePage: React.FC = () => {
               ["Commercial Venues", "Shopping centers and family entertainment spaces"],
             ].map(([title, desc], i) => (
               <div key={i}>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">{title}</h4>
-                <p className="text-gray-600 text-sm">{desc}</p>
+                <h4 className="text-lg font-medium text-blue-500 mb-2">{title}</h4>
+                <p className="text-stale-600 text-sm">{desc}</p>
               </div>
             ))}
           </div>
@@ -137,7 +139,7 @@ const MakerSpacePage: React.FC = () => {
               {
                 quote:
                   "Our interactive STEM installation has become a cornerstone attraction. Families spend meaningful time exploring the exhibits, and feedback has been overwhelmingly positive across all age groups.",
-                author: "City Mall Management",
+                author: "Alagangle, Nagpur",
               },
             ].map((t, i) => (
               <div key={i} className="border-l-2 border-blue-500 pl-5 md:pl-6">
@@ -156,8 +158,11 @@ const MakerSpacePage: React.FC = () => {
           <footer
             className="relative bg-cover bg-center text-black py-8"
             style={{
-              backgroundImage: "url('/photos/maker-space/maker_space_illustration.avif')",
-              backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
+            //  backgroundImage: "url('/photos/maker-space/maker_space_illustration.avif')",
+             backgroundImage: "url('/patterns/webb.png')",
+                backgroundRepeat: 'repeat',
+                backgroundSize: 'auto',
+                backgroundPositionY: "5%", // 👈 adjust this value (0% = top, 100% = bottom)
             }}
           >
             {/* Optional overlay for better text contrast */}

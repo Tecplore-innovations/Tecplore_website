@@ -3,7 +3,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 import { Upload, CheckCircle, Video, Music, VolumeX, X } from "lucide-react";
-import { PRE_LESSONS, PreLesson } from "./pre_lessons";
+import { PRE_LESSONS, PreLesson } from "../shared_resources/pre_lessons";
+import PreLessonList from "../shared_resources/preLessonList";
+
+import { useSearchParams } from "next/navigation";
+
 
 // --- Constants ---
 const SYNC_THRESHOLD = 0.25;
@@ -77,6 +81,59 @@ export default function StudentPage() {
     const s = Math.floor(t % 60);
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
+
+
+  const params = useSearchParams();
+const lessonFromURL = params.get("lesson");
+
+useEffect(() => {
+  if (lessonFromURL) {
+    const found = PRE_LESSONS.find(l => l.id === lessonFromURL);
+    if (found) loadPreLesson(found); // reuse same function
+  }
+}, [lessonFromURL]);
+
+
+
+async function loadPreLesson(preLesson: PreLesson) {
+  setPreLessonLoading(true);
+  try {
+    const res = await fetch(preLesson.jsonFile);
+    if (!res.ok) throw new Error("Failed to load lesson JSON");
+    const data: Lesson = await res.json();
+
+    if (preLesson.isTranslated && preLesson.audioFile) {
+      const audioRes = await fetch(preLesson.audioFile);
+      if (!audioRes.ok) throw new Error("Failed to load audio file");
+      const blob = await audioRes.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      setCustomAudioSrc(audioUrl);
+    } else {
+      setCustomAudioSrc(null);
+    }
+
+    setShowBrandVideo(true);
+    setTimeout(() => {
+      setLesson(data);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setPendingLesson(null);
+      setCurrentQuestionIndex(null);
+      setShowAnswer(false);
+      setLessonEnded(false);
+      setSummaryVisible(false);
+      setAnsweredQuestions(new Set());
+      setTriggeredQuestions(new Set());
+      setIsPaused(false);
+      isPlayingRef.current = false;
+    }, 0);
+  } catch (e) {
+    console.error(e);
+    alert("Error loading lesson resources.");
+  } finally {
+    setPreLessonLoading(false);
+  }
+}
+
 
   // Cleanup
   useEffect(() => {
@@ -197,7 +254,7 @@ export default function StudentPage() {
       <video
         src="/videos/brand-intro.webm"
         autoPlay
-        muted
+       // muted
         playsInline
         onEnded={() => setShowBrandVideo(false)}
         className="w-full h-auto max-h-[80vh] object-contain"
@@ -741,6 +798,9 @@ export default function StudentPage() {
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col gap-8 items-center">
       {!lesson && !summaryVisible && (
         <>
+
+            <div className="w-full flex justify-center">{renderFileUploader()}</div>
+
           <div className="w-full flex justify-center">
             <div className="relative w-full max-w-6xl rounded-xl overflow-hidden">
               <img
@@ -751,9 +811,8 @@ export default function StudentPage() {
             </div>
           </div>
 
-          <div className="w-full flex justify-center">{renderFileUploader()}</div>
-
-          <div className="mt-8 w-full max-w-6xl px-2 sm:px-4">
+      
+         {/*  <div className="mt-8 w-full max-w-6xl px-2 sm:px-4">
             <h3 className="font-semibold text-lg mb-8 text-blue-800 text-center">
               Start with a Ready-Made Lesson
             </h3>
@@ -850,7 +909,57 @@ export default function StudentPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
+
+
+
+
+    {/*   <PreLessonList
+  loading={preLessonLoading}
+  onSelect={async (lesson) => {
+    // ⬇️ Use your SAME existing logic here:
+    setPreLessonLoading(true);
+    try {
+      const res = await fetch(lesson.jsonFile);
+      if (!res.ok) throw new Error("Failed to load lesson JSON");
+      const data = await res.json();
+
+      if (lesson.isTranslated && lesson.audioFile) {
+        const audioRes = await fetch(lesson.audioFile);
+        if (!audioRes.ok) throw new Error("Failed to load audio file");
+        const blob = await audioRes.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        setCustomAudioSrc(audioUrl);
+      } else {
+        setCustomAudioSrc(null);
+      }
+
+      setShowBrandVideo(true);
+      setTimeout(() => {
+        setLesson(data);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setPendingLesson(null);
+        setCurrentQuestionIndex(null);
+        setShowAnswer(false);
+        setLessonEnded(false);
+        setSummaryVisible(false);
+        setAnsweredQuestions(new Set());
+        setTriggeredQuestions(new Set());
+        setIsPaused(false);
+        isPlayingRef.current = false;
+      }, 0);
+    } catch (e) {
+      alert("Error loading lesson resources.");
+    } finally {
+      setPreLessonLoading(false);
+    }
+  }}
+/> */}
+
+
+{/* it has to stay-below code */}
+
+
         </>
       )}
 
