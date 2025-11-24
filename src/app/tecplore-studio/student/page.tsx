@@ -2,12 +2,10 @@
 
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
-import { Upload, CheckCircle, Video, Music, VolumeX, X } from "lucide-react";
+import { CheckCircle, Video, VolumeX, ArrowLeft } from "lucide-react";
 import { PRE_LESSONS, PreLesson } from "../shared_resources/pre_lessons";
-
-
-import { useSearchParams } from "next/navigation";
-
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 // --- Constants ---
 const SYNC_THRESHOLD = 0.25;
@@ -32,20 +30,15 @@ type Lesson = {
 };
 
 // --- Main Component ---
- function StudentContent() {
+function StudentContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const lessonFromURL = searchParams.get("lesson");
+
   // Lesson State
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [pendingLesson, setPendingLesson] = useState<Lesson | null>(null);
-
-  // Upload State
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [requiresAudio, setRequiresAudio] = useState(false);
-  const [audioFileName, setAudioFileName] = useState<string | null>(null);
   const [customAudioSrc, setCustomAudioSrc] = useState<string | null>(null);
-
-  // Loading State
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Playback State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null);
@@ -60,17 +53,84 @@ type Lesson = {
   // Refs
   const playerRef = useRef<YT.Player | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const audioInputRef = useRef<HTMLInputElement>(null);
   const customAudioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Tracking playback status
   const isPlayingRef = useRef(false);
 
-  // --- PROGRESS BAR STATE ---
+  // Progress Bar State
   const [showProgressBar, setShowProgressBar] = useState(true);
   const [playerDuration, setPlayerDuration] = useState(0);
   const [playerTime, setPlayerTime] = useState(0);
+
+  // --- INITIALIZATION ---
+
+  useEffect(() => {
+    // 1. Check if URL param exists (Pre-made lesson)
+    if (lessonFromURL) {
+      const found = PRE_LESSONS.find((l) => l.id === lessonFromURL);
+      if (found) {
+        loadPreLesson(found);
+      } else {
+        setError("Lesson not found in library.");
+      }
+      return;
+    }
+
+    // 2. Check Session Storage (Uploaded from Home)
+    const storedLessonData = sessionStorage.getItem("tecplore_lesson_data");
+    const storedAudioUrl = sessionStorage.getItem("tecplore_audio_url");
+
+    if (storedLessonData) {
+        try {
+            const parsed: Lesson = JSON.parse(storedLessonData);
+            setLesson(parsed);
+            if (storedAudioUrl) {
+                setCustomAudioSrc(storedAudioUrl);
+            }
+            setShowBrandVideo(true);
+        } catch (e) {
+            console.error(e);
+            setError("Failed to load lesson data. Please try uploading again.");
+        }
+    } else {
+        // No data found
+        setError("No lesson data found. Please return to the Studio to upload a lesson.");
+    }
+
+  }, [lessonFromURL]);
+
+
+  async function loadPreLesson(preLesson: PreLesson) {
+    try {
+      const res = await fetch(preLesson.jsonFile);
+      if (!res.ok) throw new Error("Failed to load lesson JSON");
+      const data: Lesson = await res.json();
+
+      if (preLesson.isTranslated && preLesson.audioFile) {
+        const audioRes = await fetch(preLesson.audioFile);
+        if (!audioRes.ok) throw new Error("Failed to load audio file");
+        const blob = await audioRes.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        setCustomAudioSrc(audioUrl);
+      } else {
+        setCustomAudioSrc(null);
+      }
+
+      setLesson(data);
+      setShowBrandVideo(true);
+    } catch (e) {
+      console.error(e);
+      setError("Error loading lesson resources.");
+    }
+  }
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      // Only revoke if it was a blob we created here (optional safety)
+      isPlayingRef.current = false;
+    };
+  }, []);
 
   const formatTimeShort = (t: number) => {
     const m = Math.floor(t / 60);
@@ -78,184 +138,7 @@ type Lesson = {
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
-
-  const params = useSearchParams();
-const lessonFromURL = params.get("lesson");
-
-useEffect(() => {
-  if (lessonFromURL) {
-    const found = PRE_LESSONS.find(l => l.id === lessonFromURL);
-    if (found) loadPreLesson(found); // reuse same function
-  }
-}, [lessonFromURL]);
-
-
-
-async function loadPreLesson(preLesson: PreLesson) {
-   try {
-    const res = await fetch(preLesson.jsonFile);
-    if (!res.ok) throw new Error("Failed to load lesson JSON");
-    const data: Lesson = await res.json();
-
-    if (preLesson.isTranslated && preLesson.audioFile) {
-      const audioRes = await fetch(preLesson.audioFile);
-      if (!audioRes.ok) throw new Error("Failed to load audio file");
-      const blob = await audioRes.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      setCustomAudioSrc(audioUrl);
-    } else {
-      setCustomAudioSrc(null);
-    }
-
-    setShowBrandVideo(true);
-    setTimeout(() => {
-      setLesson(data);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setPendingLesson(null);
-      setCurrentQuestionIndex(null);
-      setShowAnswer(false);
-      setLessonEnded(false);
-      setSummaryVisible(false);
-      setAnsweredQuestions(new Set());
-      setTriggeredQuestions(new Set());
-      setIsPaused(false);
-      isPlayingRef.current = false;
-    }, 0);
-  } catch (e) {
-    console.error(e);
-    alert("Error loading lesson resources.");
-  }
-}
-
-
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (customAudioSrc) URL.revokeObjectURL(customAudioSrc);
-      isPlayingRef.current = false;
-    };
-  }, [customAudioSrc]);
-
-  // --- Handlers ---
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFileName(file.name);
-    const reader = new FileReader();
-
-    reader.onload = (ev) => {
-      try {
-        const data: Lesson = JSON.parse(ev.target?.result as string);
-        setPendingLesson(data);
-
-        if (data.translatedAudio) {
-          setRequiresAudio(true);
-          setAudioFileName(null);
-          setCustomAudioSrc(null);
-          setUploadProgress(0);
-          setIsUploadingAudio(false);
-          if (audioInputRef.current) audioInputRef.current.value = "";
-        } else {
-          setRequiresAudio(false);
-          setCustomAudioSrc(null);
-        }
-      } catch (error) {
-        console.error("Error parsing lesson JSON:", error);
-        setFileName(null);
-        setPendingLesson(null);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setAudioFileName(file.name);
-    setIsUploadingAudio(true);
-    setUploadProgress(0);
-    setCustomAudioSrc(null);
-
-    let currentProgress = 0;
-    const timer = setInterval(() => {
-      currentProgress += Math.random() * 15 + 5;
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        clearInterval(timer);
-        setUploadProgress(100);
-
-        setTimeout(() => {
-          const url = URL.createObjectURL(file);
-          setCustomAudioSrc(url);
-          setIsUploadingAudio(false);
-        }, 500);
-      } else {
-        setUploadProgress(currentProgress);
-      }
-    }, 150);
-  };
-
-  const handleRemoveLesson = () => {
-    setPendingLesson(null);
-    setFileName(null);
-    setRequiresAudio(false);
-    setAudioFileName(null);
-    setCustomAudioSrc(null);
-    setUploadProgress(0);
-    setIsUploadingAudio(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-    if (audioInputRef.current) audioInputRef.current.value = "";
-  };
-
-  const handleRemoveAudio = () => {
-    setAudioFileName(null);
-    setCustomAudioSrc(null);
-    setUploadProgress(0);
-    setIsUploadingAudio(false);
-    if (audioInputRef.current) audioInputRef.current.value = "";
-  };
-
-  const handleProceedToLesson = () => {
-    if (!pendingLesson) return;
-    if (requiresAudio && !customAudioSrc) {
-      alert("Please upload the translated audio file to proceed.");
-      return;
-    }
-    setShowBrandVideo(true);
-    setTimeout(() => {
-      setLesson(pendingLesson);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setPendingLesson(null);
-      setCurrentQuestionIndex(null);
-      setShowAnswer(false);
-      setLessonEnded(false);
-      setSummaryVisible(false);
-      setAnsweredQuestions(new Set());
-      setTriggeredQuestions(new Set());
-      setIsPaused(false);
-      isPlayingRef.current = false;
-    });
-  };
-
-  const renderBrandVideo = () => (
-    <div className="flex items-center justify-center w-full max-w-7xl mx-auto relative rounded-xl overflow-hidden shadow-2xl bg-black transition-all duration-1000">
-      <video
-        src="/videos/brand-intro.webm"
-        autoPlay
-       // muted
-        playsInline
-        onEnded={() => setShowBrandVideo(false)}
-        className="w-full h-auto max-h-[80vh] object-contain"
-      />
-    </div>
-  );
-
-  // --- SYNC & LOGIC ---
+  // --- LOGIC: Sync & Playback ---
 
   const startInterval = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -401,30 +284,14 @@ async function loadPreLesson(preLesson: PreLesson) {
     setSummaryVisible(true);
   };
 
-  const completeLesson = () => {
-    stopInterval();
-    isPlayingRef.current = false;
-    setLesson(null);
-    setPendingLesson(null);
-    setFileName(null);
-    setAudioFileName(null);
-    setCustomAudioSrc(null);
-    setRequiresAudio(false);
-    setLessonEnded(false);
-    setSummaryVisible(false);
-    setCurrentQuestionIndex(null);
-    setShowAnswer(false);
-    setAnsweredQuestions(new Set());
-    setTriggeredQuestions(new Set());
-    playerRef.current = null;
-    setIsPaused(false);
-    setIsUploadingAudio(false);
-    setUploadProgress(0);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-    if (audioInputRef.current) audioInputRef.current.value = "";
+  const exitLesson = () => {
+     // Clear storage and go home
+     sessionStorage.removeItem("tecplore_lesson_data");
+     sessionStorage.removeItem("tecplore_audio_url");
+     router.push("/tecplore-studio");
   };
 
-  // --- Progress Bar Handlers ---
+  // --- Interaction Handlers ---
 
   const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!lesson || !playerRef.current) return;
@@ -437,14 +304,12 @@ async function loadPreLesson(preLesson: PreLesson) {
     if (lesson.trimEnd != null) t = Math.min(t, lesson.trimEnd);
 
     playerRef.current.seekTo(t, true);
-    // Explicitly play to update UI
     playerRef.current.playVideo();
   };
 
   const handleSeekToQuestion = (index: number, qTime: number) => {
     if (!lesson || !playerRef.current) return;
 
-    // 1. Reset logic so it triggers again
     setAnsweredQuestions((prev) => {
       const copy = new Set(prev);
       copy.delete(index);
@@ -457,11 +322,9 @@ async function loadPreLesson(preLesson: PreLesson) {
       return copy;
     });
 
-    // 2. Hide modal if currently open to avoid conflicts
     setCurrentQuestionIndex(null);
     setShowAnswer(false);
 
-    // 3. Seek to 1 second before
     const offset = 1; 
     const target = Math.max(lesson.trimStart ?? 0, qTime - offset);
     
@@ -469,118 +332,73 @@ async function loadPreLesson(preLesson: PreLesson) {
     playerRef.current.playVideo();
   };
 
-  // --- Renders ---
+  // --- Sub-Components (Renders) ---
 
-  const renderFileUploader = () => (
-    <div className="p-8 rounded-xl bg-white/95 backdrop-blur-sm shadow-lg max-w-6xl w-full transition duration-300">
-      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-        <h3 className="font-light text-lg mb-2 text-blue-800">How To Use!</h3>
-        <p className="text-gray-600">
-          Upload your lesson file (.json) to continue. If you don’t have one yet, create a lesson in Creator Mode.
-        </p>
-      </div>
-
-      {!pendingLesson ? (
-        <label
-          htmlFor="lesson-upload"
-          className="flex flex-col items-center justify-center p-6 border-2 border-blue-100 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
-        >
-          <Upload className="w-6 h-6 text-blue-600 mb-2" />
-          <span className="font-medium text-blue-600">Click to Select Lesson File (.json)</span>
-          <input
-            id="lesson-upload"
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            onChange={handleFileUpload}
-            className="hidden"
-          />
-        </label>
-      ) : (
-        <div className="flex flex-col gap-4">
-          <div className="p-3 bg-green-50 text-green-700 border border-green-200 rounded-md flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-sm font-medium">Loaded Lesson: {fileName}</span>
-            </div>
-            <button
-              onClick={handleRemoveLesson}
-              className="p-1 hover:bg-green-100 rounded-full text-green-600 transition-colors"
-              title="Remove Lesson"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {requiresAudio && (
-            <div className="animate-fade-in">
-              {isUploadingAudio ? (
-                <div className="p-4 bg-purple-50 border border-purple-100 rounded-lg flex flex-col gap-2">
-                  <div className="flex justify-between text-xs font-medium text-purple-700">
-                    <span>Uploading {audioFileName}...</span>
-                    <span>{Math.round(uploadProgress)}%</span>
-                  </div>
-                  <div className="w-full bg-purple-200 rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className="bg-purple-600 h-2.5 rounded-full transition-all duration-200 ease-out"
-                      style={{ width: `${uploadProgress}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ) : !audioFileName ? (
-                <label
-                  htmlFor="audio-upload"
-                  className="flex flex-col items-center justify-center p-6 border-2 border-purple-100 bg-purple-50 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
-                >
-                  <Music className="w-6 h-6 text-purple-600 mb-2" />
-                  <span className="font-medium text-purple-600">Upload Translated Audio (.mp3/wav)</span>
-                  <input
-                    id="audio-upload"
-                    ref={audioInputRef}
-                    type="file"
-                    accept="audio/*"
-                    onChange={handleAudioUpload}
-                    className="hidden"
-                  />
-                </label>
-              ) : (
-                <div className="p-3 bg-purple-50 text-purple-700 border border-purple-200 rounded-md flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4" />
-                    <span className="text-sm font-medium">Loaded Audio: {audioFileName}</span>
-                  </div>
-                  <button
-                    onClick={handleRemoveAudio}
-                    className="p-1 hover:bg-purple-100 rounded-full text-purple-600 transition-colors"
-                    title="Remove Audio"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          <button
-            onClick={handleProceedToLesson}
-            disabled={requiresAudio && (!customAudioSrc || isUploadingAudio)}
-            className={`w-full px-6 py-3 bg-transparent border-2 rounded-lg 
-                      text-lg font-medium transition-all
-                      ${
-                        requiresAudio && (!customAudioSrc || isUploadingAudio)
-                          ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                          : "border-blue-400 text-blue-600 hover:border-green-600 hover:text-blue-600"
-                      }`}
-          >
-            {isUploadingAudio ? "Processing Audio..." : "Proceed to Lesson"}
-          </button>
-        </div>
-      )}
+  const renderBrandVideo = () => (
+    <div className="flex items-center justify-center w-full max-w-7xl mx-auto relative rounded-xl overflow-hidden shadow-2xl bg-black transition-all duration-1000">
+      <video
+        src="/videos/brand-intro.webm"
+        autoPlay
+        playsInline
+        onEnded={() => setShowBrandVideo(false)}
+        className="w-full h-auto max-h-[80vh] object-contain"
+      />
     </div>
   );
 
+  const renderLessonCompletedScreen = () => (
+    <div className="absolute inset-0 bg-black/95 flex flex-col justify-center items-center p-6 z-20 text-center animate-fade-in">
+      <div className="text-white">
+        <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
+        <h3 className="font-light text-4xl text-white mb-6">Lesson Completed!</h3>
+        <button
+          className="px-4 py-2 border-2 border-blue-500 text-white rounded-lg font-light hover:bg-white hover:text-black transition shadow-sm text-lg"
+          onClick={viewSummary}
+        >
+          View Summary
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderQuestionModal = () => {
+    if (currentQuestionIndex === null || !lesson || !lesson.questions[currentQuestionIndex]) return null;
+    const questionData = lesson.questions[currentQuestionIndex];
+
+    return (
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 z-20 animate-fade-in">
+        <div className="bg-white rounded-xl p-6 question-modal shadow-2xl flex flex-col gap-5 relative z-30 border-t-4 border-blue-600 overflow-y-auto max-h-[60vh] w-full max-w-lg">
+          <h3 className="font-light text-1xl text-blue-600">Question</h3>
+          <p className="text-gray-800 text-lg border-b pb-3">{questionData.question}</p>
+
+          {!showAnswer ? (
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg font-light hover:bg-blue-700 transition shadow-md self-start"
+              onClick={revealAnswer}
+            >
+              Show Answer
+            </button>
+          ) : (
+            <div className="flex flex-col gap-4 animate-fade-in">
+              <div className="p-4 bg-gray-100 border-l-4 border-green-500 rounded">
+                <p className="text-gray-800 font-medium">Answer:</p>
+                <p className="text-gray-700 mt-1">{questionData.answer}</p>
+              </div>
+              <button
+                className="px-6 py-3 bg-green-600 text-white rounded-lg font-light hover:bg-green-700 transition shadow-md self-start"
+                onClick={okAnswer}
+              >
+                Continue lesson
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderLessonSummary = () => (
-    <div className="p-4 sm:p-8 border rounded-xl max-w-4xl mx-auto bg-white shadow-xl flex flex-col gap-6">
+    <div className="p-4 sm:p-8 border rounded-xl max-w-4xl w-full mx-auto bg-white shadow-xl flex flex-col gap-6 animate-fade-in">
       <h2 className="font-medium text-3xl text-gray-800 border-b pb-3 flex flex-col items-start gap-1">
         <div className="flex items-center gap-2">
           <Video className="w-6 h-6 text-blue-400" />
@@ -609,71 +427,21 @@ async function loadPreLesson(preLesson: PreLesson) {
 
       <button
         className="mt-4 px-4 py-2 bg-blue-400 text-white rounded-lg font-light hover:bg-blue-600 transition shadow-md self-end"
-        onClick={completeLesson}
+        onClick={exitLesson}
       >
         Return Home
       </button>
     </div>
   );
 
-  const renderQuestionModal = () => {
-    if (currentQuestionIndex === null || !lesson || !lesson.questions[currentQuestionIndex]) return null;
-    const questionData = lesson.questions[currentQuestionIndex];
-
-    return (
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 z-20">
-        <div className="bg-white rounded-xl p-6 question-modal shadow-2xl flex flex-col gap-5 relative z-30 border-t-4 border-blue-600 overflow-y-auto">
-          <h3 className="font-light text-1xl text-blue-600">Question</h3>
-          <p className="text-gray-800 text-lg border-b pb-3">{questionData.question}</p>
-
-          {!showAnswer ? (
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg font-light hover:bg-blue-700 transition shadow-md self-start"
-              onClick={revealAnswer}
-            >
-              Show Answer
-            </button>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <div className="p-4 bg-gray-100 border-l-4 border-green-500 rounded">
-                <p className="text-gray-800 font-medium">Answer:</p>
-                <p className="text-gray-700 mt-1">{questionData.answer}</p>
-              </div>
-              <button
-                className="px-6 py-3 bg-green-600 text-white rounded-lg font-light hover:bg-green-700 transition shadow-md self-start"
-                onClick={okAnswer}
-              >
-                Continue lesson
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderLessonCompletedScreen = () => (
-    <div className="absolute inset-0 bg-black/95 flex flex-col justify-center items-center p-6 z-20 text-center">
-      <div className="text-white">
-        <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
-        <h3 className="font-light text-4xl text-white mb-6">Lesson Completed!</h3>
-        <button
-          className="px-4 py-2 border-2 border-blue-500 text-white rounded-lg font-light hover:bg-white hover:text-black transition shadow-sm text-lg"
-          onClick={viewSummary}
-        >
-          View Summary
-        </button>
-      </div>
-    </div>
-  );
-
   const renderVideoPlayer = () => {
-    // Calculate progress for bar
     const duration = playerDuration;
     const currentTime = playerTime;
     
     return (
-      <div className="relative flex flex-col gap-4 w-full max-w-7xl mx-auto landscape-container">
+      <div className="relative flex flex-col gap-4 w-full max-w-7xl mx-auto">
+        
+        {/* PLAYER WRAPPER */}
         <div
           className="video-wrapper rounded-xl overflow-hidden shadow-2xl bg-black relative"
           style={{ height: "80vh", maxHeight: "80vh" }}
@@ -707,14 +475,14 @@ async function loadPreLesson(preLesson: PreLesson) {
           )}
 
           {lesson?.translatedAudio && !isPaused && !lessonEnded && (
-            <div className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white flex items-center gap-2 backdrop-blur-md z-10 pointer-events-none">
+            <div className="absolute top-4 right-4 bg-black/60 p-2 rounded-full text-white flex items-center gap-2 backdrop-blur-md z-10 pointer-events-none animate-fade-in">
               <VolumeX className="w-4 h-4 text-gray-400" />
               <span className="text-xs font-medium text-white">Translated Audio</span>
             </div>
           )}
 
           {isPaused && currentQuestionIndex === null && !lessonEnded && (
-            <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none flex items-center justify-center animate-fade-in">
               <span className="text-white text-4xl font-light opacity-75">Paused</span>
             </div>
           )}
@@ -723,14 +491,16 @@ async function loadPreLesson(preLesson: PreLesson) {
           {renderQuestionModal()}
         </div>
 
-        {/* --- INLINE PROGRESS BAR --- */}
+        {/* TIMELINE CONTROLS */}
         <div className="flex flex-col gap-2 w-full select-none mt-2">
-          {/* Toggle Button */}
-          <div className="flex justify-end px-1">
+          <div className="flex justify-between px-1">
+             <h1 className="text-xl font-light text-gray-800 truncate max-w-2xl">
+              {lesson?.title}
+            </h1>
             <button
               type="button"
               onClick={() => setShowProgressBar((v) => !v)}
-              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 active:scale-95 transition-transform font-medium text-sm"
+              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 active:scale-95 transition-transform font-medium text-xs sm:text-sm"
             >
               {showProgressBar ? "🙈 Hide Timeline" : "👁 Show Timeline"}
             </button>
@@ -738,12 +508,10 @@ async function loadPreLesson(preLesson: PreLesson) {
 
           {showProgressBar && duration > 0 && (
             <div className="relative w-full h-5 flex items-center animate-fade-in">
-              {/* Click Surface */}
               <div
                 className="w-full h-2 bg-gray-200 border border-gray-300 rounded relative cursor-pointer group"
                 onClick={handleProgressBarClick}
               >
-                {/* Playback Fill */}
                 <div
                   className="absolute h-full bg-blue-600 rounded-sm pointer-events-none"
                   style={{
@@ -753,8 +521,6 @@ async function loadPreLesson(preLesson: PreLesson) {
                       : `${(currentTime / duration) * 100}%`,
                   }}
                 />
-
-                {/* Question Dots */}
                 {lesson!.questions.map((q, idx) => {
                   const qPct = (q.time / duration) * 100;
                   return (
@@ -764,211 +530,57 @@ async function loadPreLesson(preLesson: PreLesson) {
                       className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-purple-600 border border-white rounded-full shadow transition-transform hover:scale-150 cursor-pointer z-10"
                       title={`Go to Question ${idx + 1}`}
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent seeking the bar logic
+                        e.stopPropagation();
                         handleSeekToQuestion(idx, q.time);
                       }}
                     />
                   );
                 })}
               </div>
-
-              {/* Timestamp */}
               <div className="ml-3 text-gray-600 text-sm font-mono min-w-[50px]">
                 {formatTimeShort(currentTime)}
               </div>
             </div>
           )}
         </div>
-
-        <h1 className="text-2xl font-light text-gray-800 text-center sm:text-left">
-          {lesson?.title}
-        </h1>
       </div>
     );
   };
 
+  // --- Main Render ---
+
+  // 1. Error State
+  if (error) {
+    return (
+        <div className="flex flex-col items-center justify-center h-screen gap-4">
+            <h2 className="text-2xl text-red-500 font-light">{error}</h2>
+            <Link href="/tecplore-studio" className="px-6 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 hover:bg-blue-700">
+                <ArrowLeft className="w-4 h-4" /> Back to Studio
+            </Link>
+        </div>
+    );
+  }
+
+  // 2. Loading State
+  if (!lesson) {
+     return <div className="flex h-screen items-center justify-center text-blue-600 animate-pulse">Loading Classroom...</div>;
+  }
+
+  // 3. Summary State
+  if (summaryVisible) {
+      return <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">{renderLessonSummary()}</div>;
+  }
+
+  // 4. Playback State
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col gap-8 items-center">
-      {!lesson && !summaryVisible && (
-        <>
-
-            <div className="w-full flex justify-center">{renderFileUploader()}</div>
-
-          <div className="w-full flex justify-center">
-            <div className="relative w-full max-w-6xl rounded-xl overflow-hidden">
-              <img
-                src="/photos/studio_banner.avif"
-                alt="Banner"
-                className="w-full h-auto object-contain rounded-xl"
-              />
-            </div>
-          </div>
-
-      
-         {/*  <div className="mt-8 w-full max-w-6xl px-2 sm:px-4">
-            <h3 className="font-semibold text-lg mb-8 text-blue-800 text-center">
-              Start with a Ready-Made Lesson
-            </h3>
-            <div className="flex gap-6 overflow-x-auto pb-4">
-              {PRE_LESSONS.map((preLesson) => (
-                <div
-                  key={preLesson.id}
-                  className={`relative flex-none w-56 bg-white rounded-2xl overflow-hidden shadow-md border transition cursor-pointer
-                    ${
-                      selectedPreLesson?.id === preLesson.id
-                        ? "border-blue-500 shadow-lg"
-                        : "border-gray-200"
-                    } 
-                    hover:shadow-lg`}
-                  onClick={() => setSelectedPreLesson(preLesson)}
-                >
-                  {preLesson.isTranslated && (
-                    <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md">
-                      <Music className="w-3 h-3" /> Translated
-                    </div>
-                  )}
-                  <div className="w-full aspect-[4/3]">
-                    <img
-                      src={preLesson.thumbnail}
-                      alt={preLesson.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3 flex flex-col h-[150px]">
-                    <h4 className="font-semibold text-base mb-2 leading-tight line-clamp-2">
-                      {preLesson.title}
-                    </h4>
-                    <div className="text-gray-600 text-sm mb-3 flex-grow overflow-hidden">
-                      <p className="line-clamp-3">{preLesson.description}</p>
-                    </div>
-                    <button
-                      className={`w-full px-3 py-2 rounded transition font-medium text-sm mt-auto
-                      ${
-                        selectedPreLesson?.id === preLesson.id
-                          ? "bg-blue-600 text-white"
-                          : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                      }`}
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        if (selectedPreLesson?.id !== preLesson.id) {
-                          setSelectedPreLesson(preLesson);
-                          return;
-                        }
-                        setPreLessonLoading(true);
-                        try {
-                          const res = await fetch(preLesson.jsonFile);
-                          if (!res.ok) throw new Error("Failed to load lesson JSON");
-                          const data: Lesson = await res.json();
-
-                          if (preLesson.isTranslated && preLesson.audioFile) {
-                            const audioRes = await fetch(preLesson.audioFile);
-                            if (!audioRes.ok) throw new Error("Failed to load audio file");
-                            const blob = await audioRes.blob();
-                            const audioUrl = URL.createObjectURL(blob);
-                            setCustomAudioSrc(audioUrl);
-                          } else {
-                            setCustomAudioSrc(null);
-                          }
-
-                          setShowBrandVideo(true);
-                          setTimeout(() => {
-                            setLesson(data);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                            setPendingLesson(null);
-                            setCurrentQuestionIndex(null);
-                            setShowAnswer(false);
-                            setLessonEnded(false);
-                            setSummaryVisible(false);
-                            setAnsweredQuestions(new Set());
-                            setTriggeredQuestions(new Set());
-                            setIsPaused(false);
-                            isPlayingRef.current = false;
-                            setSelectedPreLesson(null);
-                          }, 0);
-                        } catch (err) {
-                          console.error(err);
-                          alert("Error loading lesson resources.");
-                        } finally {
-                          setPreLessonLoading(false);
-                        }
-                      }}
-                      disabled={preLessonLoading}
-                    >
-                      {preLessonLoading && selectedPreLesson?.id === preLesson.id
-                        ? "Loading..."
-                        : "Start Lesson"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-
-
-
-    {/*   <PreLessonList
-  loading={preLessonLoading}
-  onSelect={async (lesson) => {
-    // ⬇️ Use your SAME existing logic here:
-    setPreLessonLoading(true);
-    try {
-      const res = await fetch(lesson.jsonFile);
-      if (!res.ok) throw new Error("Failed to load lesson JSON");
-      const data = await res.json();
-
-      if (lesson.isTranslated && lesson.audioFile) {
-        const audioRes = await fetch(lesson.audioFile);
-        if (!audioRes.ok) throw new Error("Failed to load audio file");
-        const blob = await audioRes.blob();
-        const audioUrl = URL.createObjectURL(blob);
-        setCustomAudioSrc(audioUrl);
-      } else {
-        setCustomAudioSrc(null);
-      }
-
-      setShowBrandVideo(true);
-      setTimeout(() => {
-        setLesson(data);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setPendingLesson(null);
-        setCurrentQuestionIndex(null);
-        setShowAnswer(false);
-        setLessonEnded(false);
-        setSummaryVisible(false);
-        setAnsweredQuestions(new Set());
-        setTriggeredQuestions(new Set());
-        setIsPaused(false);
-        isPlayingRef.current = false;
-      }, 0);
-    } catch (e) {
-      alert("Error loading lesson resources.");
-    } finally {
-      setPreLessonLoading(false);
-    }
-  }}
-/> */}
-
-
-{/* it has to stay-below code */}
-
-
-        </>
-      )}
-
-      {lesson && !summaryVisible && (
-        <>{showBrandVideo ? renderBrandVideo() : renderVideoPlayer()}</>
-      )}
-
-      {summaryVisible && lesson && renderLessonSummary()}
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 flex flex-col items-center justify-center">
+      {showBrandVideo ? renderBrandVideo() : renderVideoPlayer()}
     </div>
   );
 }
 
-
 export default function StudentPage() {
   return (
-    // You can customize the fallback to be a spinner or skeleton loader
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
       <StudentContent />
     </Suspense>
