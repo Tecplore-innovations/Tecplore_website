@@ -373,7 +373,7 @@ export default function InteractiveExhibits() {
           : "border border-gray-500 bg-gray-100 text-black hover:bg-gray-200"
       }`}
     >
-      Gallery View
+      Project Photos
     </button>
   </div>
 </div>
