@@ -2,8 +2,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
-import WhoWeAreSection from "@/components/Home/WhoWeAre";
-import CounterEffectStats from "@/components/Home/counterEffect";
+import AboutSection from '@/components/Home/AboutSection';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const videos = [
   "/videos/Video_1.webm",
@@ -24,7 +25,16 @@ const HomePage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [currentWord, setCurrentWord] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const aboutSectionRef = useRef<HTMLElement>(null);
 
+
+  const scrollToAboutSection = () => {
+    if (aboutSectionRef.current) {
+      aboutSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+    }
+  };
 
 
 const handleCarouselChange = (newIndex: number) => {
@@ -105,16 +115,23 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
   const sectionPadding = isMobile ? "py-6" : "py-10 lg:py-10";
 
   return (
-    <main className="w-full overflow-x-hidden bg-black">
-   <section className="relative min-h-[0] lg:min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
+    <main className="w-full overflow-x-hidden ">
+   <section className="relative min-h-[0] lg:min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-slate-700 overflow-hidden">
 
-      {/* Tecplore Branding - Bottom Right */}
-      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-12 z-50">
-        <h2 className="text-2xl sm:text-2xl lg:text-2xl font-light bg-gradient-to-r from-[#4f46e5] via-[#00c6ff] to-[#2563EB] bg-clip-text text-transparent">
-          Tecplore
-        </h2>
 
+      {/* ⏫ NEW Logo Branding - Top Left */}
+      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:top-8 lg:left-12 z-50">
+        <Link href="/">
+          <Image
+            src="/photos/Tecplore_logo_Brand.png"
+            alt="Tecplore Logo"
+            width={120}
+            height={40}
+            className="cursor-pointer" // Apply cursor class directly to Image
+          />
+        </Link>
       </div>
+     
 
         {/* BG blobs */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
@@ -124,9 +141,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
         <div className={`relative z-10 container mx-auto px-2 sm:px-4 lg:px-12 ${sectionPadding} flex flex-col min-h-[0]`}>
           {/* Mobile/Tablet */}
           {isMobile ? (
-            <div className="w-full flex flex-col items-center">
-              {/* Top 24px Margin */}
-              <div style={{ height: '24px' }} />
+            <div className="w-full flex flex-col items-center pt-16">           
 
               {/* Video Player */}         
                 <div
@@ -185,7 +200,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
          {/* Text below video and dots */}
           <div className="w-full px-4 pb-8 flex flex-col items-center">
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-light text-white text-center">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-white text-center">
               Learn Science Through
               <div
                 className="mt-1 bg-clip-text text-transparent"
@@ -359,7 +374,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   ))} 
                 </div>
                 <button
-                  onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
+                  onClick={scrollToAboutSection}
                   className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white hover:scale-105 transition-all duration-300"
                   style={{
                     border: "2px solid transparent",
@@ -375,8 +390,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
           )}
         </div>
       </section>
-      <WhoWeAreSection />
-      <CounterEffectStats />
+     <AboutSection ref={aboutSectionRef} />
     </main>
   );
 };

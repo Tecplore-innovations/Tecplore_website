@@ -90,7 +90,11 @@ export default function PreLessonList({ onSelect, loading }: Props) {
             className={`relative flex-none w-56 bg-white rounded-2xl overflow-hidden shadow-md border transition cursor-pointer select-none
               ${selected === lesson.id ? "border-blue-500 shadow-lg" : "border-gray-200"}
               hover:shadow-lg`}
-            onClick={() => setSelected(lesson.id)}
+           
+              onClick={() => {
+                if (isDragging.current) return;
+                setSelected(lesson.id);
+              }}
           >
             {lesson.isTranslated && (
               <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md">
@@ -119,12 +123,18 @@ export default function PreLessonList({ onSelect, loading }: Props) {
               )}
 
               <button
-                className={`w-full px-3 py-2 rounded transition font-medium text-sm mt-auto
-                  ${selected === lesson.id ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600 hover:bg-blue-100"}`}
-                disabled={loading || lesson.isLocked}
+               className={`w-full px-3 py-2 rounded transition font-medium text-sm mt-auto
+                ${selected === lesson.id 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed"}
+                disabled:opacity-50 disabled:cursor-not-allowed`}
+                
+              disabled={loading || lesson.isLocked || selected !== lesson.id}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!lesson.isLocked) onSelect(lesson);
+                  if (!lesson.isLocked && selected === lesson.id) {
+                    onSelect(lesson);
+                  }
                 }}
               >
                 {lesson.isLocked ? "Locked" : loading && selected === lesson.id ? "Loading..." : "Start Lesson"}
