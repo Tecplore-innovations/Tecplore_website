@@ -15,7 +15,6 @@ const Footer = () => {
   const resourceLinks = [
     { name: "Interactive Exhibits", href: "/interactive-exhibits" },
     { name: "Teaching Resources", href: "/teacher-resources" },
-    { name: "Tecplore Studio", href: "/tecplore-studio" },
     { name: "Setup Maker Space", href: "/maker-space" },
   ];
 
