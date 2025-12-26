@@ -13,10 +13,16 @@ const Footer = () => {
 
 
   const resourceLinks = [
-    { name: "Interactive Exhibits", href: "/interactive-exhibits" },
-    { name: "Teaching Resources", href: "/teacher-resources" },
-    { name: "Setup Maker Space", href: "/maker-space" },
-  ];
+  { name: "Interactive Exhibits", href: "/interactive-exhibits" },
+  { name: "Teaching Resources", href: "/teacher-resources" },
+  { name: "Setup Maker Space", href: "/maker-space" },
+  {
+    name: "Tecplore Studio",
+    href: "https://studio.tecplore.com/",
+    external: true,
+  },
+];
+
 
   const companyLinks = [
     { name: "About Us", href: "/about-us" },
@@ -110,16 +116,19 @@ const Footer = () => {
                     </Link>
                   </li>
                 )}
-                {resourceLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
+               {resourceLinks.map((link) => (
+              <li key={link.name}>
+                <Link
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+
               </ul>
             </div>
 

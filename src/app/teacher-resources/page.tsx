@@ -1,11 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { resources, Resource } from "./resources";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Play, FileText, Search, Star, Award, SlidersHorizontal } from "lucide-react";
 
+
+interface Resource {
+  id: number;
+  title: string;
+  type: "video" | "document"; 
+  subject: string;
+  level: string;
+  thumbnail: string;
+  contentUrl: string;
+  createdAt: string; 
+  language: string;  
+  content: "Tecplore" | "Community";
+}
+
+
 const TeacherResources: React.FC = () => {
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [subjectFilter, setSubjectFilter] = useState<string>("All");
   const [levelFilter, setLevelFilter] = useState<string>("All");
@@ -17,16 +33,10 @@ const TeacherResources: React.FC = () => {
   const [originFilter, setOriginFilter] = useState<string>("All");
   const [filterHistoryActive, setFilterHistoryActive] = useState(false);
 
-
-
-  
-  
-
-  const subjects = Array.from(new Set(resources.map(r => r.subject)));
-  const levels = Array.from(new Set(resources.map(r => r.level)));
-  const languages = Array.from(new Set(resources.map(r => r.language)));
-  const origins = Array.from(new Set(resources.map(r => r.content)));
-
+  const subjects = Array.from(new Set((resources || []).map(r => r.subject)));
+  const levels = Array.from(new Set((resources || []).map(r => r.level)));
+  const languages = Array.from(new Set((resources || []).map(r => r.language)));
+  const origins = Array.from(new Set((resources || []).map(r => r.content)));
 
   const filteredResources = resources
     .filter(r => (subjectFilter === "All" || r.subject === subjectFilter))
@@ -124,7 +134,45 @@ useEffect(() => {
 
 
 
-const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
+useEffect(() => {
+  const fetchResources = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/get_resources.php`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Safety check
+      if (Array.isArray(data)) {
+        setResources(data);
+      } else {
+        console.error("Backend Error Details:", data);
+      }
+    } catch (error) {
+      console.error("Failed to load resources:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchResources();
+}, []);
+
+
+
+const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL!;
+
+const getAssetUrl = (url: string) => {
+  if (!url) return "";
+  if (url.startsWith("http")) return url; // YouTube / external
+  return `${ASSET_BASE_URL}${url}`;
+};
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -438,7 +486,13 @@ const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator
             </AnimatePresence>
 
             {/* Resources Grid/List */}
-            {!showFilters || activeFilterCount > 0 ? (
+          {isLoading ? (
+              /* Simple Loading Skeleton or Spinner */
+              <div className="flex flex-col items-center justify-center py-20 bg-white border border-gray-200 rounded">
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
+                <p className="text-sm text-gray-500">Loading resources...</p>
+              </div>
+            ) :!showFilters || activeFilterCount > 0 ? (
               filteredResources.length === 0 ? (
                 <div className="text-center py-12 bg-white border border-gray-200 rounded">
                   <Search className="w-12 h-12 mx-auto mb-3 text-gray-300" />
@@ -468,11 +522,13 @@ const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator
                         onClick={() => setSelectedResource(resource)}
                       >
                         <div className="relative aspect-video overflow-hidden bg-gray-100">
-                          <img
-                            src={resource.thumbnail}
-                            alt={resource.title}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
+                         <img
+                          src={`${ASSET_BASE_URL}${resource.thumbnail}`}
+                          alt={resource.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+
                           
                           <div className="absolute top-1.5 left-1.5">
                             {resource.type === "video" ? (
@@ -524,10 +580,12 @@ const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator
                         {/* Thumbnail - Narrow strip on left */}
                         <div className="relative w-24 flex-shrink-0 bg-gray-100">
                           <img
-                            src={resource.thumbnail}
-                            alt={resource.title}
-                            className="w-full h-full object-cover"
-                          />
+                              src={`${ASSET_BASE_URL}${resource.thumbnail}`}
+                              alt={resource.title}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              loading="lazy"
+                            />
+
                           
                           <div className="absolute top-1 left-1">
                             {resource.type === "video" ? (
@@ -647,30 +705,25 @@ const isMobile = typeof window !== "undefined" && /Mobi|Android/i.test(navigator
                   </div>
                 )}
 
-             
-             {selectedResource.type === "document" && (
-              <>
-                {isMobile ? (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <p className="text-gray-600 mb-4">PDF preview unavailable on mobile.</p>
-                    <a
-                      href={selectedResource.contentUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                    >
-                      Open PDF in Full Screen
-                    </a>
-                  </div>
-                ) : (
-                  <iframe
-                    src={selectedResource.contentUrl}
-                    className="w-full h-[75vh] rounded border border-gray-200"
-                    title={selectedResource.title}
-                  />
-                )}
-              </>
-            )}
+           {selectedResource.type === "document" && (
+  <div className="flex flex-col items-center justify-center py-12">
+    <FileText className="w-12 h-12 text-gray-400 mb-4" />
+
+    <p className="text-sm text-gray-600 mb-4 text-center">
+      Preview is restricted for security reasons.
+    </p>
+
+    <a
+      href={getAssetUrl(selectedResource.contentUrl)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-5 py-2.5 bg-gray-900 text-white rounded hover:bg-gray-800 transition"
+    >
+      Open PDF in New Tab
+    </a>
+  </div>
+)}
+
             </div>
             </motion.div>
           </div>
