@@ -20,7 +20,7 @@ const MakerSpacePage: React.FC = () => {
 
             {/* Text Content */}
             <div className="relative z-10 px-6 max-w-3xl">
-              <h1 className="text-4xl md:text-4xl font-light mb-6 text-white">
+              <h1 className="text-4xl md:text-4xl font-semibold mb-6 text-white">
                 Maker Space Solutions
               </h1>
               <div className="w-20 h-0.5 bg-white/60 mx-auto mb-8" />
@@ -51,7 +51,7 @@ const MakerSpacePage: React.FC = () => {
   }}
   >
         <div className="max-w-6xl mx-auto text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-slate-900">
             Ideal For
           </h2>
 
@@ -73,7 +73,7 @@ const MakerSpacePage: React.FC = () => {
 
       {/* Implementation Process */}
         <section className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-light mb-8 mt-6 text-gray-900 text-center md:text-left">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-8 mt-6 text-gray-900 text-center md:text-left">
             Implementation Process
           </h2>
           <div className="space-y-8">
@@ -125,7 +125,7 @@ const MakerSpacePage: React.FC = () => {
             {/* Testimonials */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12"
     >
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-gray-900 text-center md:text-left">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-12 text-gray-900 text-center md:text-left">
             Partner Testimonials
           </h2>
 
@@ -169,7 +169,7 @@ const MakerSpacePage: React.FC = () => {
             <div className="absolute inset-0 bg-blue-50/70" />
 
             <div className="relative max-w-6xl mx-auto px-6 text-center">
-              <h2 className="text-2xl font-light mb-4">Ready to Begin?</h2>
+              <h2 className="text-2xl font-semibold mb-4">Ready to Begin?</h2>
               <p className="text-slate-800 text-sm mb-4">
                 Let&apos;s discuss how a maker space can enhance learning at your institution.
               </p>

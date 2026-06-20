@@ -243,7 +243,7 @@ export default function InteractiveExhibits() {
           <h2 className="text-xs uppercase text-gray-400 mb-3 tracking-widest">
             Interactive Exhibits
           </h2>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-light leading-tight mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight mb-6">
             <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               {showcases[index].title}
             </span>
@@ -351,7 +351,7 @@ export default function InteractiveExhibits() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header + Filters + View Tabs */}
 <div className="flex flex-col items-center justify-center gap-4 mb-8">
-  <h3 className="text-2xl md:text-3xl font-light text-center">Explore Exhibits</h3>
+  <h3 className="text-2xl md:text-3xl font-semibold text-center">Explore Exhibits</h3>
 
   {/* View Mode Tabs */}
   <div className="flex items-center gap-4 justify-center">
