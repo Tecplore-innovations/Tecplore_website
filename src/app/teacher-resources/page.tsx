@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Play, FileText, Star, AlertCircle } from "lucide-react";
 import PageHero from "@/components/shared/PageHero";
+import { Button } from "@/components/ui/button";
 
 interface Resource {
   id: number;
@@ -105,41 +106,40 @@ const TeacherResources: React.FC = () => {
 
   // ─── Select class helper ────────────────────────────────────────────────────
   const selectCls = (active: boolean) =>
-    `rounded px-2.5 py-1.5 text-xs border cursor-pointer transition-all outline-none ${
+    `rounded-full px-2.5 py-1.5 text-xs border cursor-pointer transition-all outline-none ${
       active
-        ? "bg-white border-gray-900 text-gray-900 font-semibold"
-        : "bg-gray-50 border-gray-300 text-gray-600 hover:border-gray-500"
+        ? "bg-background border-primary text-foreground font-semibold"
+        : "bg-background border-input text-body hover:border-primary/40"
     }`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
 
       {/* ── Hero ── */}
       <PageHero
         title="Teacher Resources Portal"
         subtitle="Access curated training materials and teaching resources"
         backgroundImage="/photos/career1.avif"
-        overlayClass="bg-slate-950/80"
       />
 
       {/* ── Stats Bar ── */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-wrap justify-center gap-6 text-xs">
             <div className="flex items-center gap-1.5">
-              <Play className="w-3.5 h-3.5 text-gray-500" />
-              <span className="font-semibold text-gray-900">{resources.filter((r) => r.type === "video").length}</span>
-              <span className="text-gray-500">Videos</span>
+              <Play className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="font-semibold text-foreground">{resources.filter((r) => r.type === "video").length}</span>
+              <span className="text-muted-foreground">Videos</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-gray-500" />
-              <span className="font-semibold text-gray-900">{resources.filter((r) => r.type === "document").length}</span>
-              <span className="text-gray-500">Documents</span>
+              <FileText className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="font-semibold text-foreground">{resources.filter((r) => r.type === "document").length}</span>
+              <span className="text-muted-foreground">Documents</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Star className="w-3.5 h-3.5 text-gray-500" />
-              <span className="font-semibold text-gray-900">{subjects.length}</span>
-              <span className="text-gray-500">Subjects</span>
+              <Star className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="font-semibold text-foreground">{subjects.length}</span>
+              <span className="text-muted-foreground">Subjects</span>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ const TeacherResources: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
         {/* ── Filter strip (always visible) ── */}
-        <div className="bg-white border border-gray-200 rounded-lg p-3 mb-3">
+        <div className="surface-card p-3 mb-3">
           <div className="flex flex-wrap gap-2 items-center">
             <select value={subjectFilter}  onChange={(e) => setSubjectFilter(e.target.value)}  className={selectCls(subjectFilter  !== "All")}>
               <option value="All">All Subjects</option>
@@ -177,13 +177,13 @@ const TeacherResources: React.FC = () => {
               <option value="oldest">Oldest First</option>
             </select>
             {activeFilterCount > 0 && (
-              <button onClick={clearAllFilters} className="text-xs text-gray-500 hover:text-gray-900 underline underline-offset-2 transition-colors px-1">
+              <button onClick={clearAllFilters} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors px-1">
                 Clear all
               </button>
             )}
           </div>
           {activeFilterCount > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-100">
+            <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-border">
               {subjectFilter  !== "All" && <Chip label={subjectFilter}  onRemove={() => setSubjectFilter("All")} />}
               {levelFilter    !== "All" && <Chip label={levelFilter}    onRemove={() => setLevelFilter("All")} />}
               {typeFilter     !== "All" && <Chip label={typeFilter}     onRemove={() => setTypeFilter("All")} />}
@@ -195,51 +195,45 @@ const TeacherResources: React.FC = () => {
 
         {/* Result count */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-body">
             {fetchState === "done" ? `${filteredResources.length} Resources` : ""}
           </span>
         </div>
 
         {/* ── Content ── */}
         {fetchState === "loading" && (
-          <div className="flex flex-col items-center justify-center py-20 bg-white border border-gray-200 rounded-lg">
-            <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4" />
-            <p className="text-sm text-gray-500">Loading resources...</p>
+          <div className="flex flex-col items-center justify-center py-20 surface-card">
+            <div className="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin mb-4" />
+            <p className="text-sm text-muted-foreground">Loading resources...</p>
           </div>
         )}
 
         {fetchState === "error" && (
-          <div className="flex flex-col items-center justify-center py-20 bg-white border border-gray-200 rounded-lg">
-            <AlertCircle className="w-10 h-10 text-gray-300 mb-3" />
-            <h3 className="text-base font-semibold text-gray-900 mb-1">Could not load resources</h3>
-            <p className="text-sm text-gray-500 mb-4">Check your connection and try again.</p>
-            <button
-              onClick={() => { setFetchState("loading"); window.location.reload(); }}
-              className="px-4 py-1.5 text-sm bg-gray-900 text-white rounded hover:bg-gray-800 transition-colors font-medium"
-            >
+          <div className="flex flex-col items-center justify-center py-20 surface-card">
+            <AlertCircle className="w-10 h-10 text-muted-foreground/50 mb-3" />
+            <h3 className="text-base font-semibold text-foreground mb-1">Could not load resources</h3>
+            <p className="text-sm text-muted-foreground mb-4">Check your connection and try again.</p>
+            <Button size="sm" onClick={() => { setFetchState("loading"); window.location.reload(); }}>
               Retry
-            </button>
+            </Button>
           </div>
         )}
 
         {fetchState === "done" && filteredResources.length === 0 && (
-          <div className="text-center py-12 bg-white border border-gray-200 rounded-lg">
-            <FileText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-            <h3 className="text-base font-semibold text-gray-900 mb-1">
+          <div className="text-center py-12 surface-card">
+            <FileText className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
+            <h3 className="text-base font-semibold text-foreground mb-1">
               {activeFilterCount > 0 ? "No resources match your filters" : "No resources available"}
             </h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {activeFilterCount > 0
                 ? "Try removing one or more filters to broaden your results."
                 : "Resources will appear here once they are added."}
             </p>
             {activeFilterCount > 0 && (
-              <button
-                onClick={clearAllFilters}
-                className="px-4 py-1.5 text-sm bg-gray-900 text-white rounded hover:bg-gray-800 transition-colors font-medium"
-              >
+              <Button size="sm" onClick={clearAllFilters}>
                 Clear All Filters
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -275,12 +269,12 @@ const TeacherResources: React.FC = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="bg-white rounded-lg w-full max-w-4xl max-h-[95vh] overflow-auto shadow-2xl"
+              className="bg-background rounded-card w-full max-w-4xl max-h-[95vh] overflow-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-start justify-between z-10">
+              <div className="sticky top-0 bg-background border-b border-border px-4 py-3 flex items-start justify-between z-10">
                 <div className="flex-1 pr-4">
-                  <h2 className="text-base font-semibold text-gray-900 mb-1.5">
+                  <h2 className="text-base font-semibold text-foreground mb-1.5">
                     {selectedResource.title}
                   </h2>
                   <div className="flex flex-wrap gap-1.5 text-xs">
@@ -291,7 +285,7 @@ const TeacherResources: React.FC = () => {
                       selectedResource.subject,
                       selectedResource.type === "video" ? "Video" : "Document",
                     ].map((tag) => (
-                      <span key={tag} className="bg-gray-100 px-2 py-0.5 rounded font-medium text-gray-700">
+                      <span key={tag} className="tag">
                         {tag}
                       </span>
                     ))}
@@ -299,7 +293,7 @@ const TeacherResources: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setSelectedResource(null)}
-                  className="p-1.5 hover:bg-gray-100 rounded transition-colors text-gray-500 flex-shrink-0"
+                  className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground flex-shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -307,7 +301,7 @@ const TeacherResources: React.FC = () => {
 
               <div className="p-4">
                 {selectedResource.type === "video" && (
-                  <div className="w-full aspect-video rounded overflow-hidden bg-black">
+                  <div className="w-full aspect-video rounded-card overflow-hidden bg-black">
                     {selectedResource.contentUrl.includes("youtube.com") || selectedResource.contentUrl.includes("youtu.be") ? (
                       <iframe
                         src={`https://www.youtube.com/embed/${getYouTubeId(selectedResource.contentUrl)}`}
@@ -326,16 +320,17 @@ const TeacherResources: React.FC = () => {
 
                 {selectedResource.type === "document" && (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <FileText className="w-12 h-12 text-gray-300 mb-4" />
-                    <p className="text-sm text-gray-600 mb-4">Preview is restricted for security reasons.</p>
-                    <a
-                      href={getAssetUrl(selectedResource.contentUrl)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-gray-900 text-white rounded hover:bg-gray-800 transition font-medium text-sm"
-                    >
-                      Open PDF in New Tab
-                    </a>
+                    <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
+                    <p className="text-sm text-body mb-4">Preview is restricted for security reasons.</p>
+                    <Button asChild>
+                      <a
+                        href={getAssetUrl(selectedResource.contentUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open PDF in New Tab
+                      </a>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -345,9 +340,9 @@ const TeacherResources: React.FC = () => {
       </AnimatePresence>
 
       {/* ── Footer note ── */}
-      <footer className="w-full bg-gray-100 border-t border-gray-200 py-6 px-6 mt-6">
-        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed text-center md:text-left">
-          <strong className="text-gray-700">Note:</strong> At Tecplore, we aim to empower educators with engaging STEM learning tools.
+      <footer className="w-full bg-muted border-t border-border py-6 px-6 mt-6">
+        <p className="text-body text-xs sm:text-sm leading-relaxed text-center md:text-left">
+          <strong className="text-body">Note:</strong> At Tecplore, we aim to empower educators with engaging STEM learning tools.
           This section features both Tecplore&apos;s original creations and selected educational resources from trusted global communities.
           All third-party resources are shared for educational, non-commercial purposes.
           For edits or removal requests, please contact us at <strong>info@tecplore.com</strong>.
@@ -361,9 +356,9 @@ const TeacherResources: React.FC = () => {
 
 function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full font-medium">
+    <span className="inline-flex items-center gap-1 bg-muted text-body text-xs px-2 py-0.5 rounded-full font-medium">
       {label}
-      <button onClick={onRemove} className="hover:text-gray-900">
+      <button onClick={onRemove} className="hover:text-foreground">
         <X className="w-3 h-3" />
       </button>
     </span>
@@ -372,7 +367,7 @@ function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
 
 function TypeBadge({ type }: { type: "video" | "document" }) {
   return (
-    <div className="absolute top-1.5 left-1.5 bg-gray-900/90 text-white px-1.5 py-0.5 rounded flex items-center gap-0.5 text-[10px] font-medium">
+    <div className="absolute top-1.5 left-1.5 bg-ink/90 text-ink-foreground px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-[10px] font-medium">
       {type === "video" ? <><Play className="w-2.5 h-2.5 fill-white" />VIDEO</> : <><FileText className="w-2.5 h-2.5" />DOC</>}
     </div>
   );
@@ -381,10 +376,10 @@ function TypeBadge({ type }: { type: "video" | "document" }) {
 function ResourceCard({ resource, assetBase, onClick }: { resource: Resource; assetBase: string; onClick: () => void }) {
   return (
     <div
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-400 hover:shadow-sm transition-all cursor-pointer"
+      className="group surface-card-interactive overflow-hidden cursor-pointer"
       onClick={onClick}
     >
-      <div className="relative aspect-video overflow-hidden bg-gray-100">
+      <div className="relative aspect-video overflow-hidden bg-muted">
         <img
           src={`${assetBase}${resource.thumbnail}`}
           alt={resource.title}
@@ -394,17 +389,17 @@ function ResourceCard({ resource, assetBase, onClick }: { resource: Resource; as
         <TypeBadge type={resource.type} />
       </div>
       <div className="p-2.5">
-        <h3 className="font-medium text-xs text-gray-900 mb-1.5 line-clamp-2 leading-tight">
+        <h3 className="font-medium text-xs text-foreground mb-1.5 line-clamp-2 leading-tight">
           {resource.title}
         </h3>
         <div className="flex items-center justify-between text-[10px]">
           <div className="flex items-center gap-1">
-            <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">{resource.level}</span>
+            <span className="font-medium text-foreground bg-muted px-1.5 py-0.5 rounded-full">{resource.level}</span>
             {resource.language && (
-              <span className="text-gray-600 bg-gray-50 px-1.5 py-0.5 rounded">{resource.language}</span>
+              <span className="text-body bg-muted px-1.5 py-0.5 rounded-full">{resource.language}</span>
             )}
           </div>
-          <span className="text-gray-500">{resource.subject}</span>
+          <span className="text-muted-foreground">{resource.subject}</span>
         </div>
       </div>
     </div>
@@ -414,28 +409,28 @@ function ResourceCard({ resource, assetBase, onClick }: { resource: Resource; as
 function ResourceRow({ resource, assetBase, onClick }: { resource: Resource; assetBase: string; onClick: () => void }) {
   return (
     <div
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-400 transition-all cursor-pointer flex"
+      className="group surface-card-interactive overflow-hidden cursor-pointer flex"
       onClick={onClick}
     >
-      <div className="relative w-24 flex-shrink-0 bg-gray-100">
+      <div className="relative w-24 flex-shrink-0 bg-muted">
         <img
           src={`${assetBase}${resource.thumbnail}`}
           alt={resource.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute top-1 left-1 bg-gray-900/90 text-white px-1 py-0.5 rounded text-[9px] font-medium">
+        <div className="absolute top-1 left-1 bg-ink/90 text-ink-foreground px-1 py-0.5 rounded-full text-[9px] font-medium">
           {resource.type === "video" ? <Play className="w-2 h-2 fill-white" /> : <FileText className="w-2 h-2" />}
         </div>
       </div>
       <div className="flex-1 p-2.5 min-w-0">
-        <h3 className="font-medium text-xs text-gray-900 mb-1 line-clamp-2 leading-tight">{resource.title}</h3>
+        <h3 className="font-medium text-xs text-foreground mb-1 line-clamp-2 leading-tight">{resource.title}</h3>
         <div className="flex items-center gap-1.5 text-[10px]">
-          <span className="font-medium text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded">{resource.level}</span>
+          <span className="font-medium text-foreground bg-muted px-1.5 py-0.5 rounded-full">{resource.level}</span>
           {resource.language && (
-            <span className="text-gray-600 bg-gray-50 px-1.5 py-0.5 rounded">{resource.language}</span>
+            <span className="text-body bg-muted px-1.5 py-0.5 rounded-full">{resource.language}</span>
           )}
-          <span className="text-gray-500 truncate">{resource.subject}</span>
+          <span className="text-muted-foreground truncate">{resource.subject}</span>
         </div>
       </div>
     </div>

@@ -2,65 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== ROOT THEME VARIABLES (LIGHT + DARK) ===== */
+/* ==========================================================================
+   TECPLORE THEME: the single reference for colour, shape and shared styles.
+
+   Pages must use these tokens and classes, never raw palette classes
+   (text-blue-600, bg-gray-100) or hex values. Change a value here and it
+   updates across the whole site. Tailwind names for each token are mapped
+   in tailwind.config.ts.
+   ========================================================================== */
 @layer base {
   input, select, textarea, button {
     font-family: inherit;
   }
 
   :root {
+    /* Brand */
+    --brand-indigo: 243 75% 59%;  /* #4f46e5 */
+    --brand-blue: 221 83% 53%;    /* #2563eb */
+    --brand-cyan: 193 100% 50%;   /* #00c6ff */
+    --brand-sky: 213 94% 68%;     /* #60a5fa, for brand text on dark surfaces */
+
+    /* Light surfaces and text */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 222 47% 11%;    /* headings */
+    --body: 215 19% 35%;          /* paragraphs */
+    --muted: 210 40% 96%;         /* alternate section background */
+    --muted-foreground: 215 16% 47%; /* captions and secondary text */
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    /* No need to define --font-source-sans here, Next.js sets it for you */
-  }
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --popover-foreground: 222 47% 11%;
+    --border: 214 32% 91%;
+    --input: 213 27% 84%;
+
+    /* Dark surfaces: heroes and footer */
+    --ink: 229 84% 5%;
+    --ink-soft: 215 25% 27%;
+    --ink-foreground: 0 0% 100%;
+    --ink-muted: 213 27% 84%;
+
+    /* Actions */
+    --primary: var(--brand-blue);
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --accent: 214 100% 97%;       /* light blue tint for tags and hovers */
+    --accent-foreground: 224 76% 48%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: var(--brand-blue);
+
+    /* Shape: cards, media, inputs and dialogs. Buttons and tags are pills. */
+    --radius: 1rem;
   }
 }
 
@@ -71,5 +64,64 @@
   body {
     @apply font-sans bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Shared styles. Use these instead of repeating utility classes on each page. */
+@layer components {
+  /* Type */
+  .section-label {
+    @apply text-sm font-semibold uppercase tracking-widest text-primary;
+  }
+  .heading-section {
+    @apply text-3xl font-bold tracking-tight text-foreground md:text-4xl;
+  }
+
+  /* Surfaces */
+  .surface-card {
+    @apply rounded-card border border-border bg-card;
+  }
+  .surface-card-interactive {
+    @apply rounded-card border border-border bg-card transition-all duration-300 hover:border-primary/40 hover:shadow-md;
+  }
+
+  /* Tags are labels. Chips are clickable filters. */
+  .tag {
+    @apply inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground;
+  }
+  .chip {
+    @apply rounded-full border border-input bg-background px-3.5 py-1.5 text-xs font-medium text-body transition-all hover:border-primary/40;
+  }
+  .chip-active {
+    @apply rounded-full border border-primary bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-all;
+  }
+
+  /* Forms */
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-body;
+  }
+  .field-select {
+    @apply flex h-11 w-full rounded-card border border-input bg-transparent px-4 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm;
+  }
+
+  /* Round icon button that sits on top of photos and video */
+  .media-control {
+    @apply flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-ink/50 text-ink-foreground shadow-lg backdrop-blur-md transition-all hover:bg-ink/70;
+  }
+
+  /* Brand gradients */
+  .bg-gradient-brand {
+    background-image: linear-gradient(135deg, hsl(var(--brand-indigo)) 0%, hsl(var(--brand-blue)) 50%, hsl(var(--brand-cyan)) 100%);
+  }
+  .bg-hero-dark {
+    background-image: linear-gradient(to bottom, hsl(var(--ink)), hsl(var(--foreground)), hsl(var(--ink-soft)));
+  }
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(var(--brand-indigo)), hsl(var(--brand-blue)));
+  }
+  .text-gradient-on-dark {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(var(--brand-sky)), hsl(var(--brand-cyan)));
   }
 }

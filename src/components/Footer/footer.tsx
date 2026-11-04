@@ -2,7 +2,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +13,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Instagram, Linkedin, Home, Youtube, ExternalLink } from "lucide-react";
+import { Instagram, Linkedin, Youtube, ExternalLink } from "lucide-react";
+import { SOLUTION_LINKS } from "@/lib/site";
 
 const FISHLIFE_DESCRIPTION =
   "FishLife is an interactive educational experience that brings the underwater world to life. Explore diverse aquatic ecosystems, discover fascinating fish species, and learn about marine biology through engaging, immersive content designed for all ages.";
@@ -22,40 +22,42 @@ const FISHLIFE_DESCRIPTION =
 const STUDIO_DESCRIPTION =
   "Tecplore Studio is an online platform where educators and students can access curated digital content, create interactive lessons, and collaborate on science-based projects. It extends the Tecplore experience beyond the classroom with tools built for modern STEM education.";
 
-const Footer = () => {
-  const pathname = usePathname();
-  const isHomePage = pathname === "/";
+const headingClass = "font-semibold text-base uppercase tracking-wide text-ink-foreground mb-4";
+const linkClass = "text-ink-muted text-sm hover:text-ink-foreground transition-colors duration-200 inline-flex items-center gap-1 text-left";
 
+const Footer = () => {
   const [fishlifeOpen, setFishlifeOpen] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
 
-  const exhibitLinks = [
-    { name: "Interactive Exhibits", href: "/interactive-exhibits" },
-    { name: "Makerspace", href: "/maker-space" },
+  const whatWeDoLinks = [
+    ...SOLUTION_LINKS,
+    { name: "Learning Stations", href: "/learning-stations" },
+    { name: "Maker Spaces", href: "/maker-space" },
   ];
 
   const companyLinks = [
     { name: "About Us", href: "/about-us" },
     { name: "Join Our Team", href: "/careers" },
+    { name: "FAQ", href: "/faq" },
     { name: "Contact Us", href: "/contact" },
   ];
 
   return (
-    <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-950 text-white">
+    <footer className="bg-ink text-ink-foreground">
       {/* FishLife Dialog */}
       <Dialog open={fishlifeOpen} onOpenChange={setFishlifeOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>FishLife</DialogTitle>
-            <DialogDescription className="text-sm text-gray-500 pt-1">
+            <DialogDescription className="text-sm text-muted-foreground pt-1">
               An interactive experience by Tecplore
             </DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-body leading-relaxed">
             {FISHLIFE_DESCRIPTION}
           </p>
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={() => setFishlifeOpen(false)}>
+            <Button variant="secondary" onClick={() => setFishlifeOpen(false)}>
               Cancel
             </Button>
             <Button asChild>
@@ -77,15 +79,15 @@ const Footer = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Tecplore Studio</DialogTitle>
-            <DialogDescription className="text-sm text-gray-500 pt-1">
+            <DialogDescription className="text-sm text-muted-foreground pt-1">
               A separate platform by Tecplore
             </DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-body leading-relaxed">
             {STUDIO_DESCRIPTION}
           </p>
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={() => setStudioOpen(false)}>
+            <Button variant="secondary" onClick={() => setStudioOpen(false)}>
               Cancel
             </Button>
             <Button asChild>
@@ -104,10 +106,10 @@ const Footer = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="py-12 lg:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10">
 
             {/* Tecplore logo + socials */}
-            <div className="sm:col-span-2 lg:col-span-1 order-last lg:order-first space-y-6 text-center sm:text-left">
+            <div className="col-span-2 sm:col-span-3 lg:col-span-1 order-last lg:order-first space-y-6 text-center sm:text-left">
               <Link
                 href="/"
                 className="flex items-center justify-center sm:justify-start gap-3 hover:opacity-80 transition-opacity"
@@ -127,7 +129,7 @@ const Footer = () => {
                   href="https://www.instagram.com/tecplore_edu/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
                   aria-label="Instagram"
                 >
                   <Instagram className="h-5 w-5" />
@@ -136,7 +138,7 @@ const Footer = () => {
                   href="https://www.linkedin.com/company/tecplore"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
@@ -145,7 +147,7 @@ const Footer = () => {
                   href="https://www.youtube.com/@Tecplore"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200"
+                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
                   aria-label="Youtube"
                 >
                   <Youtube className="h-5 w-5" />
@@ -153,29 +155,13 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Exhibits */}
-            <div className="sm:col-span-1 lg:col-span-1 order-1 lg:order-2 space-y-4">
-              <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
-                Exhibits
-              </h4>
+            {/* What We Do */}
+            <div>
+              <h4 className={headingClass}>What We Do</h4>
               <ul className="space-y-3">
-                {!isHomePage && (
-                  <li>
-                    <Link
-                      href="/"
-                      className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-flex items-center gap-2"
-                    >
-                      <Home className="h-4 w-4" />
-                      Home
-                    </Link>
-                  </li>
-                )}
-                {exhibitLinks.map((link) => (
+                {whatWeDoLinks.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block"
-                    >
+                    <Link href={link.href} className={linkClass}>
                       {link.name}
                     </Link>
                   </li>
@@ -183,61 +169,36 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Interactives */}
-            <div className="sm:col-span-1 lg:col-span-1 order-2 lg:order-3 space-y-4">
-              <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
-                Interactives
-              </h4>
+            {/* Learning Tools */}
+            <div>
+              <h4 className={headingClass}>Learning Tools</h4>
               <ul className="space-y-3">
                 <li>
-                  <button
-                    onClick={() => setFishlifeOpen(true)}
-                    className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-flex items-center gap-1 text-left"
-                  >
-                    FishLife
-                    <span className="text-xs bg-blue-600 text-white px-1.5 py-0.5 rounded ml-1">New</span>
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            {/* Teacher Training */}
-            <div className="sm:col-span-1 lg:col-span-1 order-3 lg:order-4 space-y-4">
-              <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
-                Teacher Training
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/teacher-resources"
-                    className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block"
-                  >
-                    Teaching Resources
+                  <Link href="/teacher-resources" className={linkClass}>
+                    Teacher Resources
                   </Link>
                 </li>
                 <li>
-                  <button
-                    onClick={() => setStudioOpen(true)}
-                    className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block text-left"
-                  >
+                  <button onClick={() => setStudioOpen(true)} className={linkClass}>
                     Tecplore Studio
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setFishlifeOpen(true)} className={linkClass}>
+                    FishLife
+                    <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full ml-1">New</span>
                   </button>
                 </li>
               </ul>
             </div>
 
             {/* Company */}
-            <div className="sm:col-span-1 lg:col-span-1 order-4 lg:order-5 space-y-4">
-              <h4 className="font-semibold text-base uppercase tracking-wide text-white mb-4">
-                Company
-              </h4>
+            <div>
+              <h4 className={headingClass}>Company</h4>
               <ul className="space-y-3">
                 {companyLinks.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-400 text-sm hover:text-white transition-colors duration-200 inline-block"
-                    >
+                    <Link href={link.href} className={linkClass}>
                       {link.name}
                     </Link>
                   </li>
@@ -248,16 +209,16 @@ const Footer = () => {
           </div>
         </div>
 
-        <Separator className="bg-gray-700" />
+        <Separator className="bg-white/10" />
 
         <div className="py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-xs order-2 sm:order-1 text-center">
+            <p className="text-ink-muted text-xs order-2 sm:order-1 text-center">
               © {new Date().getFullYear()} Tecplore. All rights reserved.
               <span className="mx-2">|</span>
-              <Link href="/privacy-policy" className="text-gray-500 hover:text-white">Privacy Policy</Link>
+              <Link href="/privacy-policy" className="text-ink-muted hover:text-ink-foreground">Privacy Policy</Link>
               <span className="mx-1">•</span>
-              <Link href="/terms-conditions" className="text-gray-500 hover:text-white">Terms of Use</Link>
+              <Link href="/terms-conditions" className="text-ink-muted hover:text-ink-foreground">Terms of Use</Link>
             </p>
           </div>
         </div>

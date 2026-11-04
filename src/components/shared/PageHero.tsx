@@ -7,60 +7,37 @@ interface PageHeroProps {
   title: string;
   subtitle?: string;
   backgroundImage?: string;
-  backgroundPattern?: string;
-  overlayClass?: string;
-  align?: "center" | "left";
   children?: React.ReactNode;
 }
 
-export default function PageHero({
-  title,
-  subtitle,
-  backgroundImage,
-  backgroundPattern,
-  overlayClass = "bg-black/70",
-  align = "center",
-  children,
-}: PageHeroProps) {
-  const isCenter = align === "center";
-
+/** The standard dark hero used at the top of every page except the homepage. */
+export default function PageHero({ title, subtitle, backgroundImage, children }: PageHeroProps) {
   return (
-    <section className="relative text-white py-12 overflow-hidden">
-      {backgroundImage ? (
-        <div className="absolute inset-0">
-          <Image src={backgroundImage} alt="" fill className="object-cover" priority />
-        </div>
-      ) : backgroundPattern ? (
-        <div
-          className="absolute inset-0 bg-slate-950"
-          style={{
-            backgroundImage: `url('${backgroundPattern}')`,
-            backgroundRepeat: "repeat",
-            backgroundSize: "auto",
-            backgroundPosition: "center",
-          }}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-slate-950" />
+    <section className="relative overflow-hidden bg-ink py-16 text-ink-foreground md:py-24">
+      {backgroundImage && (
+        <>
+          <div className="absolute inset-0">
+            <Image src={backgroundImage} alt="" fill className="object-cover" priority />
+          </div>
+          <div className="absolute inset-0 bg-ink/80" />
+        </>
       )}
 
-      <div className={`absolute inset-0 ${overlayClass}`} />
-
       <motion.div
-        className={`relative max-w-6xl mx-auto px-6 lg:px-12 ${isCenter ? "text-center" : "text-left"}`}
+        className="relative mx-auto max-w-6xl px-6 text-center lg:px-12"
         initial="hidden"
         animate="visible"
         variants={fadeIn}
       >
         <motion.h1
-          className={`text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-tight mb-6 ${isCenter ? "max-w-4xl mx-auto" : "max-w-3xl"}`}
+          className="mx-auto mb-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl"
           variants={fadeInUp}
         >
           {title}
         </motion.h1>
         {subtitle && (
           <motion.p
-            className={`text-lg md:text-xl text-slate-300 leading-relaxed ${isCenter ? "max-w-2xl mx-auto" : "max-w-xl"}`}
+            className="mx-auto max-w-2xl text-lg leading-relaxed text-ink-muted md:text-xl"
             variants={fadeInUp}
           >
             {subtitle}

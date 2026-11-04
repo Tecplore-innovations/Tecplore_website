@@ -58,18 +58,17 @@ const teamMembers = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
 
       {/* HERO */}
       <PageHero
         title="Where Science Becomes an Experience"
-        subtitle="We design and build maker spaces, interactive exhibits, and STEM learning environments that transform how students see the world."
+        subtitle="We design science learning experiences for parks, schools and communities, bringing together interactive exhibits, maker spaces and educator training."
         backgroundImage="/photos/career1.avif"
-        overlayClass="bg-slate-950/80"
       />
 
       {/* MISSION */}
-      <section className="py-28 lg:py-36 px-6 bg-white">
+      <section className="py-28 lg:py-36 px-6 bg-background">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial="hidden"
@@ -77,14 +76,14 @@ export default function AboutPage() {
             viewport={{ once: true, margin: '-100px' }}
             variants={fadeIn}
           >
-            <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-4">Our Mission</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-6">
+            <p className="section-label mb-4">Our Mission</p>
+            <h2 className="heading-section leading-tight mb-6">
               Making STEM accessible to every learner
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              At Tecplore, we turn science into an experience. From classrooms to communities, we
-              design and set up maker spaces and learning environments that ignite curiosity, inspire
-              creativity, and connect everyday life with the wonders of science.
+            <p className="text-lg text-body leading-relaxed">
+              We set up places where people learn science by doing. From parks to classrooms to
+              community centres, we design the whole experience: the exhibits, the way they are
+              arranged, what people are prompted to try, and how you know it worked.
             </p>
           </motion.div>
 
@@ -93,9 +92,9 @@ export default function AboutPage() {
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
             variants={fadeInUp}
-            className="bg-slate-50 rounded-3xl p-10 border border-slate-200"
+            className="surface-card bg-muted p-10"
           >
-            <blockquote className="text-2xl font-light text-slate-700 leading-relaxed italic">
+            <blockquote className="text-2xl font-light text-body leading-relaxed italic">
               Our goal is not just to teach science - it is to make students fall in love with asking questions.
             </blockquote>
           </motion.div>
@@ -103,7 +102,7 @@ export default function AboutPage() {
       </section>
 
       {/* CORE VALUES */}
-      <section className="py-20 px-6 bg-slate-50 border-y border-slate-200">
+      <section className="py-20 px-6 bg-muted border-y border-border">
         <motion.div
           className="max-w-6xl mx-auto"
           initial="hidden"
@@ -111,8 +110,8 @@ export default function AboutPage() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.div className="mb-14" variants={fadeIn}>
-            <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">What Drives Us</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900">Our Core Values</h2>
+            <p className="section-label mb-3">What Drives Us</p>
+            <h2 className="heading-section">Our Core Values</h2>
           </motion.div>
 
           <motion.div
@@ -124,12 +123,12 @@ export default function AboutPage() {
               return (
                 <motion.div
                   key={val.title}
-                  className="bg-white border border-slate-200 hover:border-blue-300 hover:shadow-md rounded-2xl p-8 transition-all duration-300"
+                  className="surface-card-interactive p-8"
                   variants={scaleUp}
                 >
-                  <Icon className="h-6 w-6 text-blue-600 mb-5" strokeWidth={1.5} />
-                  <h3 className="text-base font-semibold text-slate-900 mb-2">{val.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{val.description}</p>
+                  <Icon className="h-6 w-6 text-primary mb-5" strokeWidth={1.5} />
+                  <h3 className="text-base font-semibold text-foreground mb-2">{val.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{val.description}</p>
                 </motion.div>
               );
             })}
@@ -138,7 +137,7 @@ export default function AboutPage() {
       </section>
 
       {/* TEAM */}
-      <section className="py-28 lg:py-32 px-6 bg-white">
+      <section className="py-28 lg:py-32 px-6 bg-background">
         <motion.div
           className="max-w-6xl mx-auto"
           initial="hidden"
@@ -146,9 +145,9 @@ export default function AboutPage() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.div className="mb-14" variants={fadeIn}>
-            <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">The People</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900">Meet Our Team</h2>
-            <p className="mt-3 text-lg text-slate-500 max-w-xl">
+            <p className="section-label mb-3">The People</p>
+            <h2 className="heading-section">Meet Our Team</h2>
+            <p className="mt-3 text-lg text-muted-foreground max-w-xl">
               Educators, engineers, and makers dedicated to transforming how students experience STEM.
             </p>
           </motion.div>
@@ -160,26 +159,26 @@ export default function AboutPage() {
             {teamMembers.map((member) => (
               <motion.div
                 key={member.name}
-                className="flex gap-6 bg-slate-50 border border-slate-200 rounded-2xl p-7 hover:border-blue-300 hover:shadow-md transition-all duration-300 group"
+                className="flex gap-6 surface-card-interactive p-7 group"
                 variants={scaleUp}
               >
                 <div className="flex-shrink-0">
-                  <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-slate-200 group-hover:border-blue-300 transition-colors">
+                  <div className="w-24 h-24 rounded-card overflow-hidden border-2 border-border group-hover:border-primary/40 transition-colors">
                     <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" loading="lazy" />
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-slate-900">{member.name}</h3>
+                  <h3 className="text-base font-semibold text-foreground">{member.name}</h3>
                   <a
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors text-xs mt-1 mb-3"
+                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-xs mt-1 mb-3"
                   >
                     <Linkedin size={12} strokeWidth={1.5} />
                     LinkedIn
                   </a>
-                  <p className="text-slate-600 text-sm leading-relaxed">{member.bio}</p>
+                  <p className="text-body text-sm leading-relaxed">{member.bio}</p>
                 </div>
               </motion.div>
             ))}

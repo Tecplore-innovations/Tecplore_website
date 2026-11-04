@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight, Mail } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import PageHero from "@/components/shared/PageHero";
+import { Button } from "@/components/ui/button";
 
 interface FAQ {
   question: string;
@@ -22,7 +22,7 @@ const categories: Category[] = [
       {
         question: "What does Tecplore do?",
         answer:
-          "Tecplore designs and installs hands-on STEM learning environments (interactive science exhibits, maker spaces, and educator training programs) for schools, museums, libraries, and public venues across India. Our goal is to make science tangible and irresistible for every student.",
+          "We design science learning experiences for parks, schools and communities across India. We bring together interactive exhibits, maker spaces and educator training, so people learn science by doing. Exhibits are the instrument; the learning is the product.",
       },
       {
         question: "Which cities does Tecplore operate in?",
@@ -37,12 +37,42 @@ const categories: Category[] = [
     ],
   },
   {
+    label: "How It Works",
+    faqs: [
+      {
+        question: "What are Explore, Discover and Create?",
+        answer:
+          "They are our three ways of running a Tecplore space. Explore is self-guided, so the space itself does the teaching, and suits parks, malls and libraries. Discover is guided by teachers we train, and suits schools and learning centres. Create is a programme we design with you, run by trained facilitators, and suits NGOs and CSR teams. All three follow the same learning arc; what changes is who carries it.",
+      },
+      {
+        question: "We don't have anyone to run sessions. Can this still work?",
+        answer:
+          "Yes. Explore needs no staff on your side. The exhibits come with their learning built in, through panels, challenge cards and videos, so the space teaches on its own.",
+      },
+      {
+        question: "Can we buy just the exhibits?",
+        answer:
+          "We don't send exhibits on their own, because an exhibit without its learning layer is soon left unused. Every Tecplore exhibit comes with interpretation, prompts and a way to capture what visitors learned. That layer can be light or deep, but it is never zero. Explore is our simplest option, and it still includes it.",
+      },
+      {
+        question: "How will we know it worked?",
+        answer:
+          "It depends on the model. Explore gives you footfall and dwell observations, question-board themes and QR scan counts. Discover gives you worksheet results, concept-check scores and teacher feedback. Create gives you an impact report for funders, with pre and post scores, attendance, stories and photos.",
+      },
+      {
+        question: "Do you work with NGOs and CSR programmes?",
+        answer:
+          "Yes. We start with a needs assessment covering age group, language, attendance and your funder's indicators, then co-design modules and train your facilitators, so the programme can continue without us on site.",
+      },
+    ],
+  },
+  {
     label: "Interactive Exhibits",
     faqs: [
       {
         question: "What kinds of interactive exhibits does Tecplore offer?",
         answer:
-          "Our exhibits span physics, chemistry, biology, space science, robotics, and environmental science. Each exhibit is designed to invite curiosity: students can touch, experiment, and observe real scientific phenomena rather than just read about them.",
+          "Our exhibits span physics, chemistry, biology, space science, robotics, and environmental science. Each exhibit is designed around one concept, such as Bernoulli's principle or river erosion, so people can touch, experiment, and observe it for themselves rather than just read about it.",
       },
       {
         question: "Can exhibits be customised for a specific curriculum or theme?",
@@ -55,9 +85,9 @@ const categories: Category[] = [
           "Our exhibits are designed to engage students from primary school through higher secondary (Class 1–12) and beyond. Activity complexity and safety features are tailored to the target age group during the assessment phase.",
       },
       {
-        question: "Can public spaces like museums or malls install Tecplore exhibits?",
+        question: "Can public spaces like parks, museums or malls install Tecplore exhibits?",
         answer:
-          "Absolutely. We regularly work with libraries, science museums, community centres, and family entertainment venues. Our exhibits are engineered for high-traffic environments with durable materials and minimal maintenance requirements.",
+          "Absolutely. We regularly work with libraries, science museums, community centres, and family entertainment venues. Our exhibits are built with durable materials for high-traffic environments, and we plan maintenance with you so the space stays in use year after year.",
       },
     ],
   },
@@ -102,7 +132,7 @@ const categories: Category[] = [
       {
         question: "How do I start a partnership with Tecplore?",
         answer:
-          "The easiest first step is to fill out our contact form or email us at info@tecplore.com. We'll schedule a discovery call, understand your institution's needs and space, and put together a tailored proposal with no commitment required at that stage.",
+          "The easiest first step is to book a 30-minute design call through our contact page, or email us at info@tecplore.com. We'll understand your needs and your space, and put together a tailored proposal with no commitment required at that stage.",
       },
       {
         question: "Does Tecplore work with the school's existing curriculum?",
@@ -121,33 +151,28 @@ const categories: Category[] = [
 function FAQItem({ faq }: { faq: FAQ }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-slate-200 rounded-xl bg-white overflow-hidden">
+    <div className="surface-card overflow-hidden">
       <button
         className="w-full flex justify-between items-center px-6 py-5 text-left gap-4"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
-        <span className="font-medium text-slate-900 leading-snug">{faq.question}</span>
+        <span className="font-medium text-foreground leading-snug">{faq.question}</span>
         <ChevronDown
-          className={`w-5 h-5 text-blue-600 flex-shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
         />
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="answer"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <p className="px-6 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-4">
-              {faq.answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Answers stay in the page when closed, so search engines can read them. */}
+      <div
+        aria-hidden={!open}
+        className={`grid transition-all duration-300 ease-in-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+      >
+        <div className="overflow-hidden">
+          <p className="px-6 pb-5 text-body text-sm leading-relaxed border-t border-border pt-4">
+            {faq.answer}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -160,35 +185,30 @@ export default function FAQPage() {
     : categories;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
 
       {/* Hero */}
       <PageHero
         title="Frequently Asked Questions"
         subtitle="Everything you need to know about Tecplore's exhibits, maker spaces, and partnerships."
         backgroundImage="/photos/career1.avif"
-        overlayClass="bg-slate-950/80"
       />
 
       {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center gap-2 text-sm text-slate-500">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+      <div className="bg-muted border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-slate-800 font-medium">FAQ</span>
+          <span className="text-foreground font-medium">FAQ</span>
         </div>
       </div>
 
       {/* Category Filter */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-background border-b border-border sticky top-16 z-10">
         <div className="max-w-4xl mx-auto px-6 py-3 flex flex-wrap gap-2">
           <button
             onClick={() => setActiveCategory(null)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border ${
-              activeCategory === null
-                ? "bg-slate-900 text-white border-slate-900"
-                : "bg-white text-slate-600 border-slate-300 hover:border-slate-500"
-            }`}
+            className={activeCategory === null ? "chip-active" : "chip"}
           >
             All
           </button>
@@ -196,11 +216,7 @@ export default function FAQPage() {
             <button
               key={c.label}
               onClick={() => setActiveCategory(c.label === activeCategory ? null : c.label)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                activeCategory === c.label
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white text-slate-600 border-slate-300 hover:border-slate-500"
-              }`}
+              className={activeCategory === c.label ? "chip-active" : "chip"}
             >
               {c.label}
             </button>
@@ -213,7 +229,7 @@ export default function FAQPage() {
         <div className="space-y-12">
           {displayed.map((category, ci) => (
             <div key={ci}>
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-4">
+              <h2 className="section-label mb-4">
                 {category.label}
               </h2>
               <div className="space-y-3">
@@ -226,16 +242,15 @@ export default function FAQPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 bg-slate-50 border border-slate-200 rounded-2xl px-8 py-10 text-center">
-          <p className="text-slate-700 font-medium text-lg mb-1">Still have questions?</p>
-          <p className="text-slate-500 text-sm mb-6">Our team is happy to walk you through anything, no commitment needed.</p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            Contact Us
-          </Link>
+        <div className="mt-16 surface-card bg-muted px-8 py-10 text-center">
+          <p className="text-body font-medium text-lg mb-1">Still have questions?</p>
+          <p className="text-muted-foreground text-sm mb-6">Our team is happy to walk you through anything, no commitment needed.</p>
+          <Button asChild>
+            <Link href="/contact">
+              <Mail />
+              Contact Us
+            </Link>
+          </Button>
         </div>
       </div>
 

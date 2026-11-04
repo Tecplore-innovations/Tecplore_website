@@ -1,10 +1,14 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AboutSection from '@/components/Home/AboutSection';
-import Image from 'next/image';
+import HowItWorks from '@/components/Home/HowItWorks';
+import TrustStrip from '@/components/Home/TrustStrip';
+import CtaSection from '@/components/shared/CtaSection';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { DESIGN_CALL, POSITIONING } from '@/lib/site';
 
 const videos = [
   "/videos/Video_1.webm",
@@ -16,14 +20,18 @@ const videos = [
   "/videos/Video_7.webm",
   "/videos/Video_8.webm",
 ];
-const words = ["Making", "Solving", "Breaking"];
-const MOBILE_BREAKPOINT = 1024; 
+const MOBILE_BREAKPOINT = 1024;
+
+const heroHeadline = (
+  <>
+    We design <span className="text-gradient-on-dark">science learning experiences</span> for parks, schools and communities.
+  </>
+);
 
 const HomePage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [videosLoaded, setVideosLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [currentWord, setCurrentWord] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const aboutSectionRef = useRef<HTMLElement>(null);
 
@@ -54,11 +62,6 @@ const handleCarouselChange = (newIndex: number) => {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentWord((prev) => (prev + 1) % words.length), 2000);
-    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -116,49 +119,36 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
   return (
     <main className="w-full overflow-x-hidden ">
-   <section className="relative min-h-[0] lg:min-h-screen w-full bg-gradient-to-b from-black via-gray-900 to-slate-700 overflow-hidden">
-
-
-      {/* ⏫ NEW Logo Branding - Top Left */}
-      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 lg:top-8 lg:left-12 z-50">
-        <Link href="/">
-          <Image
-            src="/photos/Tecplore_logo_Brand.png"
-            alt="Tecplore Logo"
-            width={120}
-            height={40}
-            className="cursor-pointer" // Apply cursor class directly to Image
-          />
-        </Link>
-      </div>
-     
+   <section className="relative min-h-[0] lg:min-h-[calc(100vh-4rem)] w-full bg-hero-dark overflow-hidden">
 
         {/* BG blobs */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-blue/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
         </div>
         <div className={`relative z-10 container mx-auto px-2 sm:px-4 lg:px-12 ${sectionPadding} flex flex-col min-h-[0]`}>
           {/* Mobile/Tablet */}
           {isMobile ? (
-            <div className="w-full flex flex-col items-center pt-16">           
+            <div className="w-full flex flex-col items-center pt-2">
 
-              {/* Video Player */}         
+              {/* Headline first, so the positioning is the first thing read */}
+              <div className="w-full px-4 pt-4 pb-8 flex flex-col items-center text-center">
+                <h1 className="text-3xl sm:text-4xl font-semibold leading-tight text-white">
+                  {heroHeadline}
+                </h1>
+                <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-ink-muted">
+                  {POSITIONING.subhead}
+                </p>
+                <Button asChild size="lg" className="mt-6">
+                  <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
+                </Button>
+              </div>
+
+              {/* Video Player */}
                 <div
-                className="
-                  w-full
-                  aspect-video
-                  rounded-2xl
-                  overflow-hidden
-                  p-[2px]
-                  bg-gradient-to-r from-[#4F46E5] via-[#2563EB] to-[#00C6FF]
-                "
-                style={{
-                  background:
-                    "linear-gradient(135deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
-                }}
+                className="w-full aspect-video rounded-card overflow-hidden p-[2px] bg-gradient-brand"
               >
-                <div className="w-full h-full rounded-2xl overflow-hidden">
+                <div className="w-full h-full rounded-card overflow-hidden">
                   <motion.div
                     className="w-full h-full"
                     drag="x"
@@ -169,7 +159,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                     <video
                       ref={el => { videoRefs.current[activeIndex] = el; }}
                       src={videos[activeIndex]}
-                      className="w-full h-full object-cover rounded-2xl"
+                      className="w-full h-full object-cover rounded-card"
                       autoPlay
                       muted
                       playsInline
@@ -192,41 +182,11 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                     type="button"
                     aria-label={`Show video ${i + 1}`}
                     onClick={() => handleCarouselChange(i)}
-                    className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-gray-400/50"} transition-all duration-300`}
+                    className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-white/40"} transition-all duration-300`}
                     style={{ border: 'none', padding: 0, margin: 0 }}
                   />
                 ))}
               </div>
-
-         {/* Text below video and dots */}
-          <div className="w-full px-4 pb-8 flex flex-col items-center">
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-white text-center">
-              Learn Science Through
-              <div
-                className="mt-1 bg-clip-text text-transparent"
-                style={{
-                  background: "linear-gradient(90deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text"
-                }}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={currentWord}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                    className="inline-block"
-                  >
-                    {words[currentWord]}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </h1>
-            {/* Get Started button hidden on mobile/tablet */}
-          </div>             
             </div>
           ) : (
             // Desktop layout code here
@@ -239,30 +199,26 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 transition={{ duration: 0.8 }}
                 className="text-white space-y-6 lg:space-y-8"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-tight">
-                  Learn Science Through
-                  <div className="mt-2 bg-gradient-to-r from-[#4f46e5] via-white/90 to-[#00c6ff] bg-clip-text text-transparent">
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={currentWord}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.5 }}
-                        className="inline-block"
-                      >
-                        {words[currentWord]}
-                      </motion.span>
-                    </AnimatePresence>
-                  </div>
+                <h1 className="text-4xl xl:text-5xl font-semibold leading-tight">
+                  {heroHeadline}
                 </h1>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
-                  className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-xl"
+                  className="text-lg xl:text-xl text-ink-muted leading-relaxed max-w-xl"
                 >
-                </motion.p>                      
+                  {POSITIONING.subhead}
+                </motion.p>
+                <div className="flex flex-wrap gap-4">
+                  <Button asChild size="lg">
+                    <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
+                  </Button>
+                  <Button size="lg" variant="secondaryOnDark" onClick={scrollToAboutSection}>
+                    See What We Do
+                    <ChevronDown />
+                  </Button>
+                </div>
               </motion.div>
     
         <motion.div
@@ -305,16 +261,12 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 >
                   {/* Outer Card */}
                   <div
-                    className={`relative w-full max-w-[800px] aspect-video rounded-2xl overflow-hidden shadow-2xl p-[2px] transition-all duration-300`}
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%)",
-                    }}
+                    className="relative w-full max-w-[800px] aspect-video rounded-card overflow-hidden shadow-2xl p-[2px] transition-all duration-300 bg-gradient-brand"
                   >
                     <motion.video
                       ref={el => { videoRefs.current[index] = el; }}
                       src={videos[index]}
-                      className="w-full h-full object-cover rounded-2xl"
+                      className="w-full h-full object-cover rounded-card"
                       muted
                       playsInline
                       preload="auto"
@@ -333,33 +285,23 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
             })}
           {/* Carousel Arrows with explicit px-2, top-1/2 tweaks */}
           <button
-            aria-label="Previous"
-            onClick={() => handleCarouselChange((activeIndex - 1 + videos.length) % videos.length)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-200 p-3 bg-black/50 hover:bg-black/70 rounded-full border border-white/20"
-            style={{ marginLeft: "8px" }}
-          >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-          <button
           aria-label="Previous"
           onClick={() => handleCarouselChange((activeIndex - 1 + videos.length) % videos.length)}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-[999] p-3 bg-black/50 hover:bg-black/70 rounded-full border border-white/20"
-          style={{ marginLeft: "8px" }}
+          className="media-control absolute left-4 top-1/2 -translate-y-1/2 z-[999]"
         >
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
           <button
             aria-label="Next"
             onClick={() => handleCarouselChange((activeIndex + 1) % videos.length)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-[999] p-3 bg-black/50 hover:bg-black/70 rounded-full border border-white/20"
-            style={{ marginRight: "8px" }}
+            className="media-control absolute right-4 top-1/2 -translate-y-1/2 z-[999]"
           >
               <ChevronRight className="w-6 h-6 text-white" />
             </button>
 
         </div>
-              {/* Vertically stacked: Dots then Button */}
-              <div className="flex flex-col items-center justify-center mt-12 gap-2 sm:gap-4 md:gap-6 w-full">
+              {/* Carousel dots */}
+              <div className="flex flex-col items-center justify-center mt-12 w-full">
 
                 <div className="flex gap-3 justify-center">
                   {videos.map((_, i) => (
@@ -368,29 +310,21 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                       type="button"
                       aria-label={`Show video ${i + 1}`}
                       onClick={() => handleCarouselChange(i)}
-                      className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-gray-400/50"} transition-all duration-300`}
+                      className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-white/40"} transition-all duration-300`}
                       style={{ border: 'none', padding: 0, margin: 0 }}
                     />
                   ))} 
                 </div>
-                <button
-                  onClick={scrollToAboutSection}
-                  className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-white hover:scale-105 transition-all duration-300"
-                  style={{
-                    border: "2px solid transparent",
-                    background: "linear-gradient(black, black) padding-box, linear-gradient(135deg, #4F46E5 0%, #2563EB 50%, #00C6FF 100%) border-box",
-                  }}
-                >
-                  Get Started
-                  <ChevronDown className="w-5 h-5 text-white" />
-                </button>
               </div>
             </motion.div>
             </div>
           )}
         </div>
       </section>
+     <TrustStrip />
      <AboutSection ref={aboutSectionRef} />
+     <HowItWorks />
+     <CtaSection />
     </main>
   );
 };

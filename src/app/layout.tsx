@@ -1,6 +1,10 @@
 import Footer from "@/components/Footer/footer";
+import NavBar from "@/components/Nav/NavBar";
 import { Source_Sans_3 } from "next/font/google";
+import { rootMetadata } from "@/lib/seo";
 import "./globals.css";
+
+export const metadata = rootMetadata;
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -18,7 +22,7 @@ export default function RootLayout({
 
  <body className="antialiased font-sans min-h-screen flex flex-col">
 
-        {/* <NavBar /> */}
+        <NavBar />
         <main className="flex-grow">
           {children}
         </main>

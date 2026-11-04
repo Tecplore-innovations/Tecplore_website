@@ -32,19 +32,17 @@ const perks = [
 
 const CareersPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
 
       {/* HERO */}
       <PageHero
         title="Your Tecplore Career Starts Here"
         subtitle="We're building a team of curious, driven people who believe learning should be an adventure, not a chore."
         backgroundImage="/photos/career1.avif"
-        overlayClass="bg-slate-950/75"
-        align="left"
       />
 
       {/* WHY TECPLORE */}
-      <section className="py-28 lg:py-32 px-6 bg-white">
+      <section className="py-28 lg:py-32 px-6 bg-background">
         <motion.div
           className="max-w-6xl mx-auto"
           initial="hidden"
@@ -52,9 +50,9 @@ const CareersPage: React.FC = () => {
           viewport={{ once: true, margin: '-100px' }}
         >
           <motion.div className="mb-14" variants={fadeIn}>
-            <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">Why Join Us</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900">More than a job</h2>
-            <p className="mt-3 text-lg text-slate-500 max-w-xl">
+            <p className="section-label mb-3">Why Join Us</p>
+            <h2 className="heading-section">More than a job</h2>
+            <p className="mt-3 text-lg text-muted-foreground max-w-xl">
               At Tecplore, you&apos;re not just filling a role, you&apos;re helping shape the future of STEM education.
             </p>
           </motion.div>
@@ -68,12 +66,12 @@ const CareersPage: React.FC = () => {
               return (
                 <motion.div
                   key={perk.title}
-                  className="bg-slate-50 border border-slate-200 rounded-2xl p-8 hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                  className="surface-card-interactive p-8"
                   variants={scaleUp}
                 >
-                  <Icon className="h-5 w-5 text-blue-600 mb-5" strokeWidth={1.5} />
-                  <h3 className="text-base font-semibold text-slate-900 mb-2">{perk.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{perk.description}</p>
+                  <Icon className="h-5 w-5 text-primary mb-5" strokeWidth={1.5} />
+                  <h3 className="text-base font-semibold text-foreground mb-2">{perk.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{perk.description}</p>
                 </motion.div>
               );
             })}
@@ -82,7 +80,7 @@ const CareersPage: React.FC = () => {
       </section>
 
       {/* CULTURE QUOTE */}
-      <section className="py-20 px-6 bg-slate-50 border-y border-slate-200">
+      <section className="py-20 px-6 bg-muted border-y border-border">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial="hidden"
@@ -90,14 +88,14 @@ const CareersPage: React.FC = () => {
           viewport={{ once: true }}
           variants={fadeIn}
         >
-          <p className="text-3xl md:text-4xl font-light text-slate-700 leading-relaxed italic">
+          <p className="text-3xl md:text-4xl font-light text-body leading-relaxed italic">
             We look for curiosity above all else. Everything else can be taught.
           </p>
           <div className="mt-10">
-            <p className="text-slate-500 mb-6">
+            <p className="text-muted-foreground mb-6">
               We post all openings on LinkedIn. Follow us to be the first to know.
             </p>
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-4 h-auto rounded-xl">
+            <Button asChild size="lg">
               <a
                 href="https://www.linkedin.com/company/tecplore"
                 target="_blank"

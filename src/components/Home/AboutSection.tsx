@@ -48,8 +48,14 @@ const Counter = ({ value }: { value: number }) => {
   const spring = useSpring(0, { mass: 1, stiffness: 50, damping: 20 });
   const display = useTransform(spring, (current) => Math.round(current));
 
+  // The real number is in the page HTML for search engines and no-JS visitors.
+  // Once the page is live in a browser, reset to 0 so it can count up on view.
   useEffect(() => {
-    if (inView) spring.set(value); 
+    if (elementRef.current) elementRef.current.textContent = "0";
+  }, []);
+
+  useEffect(() => {
+    if (inView) spring.set(value);
   }, [inView, value, spring]);
 
  useEffect(() => display.on("change", (latest) => {
@@ -61,7 +67,7 @@ const Counter = ({ value }: { value: number }) => {
     ref(node); 
   }, [ref]);
 
-  return <span ref={setRefs} />;
+  return <span ref={setRefs}>{value}</span>;
 };
 
 
@@ -87,7 +93,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
   return (
     <section 
       ref={ref} 
-      className="relative w-full py-20 sm:py-28 md:py-36 flex flex-col gap-24 items-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100"
+      className="relative w-full py-20 sm:py-28 md:py-36 flex flex-col gap-24 items-center overflow-hidden bg-background"
     >
 
       {/* --- 1. Animated Background Pattern (Shared) --- */}
@@ -105,12 +111,12 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
       
       {/* 2. Floating gradient orbs */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-blue-400/10 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-brand-blue/10 rounded-full blur-3xl"
         animate={{ x: [0, 80, 0], y: [0, -40, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-green-400/10 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-brand-cyan/10 rounded-full blur-3xl"
         animate={{ x: [0, -80, 0], y: [0, 40, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -129,15 +135,13 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
           >
            <div className="inline-flex items-center gap-3 sm:gap-4">
             <motion.div 
-              className="h-1 bg-gradient-to-r from-blue-600 to-green-600 w-16 sm:w-20"
+              className="h-1 bg-gradient-brand w-16 sm:w-20"
               initial={{ scaleX: 0 }}
               animate={titleInView ? { scaleX: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               style={{ transformOrigin: 'left' }}
             />
-            <h1 className="text-lg sm:text-xl md:text-2xl font-light tracking-[0.25em] uppercase text-gray-800">
-              What We Do
-            </h1>
+            <h2 className="section-label">What We Do</h2>
           </div>
           </motion.div>
         </div>
@@ -152,9 +156,9 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
                 y: 0,
                 transition: { duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }
               } : {}}
-              className="text-gray-800 break-words"
+              className="text-foreground break-words"
             >
-              We build <span className="font-light text-blue-600">interactive science exhibits</span>
+              Exhibits are <span className="font-light text-primary">the instrument.</span>
             </motion.div>
             
             <motion.div
@@ -164,9 +168,9 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
                 y: 0,
                 transition: { duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }
               } : {}}
-              className="text-gray-800 break-words"
+              className="text-foreground break-words"
             >
-              and set up <span className="font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">maker spaces</span>
+              The learning is <span className="font-bold text-gradient-brand">the product.</span>
             </motion.div>
             
             <motion.div
@@ -176,9 +180,9 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
                 y: 0,
                 transition: { duration: 0.7, delay: 0.4, ease: [0.22, 1, 0.36, 1] }
               } : {}}
-              className="text-gray-700 break-words text-base sm:text-lg md:text-xl lg:text-2xl"
+              className="text-body break-words text-base sm:text-lg md:text-xl lg:text-2xl"
             >
-              that spark curiosity.
+              We bring together interactive exhibits, maker spaces and educator training, so people learn science by doing.
             </motion.div>
           </div>
 
@@ -194,11 +198,11 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
             style={{ transformOrigin: 'left' }}
           >
             <div className="flex gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-600" />
-              <div className="w-2 h-2 rounded-full bg-green-600" />
-              <div className="w-2 h-2 rounded-full bg-red-600" />
+              <div className="w-2 h-2 rounded-full bg-brand-indigo" />
+              <div className="w-2 h-2 rounded-full bg-brand-blue" />
+              <div className="w-2 h-2 rounded-full bg-brand-cyan" />
             </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent" />
+            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
           </motion.div>
         </div>
       </div>
@@ -214,10 +218,8 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
             animate={statsHeaderInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <div className="h-1 bg-gradient-to-r from-blue-600 to-green-600 w-16 sm:w-20" />
-            <h2 className="text-lg sm:text-xl md:text-2xl font-light tracking-[0.25em] uppercase text-gray-800">
-              By The Numbers
-            </h2>
+            <div className="h-1 bg-gradient-brand w-16 sm:w-20" />
+            <h2 className="section-label">By The Numbers</h2>
           </motion.div>
         </div>
 
@@ -233,30 +235,30 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
               className="relative group"
             >
               {/* Vertical Divider Line */}
-              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-gray-200 via-gray-300 to-transparent group-hover:from-blue-400 group-hover:via-blue-500 transition-colors duration-500" />
+              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-border via-border to-transparent group-hover:from-primary group-hover:via-primary transition-colors duration-500" />
 
               <div className="pl-6 sm:pl-8">
                 {/* Icon */}
-                <div className="mb-4 text-gray-400 group-hover:text-blue-400 transition-colors duration-300">
+                <div className="mb-4 text-muted-foreground group-hover:text-primary transition-colors duration-300">
                   <stat.icon className="w-6 h-6" />
                 </div>
 
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="font-extrabold text-3xl sm:text-4xl bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent leading-none">
+                  <span className="font-extrabold text-3xl sm:text-4xl text-gradient-brand leading-none">
                     <Counter value={stat.value} />
                   </span>
-                  <span className="font-semibold text-xl sm:text-2xl bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent leading-none">
+                  <span className="font-semibold text-xl sm:text-2xl text-gradient-brand leading-none">
                     {stat.suffix}
                   </span>
                 </div>
 
                 {/* Label */}
-                <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-500 transition-colors">
+                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                   {stat.label}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-500 leading-relaxed font-medium">
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium">
                   {stat.description}
                 </p>
               </div>
