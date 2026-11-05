@@ -16,10 +16,10 @@ const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwxY0TkY9a0CwjHBdIFbmedDCxhowbt3zpFpui1uJwz4eTQgslid1bw-w6nIdR5X-nw/exec";
 
 const BUYER_TYPES = [
-  "Public space or park",
+  "NGO or CSR programme",
   "School or college",
   "Learning centre",
-  "NGO or CSR programme",
+  "Public space or park",
   "Something else",
 ];
 
@@ -102,7 +102,6 @@ const ContactPage = () => {
       <PageHero
         title="Let's Build Something Together"
         subtitle="Tell us about your space and goals. Our team will reach out to design the right learning experience for you."
-        backgroundImage="/photos/career1.avif"
       />
 
       {/* MAIN CONTENT */}

@@ -1,5 +1,6 @@
 import ResourceSamples from "@/components/Solutions/ResourceSamples";
 import SolutionPage, { type SolutionContent } from "@/components/Solutions/SolutionPage";
+import StationPicks from "@/components/Solutions/StationPicks";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(
@@ -52,6 +53,11 @@ const content: SolutionContent = {
 export default function SchoolsPage() {
   return (
     <SolutionPage content={content}>
+      <StationPicks
+        ids={[3, 5, 2, 1, 6, 4]}
+        heading="Stations that suit schools"
+        text="These stations connect to classroom topics such as forces, motion and aerodynamics, and work best with a teacher guiding the session."
+      />
       <ResourceSamples />
     </SolutionPage>
   );

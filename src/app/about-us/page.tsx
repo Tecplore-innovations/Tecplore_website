@@ -63,8 +63,7 @@ export default function AboutPage() {
       {/* HERO */}
       <PageHero
         title="Where Science Becomes an Experience"
-        subtitle="We design science learning experiences for parks, schools and communities, bringing together interactive exhibits, maker spaces and educator training."
-        backgroundImage="/photos/career1.avif"
+        subtitle="We design science learning experiences for NGO and CSR programmes, schools and public spaces, bringing together interactive exhibits, maker spaces and educator training."
       />
 
       {/* MISSION */}
@@ -81,9 +80,9 @@ export default function AboutPage() {
               Making STEM accessible to every learner
             </h2>
             <p className="text-lg text-body leading-relaxed">
-              We set up places where people learn science by doing. From parks to classrooms to
-              community centres, we design the whole experience: the exhibits, the way they are
-              arranged, what people are prompted to try, and how you know it worked.
+              We set up places where children learn science by doing. From community centres to
+              classrooms to public spaces, we design the whole experience: the exhibits, the way they
+              are arranged, what children are prompted to try, and how you know it worked.
             </p>
           </motion.div>
 

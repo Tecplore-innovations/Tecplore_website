@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 
 import CtaSection from "@/components/shared/CtaSection";
 import PageHero from "@/components/shared/PageHero";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { DESIGN_CALL, SOLUTION_LINKS } from "@/lib/site";
 
 export interface SolutionContent {
-  /** The page's own path, so it can be left out of the "other solutions" links. */
+  /** The page's own path, used to work out the previous and next solutions. */
   href: string;
   model: string;
   modelType: string;
@@ -31,11 +31,15 @@ export default function SolutionPage({
   content: SolutionContent;
   children?: React.ReactNode;
 }) {
-  const otherSolutions = SOLUTION_LINKS.filter((link) => link.href !== content.href);
+  // Previous and next loop round, so every page links to both of the others.
+  const index = SOLUTION_LINKS.findIndex((link) => link.href === content.href);
+  const count = SOLUTION_LINKS.length;
+  const previous = SOLUTION_LINKS[(index - 1 + count) % count];
+  const next = SOLUTION_LINKS[(index + 1) % count];
 
   return (
     <div className="min-h-screen bg-background">
-      <PageHero title={content.pitch} subtitle={content.subtitle} backgroundImage={content.heroImage}>
+      <PageHero title={content.pitch} subtitle={content.subtitle} image={content.heroImage}>
         <Button asChild size="lg">
           <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
         </Button>
@@ -95,24 +99,30 @@ export default function SolutionPage({
         </div>
       </section>
 
-      <CtaSection title={content.ctaTitle} text={content.ctaText} />
-
-      {/* Other solutions */}
-      <section className="px-6 py-10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm">
-          <span className="text-muted-foreground">Also see:</span>
-          {otherSolutions.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
-            >
-              {link.name}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          ))}
+      {/* Previous and next solution */}
+      <nav aria-label="Other solutions" className="px-6 py-10">
+        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2">
+          <Link href={previous.href} className="surface-card-interactive flex items-center gap-4 p-5">
+            <ArrowLeft className="h-5 w-5 flex-shrink-0 text-primary" />
+            <span>
+              <span className="section-label block">Previous</span>
+              <span className="text-lg font-semibold text-foreground">{previous.name}</span>
+            </span>
+          </Link>
+          <Link
+            href={next.href}
+            className="surface-card-interactive flex items-center justify-end gap-4 p-5 text-right"
+          >
+            <span>
+              <span className="section-label block">Next</span>
+              <span className="text-lg font-semibold text-foreground">{next.name}</span>
+            </span>
+            <ArrowRight className="h-5 w-5 flex-shrink-0 text-primary" />
+          </Link>
         </div>
-      </section>
+      </nav>
+
+      <CtaSection title={content.ctaTitle} text={content.ctaText} />
     </div>
   );
 }

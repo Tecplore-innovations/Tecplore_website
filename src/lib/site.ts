@@ -7,10 +7,11 @@ export const DESIGN_CALL = {
   href: "/contact",
 };
 
+// In priority order: NGOs and CSR come first.
 export const SOLUTION_LINKS = [
-  { name: "Public Spaces", href: "/solutions/public-spaces" },
-  { name: "Schools", href: "/solutions/schools" },
   { name: "NGOs and CSR", href: "/solutions/ngos-csr" },
+  { name: "Schools", href: "/solutions/schools" },
+  { name: "Public Spaces", href: "/solutions/public-spaces" },
 ];
 
 export const NAV_LINKS = [
@@ -25,5 +26,5 @@ export const NAV_LINKS = [
 // Keep descriptions of Tecplore in step with these lines.
 export const POSITIONING = {
   subhead:
-    "We set up places where people learn science by doing: the exhibits, the way they are arranged, what people are prompted to try, and how you know it worked.",
+    "We set up places where children learn science by doing: the exhibits, the way they are arranged, what children are prompted to try, and how you know it worked.",
 };

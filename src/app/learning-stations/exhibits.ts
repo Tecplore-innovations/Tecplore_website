@@ -100,10 +100,10 @@ export const moreExhibits: MoreExhibit[] = [
   {
     id: 6,
     title: "Pulleys",
-    image: photo("Pulley1"),
+    image: photo("Pulley3"),
     short: "Understand how pulleys balance forces and make lifting easier.",
     long: "Explore the relationship between mass, force, and acceleration using interactive weights and pulleys. Experience how mechanical advantage helps lift heavy objects with less effort.",
-    gallery: [photo("Pulley2"), photo("Pulley3"), photo("Pulley4")],
+    gallery: [photo("Pulley4")],
     categories: ["Physics", "Mechanics"],
     tryIt: "Lift the weight using different pulley set-ups.",
     notice: "Which set-up takes the least effort.",

@@ -19,7 +19,7 @@ export default function NavBar() {
   const isActive = (href: string) => pathname === href || pathname === `${href}/`;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-ink-foreground">
+    <header className="sticky top-0 z-40 border-b border-border bg-background text-foreground">
       <nav
         aria-label="Main"
         className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
@@ -40,8 +40,8 @@ export default function NavBar() {
             <li>
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger
-                  className={`inline-flex items-center gap-1 text-sm font-medium transition-colors hover:text-ink-foreground focus:outline-none ${
-                    SOLUTION_LINKS.some((link) => isActive(link.href)) ? "text-ink-foreground" : "text-ink-muted"
+                  className={`inline-flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary focus:outline-none ${
+                    SOLUTION_LINKS.some((link) => isActive(link.href)) ? "text-primary" : "text-body"
                   }`}
                 >
                   Solutions
@@ -63,8 +63,8 @@ export default function NavBar() {
                 <Link
                   href={link.href}
                   aria-current={isActive(link.href) ? "page" : undefined}
-                  className={`text-sm font-medium transition-colors hover:text-ink-foreground ${
-                    isActive(link.href) ? "text-ink-foreground" : "text-ink-muted"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    isActive(link.href) ? "text-primary" : "text-body"
                   }`}
                 >
                   {link.name}
@@ -81,7 +81,7 @@ export default function NavBar() {
         <Sheet>
           <SheetTrigger
             aria-label="Open menu"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-ink-foreground transition-colors hover:bg-white/10 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-accent lg:hidden"
           >
             <Menu className="h-6 w-6" />
           </SheetTrigger>

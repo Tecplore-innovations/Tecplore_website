@@ -1,4 +1,5 @@
 import SolutionPage, { type SolutionContent } from "@/components/Solutions/SolutionPage";
+import StationPicks from "@/components/Solutions/StationPicks";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata(
@@ -46,5 +47,13 @@ const content: SolutionContent = {
 };
 
 export default function NgosCsrPage() {
-  return <SolutionPage content={content} />;
+  return (
+    <SolutionPage content={content}>
+      <StationPicks
+        ids={[10, 6, 8, 3, 5, 9]}
+        heading="Stations that suit community programmes"
+        text="These are good starting points. We choose the final set with you, around your community and local context such as water, farming and festivals."
+      />
+    </SolutionPage>
+  );
 }

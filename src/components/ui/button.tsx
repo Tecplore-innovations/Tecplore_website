@@ -14,9 +14,6 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
         secondary:
           "border border-primary bg-transparent text-primary hover:bg-accent",
-        // Secondary for dark surfaces, where blue outline text is hard to read.
-        secondaryOnDark:
-          "border border-white/40 bg-transparent text-ink-foreground hover:bg-white/10",
         link: "text-primary underline-offset-4 hover:underline",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",

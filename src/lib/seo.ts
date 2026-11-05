@@ -4,14 +4,14 @@ export const SITE_URL = "https://tecplore.com";
 export const SITE_NAME = "Tecplore";
 
 export const SITE_DESCRIPTION =
-  "We design science learning experiences for parks, schools and communities across India, bringing together interactive exhibits, maker spaces and educator training.";
+  "We design science learning experiences for NGO and CSR programmes, schools and public spaces across India, bringing together interactive exhibits, maker spaces and educator training.";
 
 // Every public page, for the sitemap. Add new pages here.
 export const SITEMAP_PATHS = [
   "/",
-  "/solutions/public-spaces",
-  "/solutions/schools",
   "/solutions/ngos-csr",
+  "/solutions/schools",
+  "/solutions/public-spaces",
   "/learning-stations",
   "/maker-space",
   "/teacher-resources",
@@ -43,7 +43,7 @@ export function pageMetadata(title: string, description: string, path: string): 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Tecplore | Science Learning for Parks, Schools and Communities",
+    default: "Tecplore | Science Learning for NGOs, Schools and Public Spaces",
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,

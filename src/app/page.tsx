@@ -24,7 +24,7 @@ const MOBILE_BREAKPOINT = 1024;
 
 const heroHeadline = (
   <>
-    We design <span className="text-gradient-on-dark">science learning experiences</span> for parks, schools and communities.
+    We design <span className="text-primary">science learning experiences</span> for NGO and CSR programmes, schools and public spaces.
   </>
 );
 
@@ -119,13 +119,8 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
   return (
     <main className="w-full overflow-x-hidden ">
-   <section className="relative min-h-[0] lg:min-h-[calc(100vh-4rem)] w-full bg-hero-dark overflow-hidden">
+   <section className="relative min-h-[0] lg:min-h-[calc(100vh-4rem)] w-full border-b border-border bg-background overflow-hidden">
 
-        {/* BG blobs */}
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-blue/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
-        </div>
         <div className={`relative z-10 container mx-auto px-2 sm:px-4 lg:px-12 ${sectionPadding} flex flex-col min-h-[0]`}>
           {/* Mobile/Tablet */}
           {isMobile ? (
@@ -133,10 +128,10 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
               {/* Headline first, so the positioning is the first thing read */}
               <div className="w-full px-4 pt-4 pb-8 flex flex-col items-center text-center">
-                <h1 className="text-3xl sm:text-4xl font-semibold leading-tight text-white">
+                <h1 className="text-3xl sm:text-4xl font-semibold leading-tight text-foreground">
                   {heroHeadline}
                 </h1>
-                <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-ink-muted">
+                <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-body">
                   {POSITIONING.subhead}
                 </p>
                 <Button asChild size="lg" className="mt-6">
@@ -146,7 +141,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
               {/* Video Player */}
                 <div
-                className="w-full aspect-video rounded-card overflow-hidden p-[2px] bg-gradient-brand"
+                className="w-full aspect-video rounded-card overflow-hidden border-2 border-primary"
               >
                 <div className="w-full h-full rounded-card overflow-hidden">
                   <motion.div
@@ -182,7 +177,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                     type="button"
                     aria-label={`Show video ${i + 1}`}
                     onClick={() => handleCarouselChange(i)}
-                    className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-white/40"} transition-all duration-300`}
+                    className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-primary" : "bg-input"} transition-all duration-300`}
                     style={{ border: 'none', padding: 0, margin: 0 }}
                   />
                 ))}
@@ -197,7 +192,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
-                className="text-white space-y-6 lg:space-y-8"
+                className="text-foreground space-y-6 lg:space-y-8"
               >
                 <h1 className="text-4xl xl:text-5xl font-semibold leading-tight">
                   {heroHeadline}
@@ -206,7 +201,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
-                  className="text-lg xl:text-xl text-ink-muted leading-relaxed max-w-xl"
+                  className="text-lg xl:text-xl text-body leading-relaxed max-w-xl"
                 >
                   {POSITIONING.subhead}
                 </motion.p>
@@ -214,7 +209,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   <Button asChild size="lg">
                     <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
                   </Button>
-                  <Button size="lg" variant="secondaryOnDark" onClick={scrollToAboutSection}>
+                  <Button size="lg" variant="secondary" onClick={scrollToAboutSection}>
                     See What We Do
                     <ChevronDown />
                   </Button>
@@ -236,7 +231,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
               let scale = 1, opacity = 1, zIndex = 100;
               if (isBgCard) {
                 scale = 0.60; // Much smaller
-                opacity = 0.22; // Lower, almost only card shape visible
+                opacity = 0; // Only the active video is shown
                 zIndex = 10;  // active on top
               } else if (!isActive) {
                 scale = 0.60; // offscreen/spacer
@@ -261,7 +256,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                 >
                   {/* Outer Card */}
                   <div
-                    className="relative w-full max-w-[800px] aspect-video rounded-card overflow-hidden shadow-2xl p-[2px] transition-all duration-300 bg-gradient-brand"
+                    className="relative w-full max-w-[800px] aspect-video rounded-card overflow-hidden shadow-2xl border-2 border-primary transition-all duration-300"
                   >
                     <motion.video
                       ref={el => { videoRefs.current[index] = el; }}
@@ -310,7 +305,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                       type="button"
                       aria-label={`Show video ${i + 1}`}
                       onClick={() => handleCarouselChange(i)}
-                      className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-white" : "bg-white/40"} transition-all duration-300`}
+                      className={`w-2 h-2 rounded-full ${i === activeIndex ? "bg-primary" : "bg-input"} transition-all duration-300`}
                       style={{ border: 'none', padding: 0, margin: 0 }}
                     />
                   ))} 

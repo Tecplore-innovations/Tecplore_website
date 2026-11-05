@@ -26,7 +26,6 @@ const config: Config = {
         },
         ink: {
           DEFAULT: "hsl(var(--ink))",
-          soft: "hsl(var(--ink-soft))",
           foreground: "hsl(var(--ink-foreground))",
           muted: "hsl(var(--ink-muted))",
         },

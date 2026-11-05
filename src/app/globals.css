@@ -5,6 +5,8 @@
 /* ==========================================================================
    TECPLORE THEME: the single reference for colour, shape and shared styles.
 
+   Tecplore uses solid colours only: no gradients or glow effects.
+
    Pages must use these tokens and classes, never raw palette classes
    (text-blue-600, bg-gray-100) or hex values. Change a value here and it
    updates across the whole site. Tailwind names for each token are mapped
@@ -17,38 +19,37 @@
 
   :root {
     /* Brand */
-    --brand-indigo: 243 75% 59%;  /* #4f46e5 */
-    --brand-blue: 221 83% 53%;    /* #2563eb */
-    --brand-cyan: 193 100% 50%;   /* #00c6ff */
-    --brand-sky: 213 94% 68%;     /* #60a5fa, for brand text on dark surfaces */
+    --brand-indigo: 243.4 75.4% 58.6%;  /* #4f46e5 */
+    --brand-blue: 221.2 83.2% 53.3%;    /* #2563eb */
+    --brand-cyan: 193.4 100% 50%;   /* #00c6ff */
+    --brand-sky: 213.1 93.9% 67.8%;     /* #60a5fa, for brand text on dark surfaces */
 
     /* Light surfaces and text */
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;    /* headings */
-    --body: 215 19% 35%;          /* paragraphs */
-    --muted: 210 40% 96%;         /* alternate section background */
-    --muted-foreground: 215 16% 47%; /* captions and secondary text */
+    --foreground: 222.2 47.4% 11.2%;    /* headings */
+    --body: 215.3 19.3% 34.5%;          /* paragraphs */
+    --muted: 210 40% 96.1%;         /* alternate section background */
+    --muted-foreground: 215.4 16.3% 46.9%; /* captions and secondary text */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 222.2 47.4% 11.2%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --border: 214 32% 91%;
-    --input: 213 27% 84%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 212.7 26.8% 83.9%;
 
     /* Dark surfaces: heroes and footer */
-    --ink: 229 84% 5%;
-    --ink-soft: 215 25% 27%;
+    --ink: 228.6 84% 4.9%;
     --ink-foreground: 0 0% 100%;
-    --ink-muted: 213 27% 84%;
+    --ink-muted: 212.7 26.8% 83.9%;
 
     /* Actions */
     --primary: var(--brand-blue);
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --accent: 214 100% 97%;       /* light blue tint for tags and hovers */
-    --accent-foreground: 224 76% 48%;
-    --destructive: 0 84% 60%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 213.8 100% 96.9%;       /* light blue tint for tags and hovers */
+    --accent-foreground: 224.3 76.3% 48%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
     --ring: var(--brand-blue);
 
@@ -109,19 +110,4 @@
     @apply flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-ink/50 text-ink-foreground shadow-lg backdrop-blur-md transition-all hover:bg-ink/70;
   }
 
-  /* Brand gradients */
-  .bg-gradient-brand {
-    background-image: linear-gradient(135deg, hsl(var(--brand-indigo)) 0%, hsl(var(--brand-blue)) 50%, hsl(var(--brand-cyan)) 100%);
-  }
-  .bg-hero-dark {
-    background-image: linear-gradient(to bottom, hsl(var(--ink)), hsl(var(--foreground)), hsl(var(--ink-soft)));
-  }
-  .text-gradient-brand {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(90deg, hsl(var(--brand-indigo)), hsl(var(--brand-blue)));
-  }
-  .text-gradient-on-dark {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(90deg, hsl(var(--brand-sky)), hsl(var(--brand-cyan)));
-  }
 }

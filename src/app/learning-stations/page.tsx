@@ -27,6 +27,9 @@ const TryNoticeWhy = ({ station }: { station: Exhibit }) => (
 
 const VARIATION_MS = 4000;
 
+// Set to true to bring back the Featured Stations slideshow.
+const SHOW_FEATURED_STATIONS: boolean = false;
+
 function preloadImages(paths: string[]) {
   paths.forEach((path) => {
     const img = new Image();
@@ -195,7 +198,7 @@ export default function LearningStations() {
 
   // Auto slide
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || !SHOW_FEATURED_STATIONS) return;
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % showcases.length);
     }, VARIATION_MS);
@@ -249,10 +252,11 @@ export default function LearningStations() {
       <PageHero
         title="Learning Stations"
         subtitle="A learning station is a hands-on exhibit with its learning built in, designed around one science concept."
-        backgroundImage="/photos/interactive-exhibits/AeroTower3.avif"
+        image="/photos/interactive-exhibits/AeroTower3.avif"
       />
 
-      {/* --- Featured exhibits --- */}
+      {/* --- Featured stations: turn on or off with SHOW_FEATURED_STATIONS --- */}
+      {SHOW_FEATURED_STATIONS && (
       <section
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24"
         onMouseEnter={() => setIsPaused(true)}
@@ -261,7 +265,7 @@ export default function LearningStations() {
         <div className="text-center lg:text-left mb-8 lg:mb-0 lg:absolute lg:left-8 lg:top-1/2 lg:-translate-y-1/2 lg:max-w-md z-10">
           <p className="section-label mb-3">Featured Stations</p>
           <h2 className="heading-section mb-6 lg:text-5xl">
-            <span className="block text-gradient-brand">
+            <span className="block text-primary">
               {showcases[index].title}
             </span>
           </h2>
@@ -362,6 +366,7 @@ export default function LearningStations() {
           ))}
         </div>
       </section>
+      )}
 
       {/* All stations */}
       <section className="bg-background text-foreground py-16">

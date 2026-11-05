@@ -22,7 +22,7 @@ const categories: Category[] = [
       {
         question: "What does Tecplore do?",
         answer:
-          "We design science learning experiences for parks, schools and communities across India. We bring together interactive exhibits, maker spaces and educator training, so people learn science by doing. Exhibits are the instrument; the learning is the product.",
+          "We design science learning experiences for NGO and CSR programmes, schools and public spaces across India. We bring together interactive exhibits, maker spaces and educator training, so children learn science by doing. Exhibits are the instrument; the learning is the product.",
       },
       {
         question: "Which cities does Tecplore operate in?",
@@ -45,6 +45,11 @@ const categories: Category[] = [
           "They are our three ways of running a Tecplore space. Explore is self-guided, so the space itself does the teaching, and suits parks, malls and libraries. Discover is guided by teachers we train, and suits schools and learning centres. Create is a programme we design with you, run by trained facilitators, and suits NGOs and CSR teams. All three follow the same learning arc; what changes is who carries it.",
       },
       {
+        question: "Do you work with NGOs and CSR programmes?",
+        answer:
+          "Yes. We start with a needs assessment covering age group, language, attendance and your funder's indicators, then co-design modules and train your facilitators, so the programme can continue without us on site.",
+      },
+      {
         question: "We don't have anyone to run sessions. Can this still work?",
         answer:
           "Yes. Explore needs no staff on your side. The exhibits come with their learning built in, through panels, challenge cards and videos, so the space teaches on its own.",
@@ -58,11 +63,6 @@ const categories: Category[] = [
         question: "How will we know it worked?",
         answer:
           "It depends on the model. Explore gives you footfall and dwell observations, question-board themes and QR scan counts. Discover gives you worksheet results, concept-check scores and teacher feedback. Create gives you an impact report for funders, with pre and post scores, attendance, stories and photos.",
-      },
-      {
-        question: "Do you work with NGOs and CSR programmes?",
-        answer:
-          "Yes. We start with a needs assessment covering age group, language, attendance and your funder's indicators, then co-design modules and train your facilitators, so the programme can continue without us on site.",
       },
     ],
   },
@@ -148,13 +148,12 @@ const categories: Category[] = [
   },
 ];
 
-function FAQItem({ faq }: { faq: FAQ }) {
-  const [open, setOpen] = useState(false);
+function FAQItem({ faq, open, onToggle }: { faq: FAQ; open: boolean; onToggle: () => void }) {
   return (
     <div className="surface-card overflow-hidden">
       <button
         className="w-full flex justify-between items-center px-6 py-5 text-left gap-4"
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         aria-expanded={open}
       >
         <span className="font-medium text-foreground leading-snug">{faq.question}</span>
@@ -179,6 +178,8 @@ function FAQItem({ faq }: { faq: FAQ }) {
 
 export default function FAQPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  // Only one answer is open at a time.
+  const [openQuestion, setOpenQuestion] = useState<string | null>(null);
 
   const displayed = activeCategory
     ? categories.filter((c) => c.label === activeCategory)
@@ -191,7 +192,6 @@ export default function FAQPage() {
       <PageHero
         title="Frequently Asked Questions"
         subtitle="Everything you need to know about Tecplore's exhibits, maker spaces, and partnerships."
-        backgroundImage="/photos/career1.avif"
       />
 
       {/* Breadcrumb */}
@@ -234,7 +234,12 @@ export default function FAQPage() {
               </h2>
               <div className="space-y-3">
                 {category.faqs.map((faq) => (
-                  <FAQItem key={faq.question} faq={faq} />
+                  <FAQItem
+                    key={faq.question}
+                    faq={faq}
+                    open={openQuestion === faq.question}
+                    onToggle={() => setOpenQuestion((q) => (q === faq.question ? null : faq.question))}
+                  />
                 ))}
               </div>
             </div>

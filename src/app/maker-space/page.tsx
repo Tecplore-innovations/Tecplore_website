@@ -52,7 +52,7 @@ const MakerSpacePage: React.FC = () => {
       <PageHero
         title="Maker Space Solutions"
         subtitle="Experiential Learning | Safe Exploration Environment | Cross-Disciplinary Integration | Educator Support"
-        backgroundImage="/photos/maker-space/maker_space_banner.avif"
+        image="/photos/maker-space/maker_space_banner.avif"
       />
 
       {/* Ideal For */}

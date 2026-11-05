@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Compass, GraduationCap, Handshake } from "lucide-react";
 
 // The three engagement models from the Positioning & Proposal Framework.
+// Shown from the base plan up, because each one builds on the one before.
 const models = [
   {
     icon: Compass,

@@ -179,15 +179,24 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <button onClick={() => setStudioOpen(true)} className={linkClass}>
+                  {/* Real links, so search engines can follow them. Visitors still get the popup. */}
+                  <a
+                    href="https://studio.tecplore.com/"
+                    onClick={(e) => { e.preventDefault(); setStudioOpen(true); }}
+                    className={linkClass}
+                  >
                     Tecplore Studio
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button onClick={() => setFishlifeOpen(true)} className={linkClass}>
-                    FishLife
+                  <a
+                    href="https://fishlife.tecplore.com/"
+                    onClick={(e) => { e.preventDefault(); setFishlifeOpen(true); }}
+                    className={linkClass}
+                  >
+                    FishLife Digital Aquarium
                     <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full ml-1">New</span>
-                  </button>
+                  </a>
                 </li>
               </ul>
             </div>

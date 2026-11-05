@@ -38,7 +38,6 @@ const CareersPage: React.FC = () => {
       <PageHero
         title="Your Tecplore Career Starts Here"
         subtitle="We're building a team of curious, driven people who believe learning should be an adventure, not a chore."
-        backgroundImage="/photos/career1.avif"
       />
 
       {/* WHY TECPLORE */}

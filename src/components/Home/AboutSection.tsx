@@ -109,17 +109,6 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
       />
       {/* ... rest of the component content ... */}
       
-      {/* 2. Floating gradient orbs */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-brand-blue/10 rounded-full blur-3xl"
-        animate={{ x: [0, 80, 0], y: [0, -40, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-brand-cyan/10 rounded-full blur-3xl"
-        animate={{ x: [0, -80, 0], y: [0, 40, 0] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      />
 
       {/* --- Section A: What We Do (from WhoWeAre) --- */}
       <div className="relative z-10 max-w-5xl sm:max-w-6xl md:max-w-7xl mx-auto px-6 sm:px-8 md:px-16 w-full">
@@ -135,7 +124,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
           >
            <div className="inline-flex items-center gap-3 sm:gap-4">
             <motion.div 
-              className="h-1 bg-gradient-brand w-16 sm:w-20"
+              className="h-1 bg-primary w-16 sm:w-20"
               initial={{ scaleX: 0 }}
               animate={titleInView ? { scaleX: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -170,7 +159,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
               } : {}}
               className="text-foreground break-words"
             >
-              The learning is <span className="font-bold text-gradient-brand">the product.</span>
+              The learning is <span className="font-bold text-primary">the product.</span>
             </motion.div>
             
             <motion.div
@@ -182,7 +171,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
               } : {}}
               className="text-body break-words text-base sm:text-lg md:text-xl lg:text-2xl"
             >
-              We bring together interactive exhibits, maker spaces and educator training, so people learn science by doing.
+              We bring together interactive exhibits, maker spaces and educator training, so children learn science by doing.
             </motion.div>
           </div>
 
@@ -202,7 +191,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
               <div className="w-2 h-2 rounded-full bg-brand-blue" />
               <div className="w-2 h-2 rounded-full bg-brand-cyan" />
             </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+            <div className="flex-1 h-px bg-border" />
           </motion.div>
         </div>
       </div>
@@ -218,7 +207,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
             animate={statsHeaderInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <div className="h-1 bg-gradient-brand w-16 sm:w-20" />
+            <div className="h-1 bg-primary w-16 sm:w-20" />
             <h2 className="section-label">By The Numbers</h2>
           </motion.div>
         </div>
@@ -235,7 +224,7 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
               className="relative group"
             >
               {/* Vertical Divider Line */}
-              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-border via-border to-transparent group-hover:from-primary group-hover:via-primary transition-colors duration-500" />
+              <div className="absolute left-0 top-0 bottom-0 w-px bg-border group-hover:bg-primary transition-colors duration-500" />
 
               <div className="pl-6 sm:pl-8">
                 {/* Icon */}
@@ -244,10 +233,10 @@ const AboutSection = React.forwardRef<HTMLElement, object>(({ }, ref) => {
                 </div>
 
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="font-extrabold text-3xl sm:text-4xl text-gradient-brand leading-none">
+                  <span className="font-extrabold text-3xl sm:text-4xl text-primary leading-none">
                     <Counter value={stat.value} />
                   </span>
-                  <span className="font-semibold text-xl sm:text-2xl text-gradient-brand leading-none">
+                  <span className="font-semibold text-xl sm:text-2xl text-primary leading-none">
                     {stat.suffix}
                   </span>
                 </div>

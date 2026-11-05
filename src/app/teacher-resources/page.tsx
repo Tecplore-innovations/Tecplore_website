@@ -119,7 +119,6 @@ const TeacherResources: React.FC = () => {
       <PageHero
         title="Teacher Resources Portal"
         subtitle="Access curated training materials and teaching resources"
-        backgroundImage="/photos/career1.avif"
       />
 
       {/* ── Stats Bar ── */}
