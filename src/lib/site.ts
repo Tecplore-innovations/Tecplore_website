@@ -26,5 +26,5 @@ export const NAV_LINKS = [
 // Keep descriptions of Tecplore in step with these lines.
 export const POSITIONING = {
   subhead:
-    "We set up places where children learn science by doing: the exhibits, the way they are arranged, what children are prompted to try, and how you know it worked.",
+    "Children learn science by doing. We design the whole experience: the exhibits, what children try, and how you know it worked.",
 };

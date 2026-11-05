@@ -13,6 +13,8 @@ Canva and the website can't update each other automatically, so any change is ma
 2. Update the matching value in `src/app/globals.css`.
 3. Update the Tecplore Theme design and the brand kit in Canva.
 
+**Known difference:** the website footer is navy, but the Tecplore Theme design in Canva still shows the cardinal red footer. This is deliberate. The red footer values are kept, commented out, in `src/app/globals.css`, so the website can switch back.
+
 ## Colours
 
 | Name | Hex | Website token | Use |
@@ -20,8 +22,11 @@ Canva and the website can't update each other automatically, so any change is ma
 | Tecplore Blue | `#2563EB` | `primary`, `brand-blue` | Main buttons and links |
 | Tecplore Indigo | `#4F46E5` | `brand-indigo` | Small accents |
 | Tecplore Cyan | `#00C6FF` | `brand-cyan` | Small accents |
-| Sky | `#60A5FA` | `brand-sky` | Link hover on the dark footer |
-| Ink | `#020617` | `ink` | Footer |
+| Sky | `#60A5FA` | `brand-sky` | Small accents |
+| Footer Navy | `#020617` | `footer` | Footer background |
+| Footer Text | `#CBD5E1` | `footer-muted` | Footer links, with white for headings |
+| Cardinal Red | `#8C1C1C` | none | Hero art only, in `public/photos/hero-art.svg` |
+| Ink | `#020617` | `ink` | Dark overlays on photos and video |
 | Heading | `#0F172A` | `foreground` | Headings |
 | Body Text | `#475569` | `body` | Paragraphs |
 | Muted Text | `#64748B` | `muted-foreground` | Captions and secondary text |

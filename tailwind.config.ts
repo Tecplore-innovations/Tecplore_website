@@ -29,6 +29,11 @@ const config: Config = {
           foreground: "hsl(var(--ink-foreground))",
           muted: "hsl(var(--ink-muted))",
         },
+        footer: {
+          DEFAULT: "hsl(var(--footer))",
+          foreground: "hsl(var(--footer-foreground))",
+          muted: "hsl(var(--footer-muted))",
+        },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

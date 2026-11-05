@@ -27,7 +27,7 @@ const categories: Category[] = [
       {
         question: "Which cities does Tecplore operate in?",
         answer:
-          "Our registered office is in Coimbatore, Tamil Nadu, with branch offices in Trivandrum (Kerala) and Nagpur (Maharashtra). We have partnered with 100+ schools across these regions and continue to expand.",
+          "Our registered office is in Coimbatore, Tamil Nadu, with branch offices in Trivandrum (Kerala) and Nagpur (Maharashtra).",
       },
       {
         question: "How long has Tecplore been in operation?",

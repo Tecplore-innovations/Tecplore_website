@@ -6,6 +6,7 @@ import AboutSection from '@/components/Home/AboutSection';
 import HowItWorks from '@/components/Home/HowItWorks';
 import TrustStrip from '@/components/Home/TrustStrip';
 import CtaSection from '@/components/shared/CtaSection';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { DESIGN_CALL, POSITIONING } from '@/lib/site';
@@ -127,23 +128,34 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
         <div className={`relative z-10 container mx-auto px-2 sm:px-4 lg:px-12 ${sectionPadding} flex flex-col min-h-[0]`}>
           {!SHOW_HERO_VIDEO ? (
-            // Text-only hero, used while the video is hidden
-            <div className="mx-auto max-w-4xl px-4 py-12 text-center md:py-20">
-              <h1 className="text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-                {heroHeadline}
-              </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-body">
-                {POSITIONING.subhead}
-              </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button asChild size="lg">
-                  <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
-                </Button>
-                <Button size="lg" variant="secondary" onClick={scrollToAboutSection}>
-                  See What We Do
-                  <ChevronDown />
-                </Button>
+            // Hero with abstract art, used while the video is hidden
+            <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-10 md:py-14 lg:grid-cols-2 lg:gap-14">
+              <div>
+                <h1 className="text-3xl font-semibold leading-tight text-foreground sm:text-4xl xl:text-5xl">
+                  {heroHeadline}
+                </h1>
+                <p className="mt-6 max-w-2xl text-lg leading-relaxed text-body">
+                  {POSITIONING.subhead}
+                </p>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <Button asChild size="lg">
+                    <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
+                  </Button>
+                  <Button size="lg" variant="secondary" onClick={scrollToAboutSection}>
+                    See What We Do
+                    <ChevronDown />
+                  </Button>
+                </div>
               </div>
+              <Image
+                src="/photos/hero-art.svg"
+                alt=""
+                width={600}
+                height={450}
+                unoptimized
+                priority
+                className="h-auto w-full rounded-card border border-border"
+              />
             </div>
           ) : isMobile ? (
             <div className="w-full flex flex-col items-center pt-2">

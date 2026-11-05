@@ -22,15 +22,19 @@ const FISHLIFE_DESCRIPTION =
 const STUDIO_DESCRIPTION =
   "Tecplore Studio is an online platform where educators and students can access curated digital content, create interactive lessons, and collaborate on science-based projects. It extends the Tecplore experience beyond the classroom with tools built for modern STEM education.";
 
-const headingClass = "font-semibold text-base uppercase tracking-wide text-ink-foreground mb-4";
-const linkClass = "text-ink-muted text-sm hover:text-ink-foreground transition-colors duration-200 inline-flex items-center gap-1 text-left";
+const headingClass = "font-semibold text-base uppercase tracking-wide text-footer-foreground mb-4";
+const linkClass = "text-footer-muted text-sm hover:text-footer-foreground transition-colors duration-200 inline-flex items-center gap-1 text-left";
 
 const Footer = () => {
   const [fishlifeOpen, setFishlifeOpen] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
 
   const whatWeDoLinks = [
-    ...SOLUTION_LINKS,
+    ...SOLUTION_LINKS.flatMap((link) =>
+      link.href === "/solutions/schools"
+        ? [link, { name: "Teacher Resources", href: "/teacher-resources" }]
+        : [link]
+    ),
     { name: "Learning Stations", href: "/learning-stations" },
     { name: "Maker Spaces", href: "/maker-space" },
   ];
@@ -43,7 +47,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-ink text-ink-foreground">
+    <footer className="bg-footer text-footer-foreground">
       {/* FishLife Dialog */}
       <Dialog open={fishlifeOpen} onOpenChange={setFishlifeOpen}>
         <DialogContent className="sm:max-w-md">
@@ -129,7 +133,7 @@ const Footer = () => {
                   href="https://www.instagram.com/tecplore_edu/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
+                  className="text-footer-muted hover:text-footer-foreground transition-colors duration-200"
                   aria-label="Instagram"
                 >
                   <Instagram className="h-5 w-5" />
@@ -138,7 +142,7 @@ const Footer = () => {
                   href="https://www.linkedin.com/company/tecplore"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
+                  className="text-footer-muted hover:text-footer-foreground transition-colors duration-200"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
@@ -147,7 +151,7 @@ const Footer = () => {
                   href="https://www.youtube.com/@Tecplore"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink-muted hover:text-brand-sky transition-colors duration-200"
+                  className="text-footer-muted hover:text-footer-foreground transition-colors duration-200"
                   aria-label="Youtube"
                 >
                   <Youtube className="h-5 w-5" />
@@ -169,15 +173,10 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Learning Tools */}
+            {/* Other Products: separate from the science learning work */}
             <div>
-              <h4 className={headingClass}>Learning Tools</h4>
+              <h4 className={headingClass}>Other Products</h4>
               <ul className="space-y-3">
-                <li>
-                  <Link href="/teacher-resources" className={linkClass}>
-                    Teacher Resources
-                  </Link>
-                </li>
                 <li>
                   {/* Real links, so search engines can follow them. Visitors still get the popup. */}
                   <a
@@ -195,7 +194,7 @@ const Footer = () => {
                     className={linkClass}
                   >
                     FishLife Digital Aquarium
-                    <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full ml-1">New</span>
+                    <span className="text-xs bg-white text-footer px-1.5 py-0.5 rounded-full ml-1">New</span>
                   </a>
                 </li>
               </ul>
@@ -218,16 +217,16 @@ const Footer = () => {
           </div>
         </div>
 
-        <Separator className="bg-white/10" />
+        <Separator className="bg-white/20" />
 
         <div className="py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-ink-muted text-xs order-2 sm:order-1 text-center">
+            <p className="text-footer-muted text-xs order-2 sm:order-1 text-center">
               © {new Date().getFullYear()} Tecplore. All rights reserved.
               <span className="mx-2">|</span>
-              <Link href="/privacy-policy" className="text-ink-muted hover:text-ink-foreground">Privacy Policy</Link>
+              <Link href="/privacy-policy" className="text-footer-muted hover:text-footer-foreground">Privacy Policy</Link>
               <span className="mx-1">•</span>
-              <Link href="/terms-conditions" className="text-ink-muted hover:text-ink-foreground">Terms of Use</Link>
+              <Link href="/terms-conditions" className="text-footer-muted hover:text-footer-foreground">Terms of Use</Link>
             </p>
           </div>
         </div>

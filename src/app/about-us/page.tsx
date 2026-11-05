@@ -32,12 +32,14 @@ const values = [
 const teamMembers = [
   {
     name: 'Vivek Devaraj',
+    role: 'Founding Partner',
     imageUrl: '/photos/aboutus/Vivek.avif',
     linkedin: 'https://www.linkedin.com/in/vdevaraj',
     bio: "Engineer, maker, and educator with a Master's from Eindhoven University of Technology. With years of global R&D experience and two patents, I now build maker spaces that help students explore ideas and learn engineering by doing.",
   },
   {
     name: 'Prasanna G',
+    role: 'Founding Partner',
     imageUrl: '/photos/aboutus/Prasanna.avif',
     linkedin: 'https://www.linkedin.com/in/prasanna-g-57284012',
     bio: 'After over two decades at ISRO working on space systems, I now bring the same precision and creativity to education, designing practical science experiences that make learning exciting and meaningful.',
@@ -52,7 +54,7 @@ const teamMembers = [
     name: 'Arunkumar R',
     imageUrl: '/photos/aboutus/Arunkumar.avif',
     linkedin: 'https://www.linkedin.com/in/arunkumar--r',
-    bio: 'A physics graduate with experience in manufacturing startups, CSIR aerospace labs, and agri-tech ventures. I combine science and creativity to design digital content that makes learning engaging and accessible.',
+    bio: "I design Tecplore's digital learning content, blending science and creativity so that big ideas feel simple, engaging and open to every learner.",
   },
 ];
 
@@ -80,9 +82,9 @@ export default function AboutPage() {
               Making STEM accessible to every learner
             </h2>
             <p className="text-lg text-body leading-relaxed">
-              We set up places where children learn science by doing. From community centres to
-              classrooms to public spaces, we design the whole experience: the exhibits, the way they
-              are arranged, what children are prompted to try, and how you know it worked.
+              Children learn science by doing. From community centres to classrooms to public spaces,
+              we design the whole experience: the exhibits, what children try, and how you know it
+              worked.
             </p>
           </motion.div>
 
@@ -168,6 +170,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base font-semibold text-foreground">{member.name}</h3>
+                  {member.role && <p className="text-sm font-medium text-primary">{member.role}</p>}
                   <a
                     href={member.linkedin}
                     target="_blank"
