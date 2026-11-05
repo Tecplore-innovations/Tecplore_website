@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
       <PageHero title="Privacy Policy" />
       <div className="max-w-3xl mx-auto px-6 py-16">
         <p className="text-sm text-body mb-8">
-          Last Updated: {new Date().toLocaleDateString()}
+          Last Updated: November 05, 2026
         </p>
 
         <p className="mb-6">

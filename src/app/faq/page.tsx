@@ -82,7 +82,7 @@ const categories: Category[] = [
       {
         question: "Are the exhibits suitable for all age groups?",
         answer:
-          "Our exhibits are designed to engage students from primary school through higher secondary (Class 1–12) and beyond. Activity complexity and safety features are tailored to the target age group during the assessment phase.",
+          "Our exhibits are designed for students from Class 6 to Class 12. Activity complexity and safety features are tailored to the target age group during the assessment phase.",
       },
       {
         question: "Can public spaces like parks, museums or malls install Tecplore exhibits?",

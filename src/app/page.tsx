@@ -22,6 +22,9 @@ const videos = [
 ];
 const MOBILE_BREAKPOINT = 1024;
 
+// Set to true to bring back the hero video carousel.
+const SHOW_HERO_VIDEO: boolean = false;
+
 const heroHeadline = (
   <>
     We design <span className="text-primary">science learning experiences</span> for NGO and CSR programmes, schools and public spaces.
@@ -65,6 +68,7 @@ const handleCarouselChange = (newIndex: number) => {
   }, []);
 
   useEffect(() => {
+    if (!SHOW_HERO_VIDEO) return;
     let indicesToLoad: number[] = [];
     if (isMobile) {
       indicesToLoad = [activeIndex, (activeIndex + 1) % videos.length];
@@ -83,7 +87,7 @@ const handleCarouselChange = (newIndex: number) => {
   }, [activeIndex, isMobile]);
 
   useEffect(() => {
-    if (!videosLoaded) return;
+    if (!SHOW_HERO_VIDEO || !videosLoaded) return;
     const video = videoRefs.current[activeIndex];
     if (!video) return;
     const next = () => setActiveIndex((prev) => (prev + 1) % videos.length);
@@ -119,11 +123,29 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
 
   return (
     <main className="w-full overflow-x-hidden ">
-   <section className="relative min-h-[0] lg:min-h-[calc(100vh-4rem)] w-full border-b border-border bg-background overflow-hidden">
+   <section className={`relative min-h-[0] ${SHOW_HERO_VIDEO ? "lg:min-h-[calc(100vh-4rem)]" : ""} w-full border-b border-border bg-background overflow-hidden`}>
 
         <div className={`relative z-10 container mx-auto px-2 sm:px-4 lg:px-12 ${sectionPadding} flex flex-col min-h-[0]`}>
-          {/* Mobile/Tablet */}
-          {isMobile ? (
+          {!SHOW_HERO_VIDEO ? (
+            // Text-only hero, used while the video is hidden
+            <div className="mx-auto max-w-4xl px-4 py-12 text-center md:py-20">
+              <h1 className="text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+                {heroHeadline}
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-body">
+                {POSITIONING.subhead}
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <Button asChild size="lg">
+                  <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
+                </Button>
+                <Button size="lg" variant="secondary" onClick={scrollToAboutSection}>
+                  See What We Do
+                  <ChevronDown />
+                </Button>
+              </div>
+            </div>
+          ) : isMobile ? (
             <div className="w-full flex flex-col items-center pt-2">
 
               {/* Headline first, so the positioning is the first thing read */}

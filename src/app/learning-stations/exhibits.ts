@@ -10,7 +10,7 @@ type Station = {
   tryIt: string;
   notice: string;
   why: string;
-  // Set this to show an age group tag on the card, for example "Class 6-10".
+  // Shown as a tag on the card and in the detail view.
   ageGroup?: string;
 };
 
@@ -29,6 +29,7 @@ export const showcases: Showcase[] = [
     long: "A hands-on sandbox model that simulates river formation and erosion. Students can observe how flowing water carves valleys, creates meanders, and deposits sediments to form deltas - demonstrating topography, soil erosion, and watershed dynamics.",
     gallery: [photo("StreamTable3"), photo("StreamTable4")],
     categories: ["Geography", "Earth Science"],
+    ageGroup: "Class 6-12",
     tryIt: "Let water flow across the sand.",
     notice: "Where it cuts channels, and where it drops sediment.",
     why: "Moving water carries land away from one place and deposits it in another, forming meanders and deltas.",
@@ -41,6 +42,7 @@ export const showcases: Showcase[] = [
     long: "Demonstrates resonance and standing waves using vibrating plates and sand patterns (Chladni figures). The sand settles at nodes where the plate doesn’t vibrate, forming beautiful geometric shapes.",
     gallery: [photo("SoundPatterns2")],
     categories: ["Physics", "Waves"],
+    ageGroup: "Class 6-12",
     tryIt: "Make the plate vibrate.",
     notice: "The shapes the sand forms on the plate.",
     why: "Sand settles at the nodes, the lines where the plate does not vibrate.",
@@ -53,6 +55,7 @@ export const showcases: Showcase[] = [
     long: "Hands-on demonstration of how curved surfaces change trajectories and focus energy. Great for optics and geometry lessons.",
     gallery: [photo("CurvedCarrom3"), photo("CurvedCarrom4"), photo("CurvedCarrom5")],
     categories: ["Physics", "Math"],
+    ageGroup: "Class 6-12",
     tryIt: "Flick a striker at the curved edge.",
     notice: "Where it travels after it bounces.",
     why: "A curved surface turns paths towards a focal point, as a curved mirror does with light.",
@@ -65,6 +68,7 @@ export const showcases: Showcase[] = [
     long: "An engaging experiment that demonstrates Bernoulli's principle in action. The Aero Tower helps learners understand how airspeed affects pressure, forming the basis of flight and aerodynamics.",
     gallery: [photo("AeroTower3"), photo("AeroTower4"), photo("AeroTower5")],
     categories: ["Physics", "Aerodynamics"],
+    ageGroup: "Class 6-12",
     tryIt: "Change the airflow in the tower.",
     notice: "How the objects respond as the air speeds up.",
     why: "Faster-moving air has lower pressure, which is the basis of flight.",
@@ -77,6 +81,7 @@ export const showcases: Showcase[] = [
     long: "Designed for aerodynamics demos with visible smoke flow and adjustable models to study lift and drag characteristics.",
     gallery: [photo("HorizontalWindTunnel3"), photo("HorizontalWindTunnel4"), photo("HorizontalWindTunnel5")],
     categories: ["Physics", "Engineering"],
+    ageGroup: "Class 6-12",
     tryIt: "Adjust the model in the airflow.",
     notice: "How the smoke flows around its shape.",
     why: "A shape and its angle in moving air change its lift and drag.",
@@ -93,6 +98,7 @@ export const moreExhibits: MoreExhibit[] = [
     long: "Demonstrates how the length of air columns in pipes affects the pitch of sound. Strike or blow across the pipes to hear different notes and understand resonance in acoustics.",
     gallery: [photo("MusicalPipe2"), photo("MusicalPipe3")],
     categories: ["Physics", "Sound"],
+    ageGroup: "Class 6-12",
     tryIt: "Strike or blow across pipes of different lengths.",
     notice: "Which pipes sound higher, and which sound lower.",
     why: "A shorter column of air vibrates faster, which gives a higher note.",
@@ -105,6 +111,7 @@ export const moreExhibits: MoreExhibit[] = [
     long: "Explore the relationship between mass, force, and acceleration using interactive weights and pulleys. Experience how mechanical advantage helps lift heavy objects with less effort.",
     gallery: [photo("Pulley4")],
     categories: ["Physics", "Mechanics"],
+    ageGroup: "Class 6-12",
     tryIt: "Lift the weight using different pulley set-ups.",
     notice: "Which set-up takes the least effort.",
     why: "More ropes share the load, so you pull with less force over a longer distance.",
@@ -117,6 +124,7 @@ export const moreExhibits: MoreExhibit[] = [
     long: "An interactive demonstration of centrifugal force using rotating masses on flexible arms. Observe how rotation influences motion and stability in spinning systems.",
     gallery: [photo("CentrifugalForce2"), photo("CentrifugalForce3"), photo("CentrifugalForce4")],
     categories: ["Physics", "Motion"],
+    ageGroup: "Class 6-12",
     tryIt: "Spin the table, slowly and then faster.",
     notice: "How the masses move outward as the speed rises.",
     why: "Moving objects tend to carry on in a straight line, so they swing outward in a spin.",
@@ -129,6 +137,7 @@ export const moreExhibits: MoreExhibit[] = [
     long: "A scaled model to explore thrust, center of mass and stability. Perfect for classroom physics discussions.",
     gallery: [photo("RocketModel2"), photo("RocketModel3"), photo("RocketModel4"), photo("RocketModel5")],
     categories: ["Physics", "Engineering"],
+    ageGroup: "Class 6-12",
     tryIt: "Find the point where the rocket balances.",
     notice: "Where that point sits along its length.",
     why: "A rocket's stability depends on its centre of mass, and thrust pushes it up as gas is pushed down.",
@@ -141,6 +150,7 @@ export const moreExhibits: MoreExhibit[] = [
     long: "Demonstrates the principles of projectile motion, including launch angle, velocity, and trajectory. Perfect for physics lessons on kinematics.",
     gallery: [photo("ProjectileLauncher2"), photo("ProjectileLauncher3"), photo("ProjectileLauncher4"), photo("ProjectileLauncher5")],
     categories: ["Physics", "Mechanics"],
+    ageGroup: "Class 6-12",
     tryIt: "Change the launch angle and fire.",
     notice: "How far and how high it travels.",
     why: "Launch angle and speed together set the path of any projectile.",

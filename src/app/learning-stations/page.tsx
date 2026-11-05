@@ -90,6 +90,7 @@ const DesktopGalleryModal = ({
         ))}
       </div>
       <div className="flex flex-wrap gap-2 mt-4 border-t pt-4 w-full">
+        {exhibit.ageGroup && <span className="tag">{exhibit.ageGroup}</span>}
         {exhibit.categories.map((c) => (
           <span key={c} className="tag">{c}</span>
         ))}
