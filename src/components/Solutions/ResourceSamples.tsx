@@ -44,7 +44,7 @@ export default function ResourceSamples() {
   return (
     <section className="px-6 pb-16">
       <div className="mx-auto max-w-6xl">
-        <h2 className="heading-section mb-3">Teaching material your staff can use</h2>
+        <h2 className="heading-section mb-3">Teacher&apos;s portal</h2>
         <p className="mb-8 max-w-3xl text-body">
           Our Teacher Resources library holds training videos, lesson plans and activity guides across
           subjects and grade levels.

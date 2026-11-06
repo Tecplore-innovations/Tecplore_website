@@ -13,24 +13,24 @@ export default function TermsOfUsePage() {
         </p>
 
         <p className="mb-6">
-          By accessing or using <strong>Tecplore</strong>&apos;s website, STEM modules, exhibits, learning tools, or resources, you agree to these Terms of Use.
+          By accessing or using <strong>Tecplore</strong>&apos;s website, STEM modules, learning stations, learning tools, or resources, you agree to these Terms of Use.
         </p>
 
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">Educational Purpose</h2>
         <p className="mb-4">
-          Tecplore provides hands-on learning content, interactive STEM exhibits, and curiosity-driven educational tools. Material is for learning and informational purposes only, not professional engineering or scientific certification.
+          Tecplore provides hands-on learning content, interactive STEM learning stations, and curiosity-driven educational tools. Material is for learning and informational purposes only, not professional engineering or scientific certification.
         </p>
 
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">User Responsibilities</h2>
         <ul className="list-disc ml-6 space-y-2 mb-4">
           <li>Use content responsibly and safely</li>
-          <li>Follow lab & exhibit safety guidelines</li>
+          <li>Follow lab & learning station safety guidelines</li>
           <li>Do not misuse learning equipment or software</li>
         </ul>
 
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">Intellectual Property</h2>
         <p className="mb-4">
-          All content, designs, exhibits, videos, and learning materials belong to Tecplore. You may not copy, resell, or reproduce content without permission.
+          All content, designs, learning stations, videos, and learning materials belong to Tecplore. You may not copy, resell, or reproduce content without permission.
         </p>
 
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">Limitation of Liability</h2>

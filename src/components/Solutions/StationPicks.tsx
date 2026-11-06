@@ -1,24 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { moreExhibits, showcases } from "@/app/learning-stations/exhibits";
+import { useSiteContent, type StationTag } from "@/lib/siteContent";
+import { stationsForTag } from "@/lib/stations";
 
-/** A short list of recommended learning stations, picked by id. */
+/** The stations tagged for this page. Tags are set from /site-admin. */
 export default function StationPicks({
-  ids,
+  tag,
   heading,
   text,
 }: {
-  ids: number[];
+  tag: StationTag;
   heading: string;
-  text: string;
+  text: React.ReactNode;
 }) {
-  const all = [
-    ...showcases.map((s) => ({ ...s, thumb: s.images[0] })),
-    ...moreExhibits.map((s) => ({ ...s, thumb: s.image })),
-  ];
-  const picks = ids.flatMap((id) => all.filter((station) => station.id === id));
+  const content = useSiteContent();
+  const picks = stationsForTag(tag, content);
 
   return (
     <section className="px-6 pb-16">
@@ -37,13 +37,12 @@ export default function StationPicks({
               />
               <div className="min-w-0">
                 <h3 className="font-semibold text-foreground">{station.title}</h3>
-                <p className="mt-1 text-sm text-body">
-                  <span className="font-semibold text-primary">Try: </span>
-                  {station.tryIt}
-                </p>
+                <p className="mt-1 text-sm text-body">{station.short}</p>
               </div>
             </div>
           ))}
+          {/* Loading stage, while tags and added stations arrive */}
+          {!content.loaded && <div aria-hidden className="surface-card h-28 animate-pulse bg-muted" />}
         </div>
         <Link
           href="/learning-stations"

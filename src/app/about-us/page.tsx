@@ -4,13 +4,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Linkedin, Star, Zap, Users, ShieldCheck } from 'lucide-react';
 import PageHero from '@/components/shared/PageHero';
-import { fadeIn, fadeInUp, staggerContainer, scaleUp } from '@/lib/animations';
+import { fadeIn, staggerContainer, scaleUp } from '@/lib/animations';
 
 const values = [
   {
     icon: Star,
     title: 'Excellence',
-    description: 'We set high standards for content, experience, and delivery in every maker space and learning environment we create.',
+    description: 'We set high standards for content, experience, and delivery in every learning environment we create.',
   },
   {
     icon: Zap,
@@ -65,42 +65,14 @@ export default function AboutPage() {
       {/* HERO */}
       <PageHero
         title="Where Science Becomes an Experience"
-        subtitle="We design science learning experiences for NGO and CSR programmes, schools and public spaces, bringing together interactive exhibits, maker spaces and educator training."
-      />
-
-      {/* MISSION */}
-      <section className="py-28 lg:py-36 px-6 bg-background">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            variants={fadeIn}
-          >
-            <p className="section-label mb-4">Our Mission</p>
-            <h2 className="heading-section leading-tight mb-6">
-              Making STEM accessible to every learner
-            </h2>
-            <p className="text-lg text-body leading-relaxed">
-              Children learn science by doing. From community centres to classrooms to public spaces,
-              we design the whole experience: the exhibits, what children try, and how you know it
-              worked.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            variants={fadeInUp}
-            className="surface-card bg-muted p-10"
-          >
-            <blockquote className="text-2xl font-light text-body leading-relaxed italic">
-              Our goal is not just to teach science - it is to make students fall in love with asking questions.
-            </blockquote>
-          </motion.div>
-        </div>
-      </section>
+        subtitle="Making STEM accessible to every learner. Children learn science by doing. From community centres to classrooms to public spaces, we design the whole experience: the learning stations, what children try, and how you know it worked."
+        image="/photos/aboutus/team-illustration.jpg"
+        illustration
+      >
+        <blockquote className="border-l-4 border-primary pl-5 text-lg italic leading-relaxed text-body">
+          Our goal is not just to teach science - it is to make students fall in love with asking questions.
+        </blockquote>
+      </PageHero>
 
       {/* CORE VALUES */}
       <section className="py-20 px-6 bg-muted border-y border-border">

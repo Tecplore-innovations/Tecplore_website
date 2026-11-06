@@ -4,12 +4,13 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AboutSection from '@/components/Home/AboutSection';
 import HowItWorks from '@/components/Home/HowItWorks';
+import ResponseSection from '@/components/Home/ResponseSection';
 import TrustStrip from '@/components/Home/TrustStrip';
 import CtaSection from '@/components/shared/CtaSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { DESIGN_CALL, POSITIONING } from '@/lib/site';
+import { DESIGN_CALL } from '@/lib/site';
 
 const videos = [
   "/videos/Video_1.webm",
@@ -28,7 +29,16 @@ const SHOW_HERO_VIDEO: boolean = false;
 
 const heroHeadline = (
   <>
-    We design <span className="text-primary">science learning experiences</span> for NGO and CSR programmes, schools and public spaces.
+    Are you a <span className="text-primary">School or NGO</span> looking to set up a{" "}
+    <span className="text-primary"><span className="whitespace-nowrap">hands-on</span> learning space?</span>
+  </>
+);
+
+const heroSubhead = (
+  <>
+    Do you want to provide a hands-on learning experience to students?
+    <br />
+    Do you want to provide future-proof education for the AI natives?
   </>
 );
 
@@ -135,7 +145,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   {heroHeadline}
                 </h1>
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-body">
-                  {POSITIONING.subhead}
+                  {heroSubhead}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Button asChild size="lg">
@@ -166,7 +176,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   {heroHeadline}
                 </h1>
                 <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-body">
-                  {POSITIONING.subhead}
+                  {heroSubhead}
                 </p>
                 <Button asChild size="lg" className="mt-6">
                   <Link href={DESIGN_CALL.href}>{DESIGN_CALL.label}</Link>
@@ -237,7 +247,7 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
                   transition={{ delay: 0.4 }}
                   className="text-lg xl:text-xl text-body leading-relaxed max-w-xl"
                 >
-                  {POSITIONING.subhead}
+                  {heroSubhead}
                 </motion.p>
                 <div className="flex flex-wrap gap-4">
                   <Button asChild size="lg">
@@ -350,8 +360,9 @@ const handleSwipe = (offsetX: number, velocityX: number) => {
           )}
         </div>
       </section>
+     <ResponseSection ref={aboutSectionRef} />
      <TrustStrip />
-     <AboutSection ref={aboutSectionRef} />
+     <AboutSection />
      <HowItWorks />
      <CtaSection />
     </main>

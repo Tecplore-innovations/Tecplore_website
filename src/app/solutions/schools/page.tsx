@@ -1,3 +1,4 @@
+import Confirm from "@/components/shared/Confirm";
 import ResourceSamples from "@/components/Solutions/ResourceSamples";
 import SolutionPage, { type SolutionContent } from "@/components/Solutions/SolutionPage";
 import StationPicks from "@/components/Solutions/StationPicks";
@@ -11,18 +12,17 @@ export const metadata = pageMetadata(
 
 const content: SolutionContent = {
   href: "/solutions/schools",
-  model: "Discover",
-  modelType: "Guided",
+  model: "Guided or self-guided",
   pitch: "A lab students use every week, mapped to your syllabus, that teachers can run without extra work",
-  subtitle: "For schools with occasional facilitation, and for learning centres.",
+  subtitle: "Ideal for schools with occasional facilitation, and for learning centres.",
   heroImage: "/photos/interactive-exhibits/CentrifugalForce3.avif",
   whoRunsIt: "Your teachers, trained by Tecplore, with periodic Tecplore visits.",
   outcome: "Results tied to the syllabus, with low teacher load.",
-  stepsHeading: "Your teachers lead, and we make it easy",
+  stepsHeading: <Confirm id="schools-text">Your teachers lead, and we make it easy</Confirm>,
   steps: [
     {
       title: "Curriculum map",
-      text: "One page per exhibit showing the class, the chapter (CBSE, NCERT or Samacheer Kalvi) and the learning outcome.",
+      text: "One page per learning station showing the class, the chapter (CBSE, NCERT or Samacheer Kalvi) and the learning outcome.",
     },
     {
       title: "Teacher training",
@@ -30,7 +30,7 @@ const content: SolutionContent = {
     },
     {
       title: "Ready lesson plans",
-      text: "A 40-minute lesson plan and ready worksheets for each exhibit, so there is nothing extra to prepare.",
+      text: "A 40-minute lesson plan and ready worksheets for each learning station, so there is nothing extra to prepare.",
     },
     {
       title: "A complete session",
@@ -41,11 +41,16 @@ const content: SolutionContent = {
       text: "Each term, our staff run sessions for a whole grade, which also work well for open days and parent visits.",
     },
     {
-      title: "Results you can share",
-      text: "A simple before-and-after concept check for each exhibit, shared with the principal each term.",
+      title: "Concept checks",
+      text: "A simple before-and-after concept check for each learning station.",
     },
   ],
-  evidence: ["Worksheet results", "Concept-check scores", "Teacher feedback"],
+  // Photos are added from the /site-admin page.
+  caseStudy: {
+    name: <Confirm id="solapur">Solapur School</Confirm>,
+    summary: <Confirm id="solapur">A completed Tecplore project. Summary to be added.</Confirm>,
+    photoGroup: "solapur",
+  },
   ctaTitle: "Planning a science lab for your school?",
   ctaText: "Tell us your classes and your syllabus, and we'll talk through how it could fit your timetable.",
 };
@@ -54,7 +59,7 @@ export default function SchoolsPage() {
   return (
     <SolutionPage content={content}>
       <StationPicks
-        ids={[3, 5, 2, 1, 6, 4]}
+        tag="schools"
         heading="Stations that suit schools"
         text="These stations connect to classroom topics such as forces, motion and aerodynamics, and work best with a teacher guiding the session."
       />

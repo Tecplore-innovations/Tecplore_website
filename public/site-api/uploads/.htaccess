@@ -1,0 +1,5 @@
+# Uploaded photos only: nothing in this folder may run as code.
+Options -ExecCGI -Indexes
+<FilesMatch "(?i)\.(php[0-9]?|phtml|phar|pht|cgi|pl|py|sh|htaccess)$">
+  Require all denied
+</FilesMatch>

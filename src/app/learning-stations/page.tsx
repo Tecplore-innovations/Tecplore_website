@@ -5,15 +5,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import CtaSection from "@/components/shared/CtaSection";
 import PageHero from "@/components/shared/PageHero";
+import PhotoGroup from "@/components/shared/PhotoGroup";
+import { SHOW_CONFIRM_HIGHLIGHTS } from "@/lib/confirm";
+import { useSiteContent } from "@/lib/siteContent";
+import { addedStations, editedStations } from "@/lib/stations";
 import { Button } from "@/components/ui/button";
 import { showcases, moreExhibits, Showcase, MoreExhibit } from "./exhibits";
 
 type Exhibit = Showcase | MoreExhibit; // unified type
 
+// Set to true to bring back the "Try" line on cards and in the detail view.
+const SHOW_TRY_LINE: boolean = false;
+
+// Set to true to bring back the subject and class tags, and the subject filters.
+const SHOW_STATION_TAGS: boolean = false;
+
+// Set to true to bring back the strip of extra photos in the detail view.
+// All photos stay available in the Project Photos view.
+const SHOW_EXTRA_PHOTOS: boolean = false;
+
 const TryNoticeWhy = ({ station }: { station: Exhibit }) => (
-  <dl className="my-4 grid gap-3 rounded-card bg-muted p-4 text-sm sm:grid-cols-3">
+  <dl className={`my-4 grid gap-3 rounded-card bg-muted p-4 text-sm ${SHOW_TRY_LINE ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
     {[
-      ["Try", station.tryIt],
+      ...(SHOW_TRY_LINE ? [["Try", station.tryIt]] : []),
       ["Notice", station.notice],
       ["Why", station.why],
     ].map(([label, text]) => (
@@ -24,6 +38,36 @@ const TryNoticeWhy = ({ station }: { station: Exhibit }) => (
     ))}
   </dl>
 );
+
+// Filled in from the /site-admin page. Empty ones show a yellow placeholder.
+const StationDetails = ({ station }: { station: Exhibit }) => {
+  const details = useSiteContent().stations[station.id];
+  const space = details?.space;
+  const youtube = details?.youtube;
+  if (!space && !youtube && !SHOW_CONFIRM_HIGHLIGHTS) return null;
+  return (
+    <p className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-body">
+      {(space || SHOW_CONFIRM_HIGHLIGHTS) && (
+        <span>
+          <span className="font-semibold text-foreground">Space required: </span>
+          {space || <mark className="needs-confirm">to be added</mark>}
+        </span>
+      )}
+      {youtube ? (
+        <a
+          href={youtube}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-primary hover:underline"
+        >
+          Watch on YouTube
+        </a>
+      ) : (
+        SHOW_CONFIRM_HIGHLIGHTS && <mark className="needs-confirm">YouTube link to be added</mark>
+      )}
+    </p>
+  );
+};
 
 const VARIATION_MS = 4000;
 
@@ -69,6 +113,7 @@ const DesktopGalleryModal = ({
           <h5 className="font-semibold text-3xl text-foreground">{exhibit.title}</h5>
           <p className="text-md text-body mt-2">{exhibit.long}</p>
           <TryNoticeWhy station={exhibit} />
+          <StationDetails station={exhibit} />
         </div>
         <button
           onClick={onClose}
@@ -77,26 +122,36 @@ const DesktopGalleryModal = ({
           <X className="w-5 h-5" />
         </button>
       </div>
-      {/* Images */}
-      <div className="flex gap-4 overflow-x-auto py-2 scrollbar-hide h-36 mt-4">
-        {exhibit.gallery.map((g, i) => (
-          <div key={i} className="flex-shrink-0 w-60 h-full rounded-card overflow-hidden shadow-lg">
-            <img
-              src={g}
-              alt={`${exhibit.title}-gallery-${i}`}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-card"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="flex flex-wrap gap-2 mt-4 border-t pt-4 w-full">
-        {exhibit.ageGroup && <span className="tag">{exhibit.ageGroup}</span>}
-        {exhibit.categories.map((c) => (
-          <span key={c} className="tag">{c}</span>
-        ))}
-      </div>
-      {/* Next/Prev Exhibit — bottom right */}
-      <div className="absolute right-6 bottom-6 flex gap-4">
+      {/* Main photo */}
+      <img
+        src={"images" in exhibit ? exhibit.images[0] : exhibit.image}
+        alt={exhibit.title}
+        className="mt-2 max-h-[36vh] w-full rounded-card bg-muted object-contain"
+      />
+      {/* Extra photos */}
+      {SHOW_EXTRA_PHOTOS && (
+        <div className="flex gap-4 overflow-x-auto py-2 scrollbar-hide h-36 mt-4">
+          {exhibit.gallery.map((g, i) => (
+            <div key={i} className="flex-shrink-0 w-60 h-full rounded-card overflow-hidden shadow-lg">
+              <img
+                src={g}
+                alt={`${exhibit.title}-gallery-${i}`}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 rounded-card"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+      {SHOW_STATION_TAGS && (
+        <div className="flex flex-wrap gap-2 mt-4 border-t pt-4 w-full">
+          {exhibit.ageGroup && <span className="tag">{exhibit.ageGroup}</span>}
+          {exhibit.categories.map((c) => (
+            <span key={c} className="tag">{c}</span>
+          ))}
+        </div>
+      )}
+      {/* Next/Prev Exhibit */}
+      <div className="mt-6 flex justify-end gap-4">
         <Button variant="secondary" size="sm" onClick={prevExhibit}>
           &lt; Previous
         </Button>
@@ -169,6 +224,7 @@ const GalleryImageModal = ({
 
 
 export default function LearningStations() {
+  const content = useSiteContent();
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
@@ -212,7 +268,7 @@ export default function LearningStations() {
   const handleExpand = (id: number) => setExpanded((prev) => (prev === id ? null : id));
  
   // Merge showcases + more exhibits
-  const allExhibits: Exhibit[] = [...showcases, ...moreExhibits];
+  const allExhibits: Exhibit[] = [...editedStations(content), ...addedStations(content)];
 
   // Filter logic
   const ALL_CATEGORIES = Array.from(new Set(allExhibits.flatMap((ex) => ex.categories)));
@@ -224,12 +280,13 @@ export default function LearningStations() {
   const expandedExhibit = allExhibits.find((ex) => ex.id === expanded);
 
    // Gather all gallery items
-  const allGalleryItems = allExhibits.flatMap((ex) =>
-    ex.gallery.map((imgSrc, idx) => ({
+  const allGalleryItems = allExhibits.flatMap((ex) => {
+    const main = "images" in ex ? ex.images : [ex.image];
+    return Array.from(new Set([...main, ...ex.gallery])).map((imgSrc, idx) => ({
       src: imgSrc,
       alt: `${ex.title} - Image ${idx + 1}`,
-    }))
-  );
+    }));
+  });
   
   // Gallery paging
   const pageSize = 15;
@@ -252,8 +309,9 @@ export default function LearningStations() {
     <div className="w-full min-h-screen bg-muted">
       <PageHero
         title="Learning Stations"
-        subtitle="A learning station is a hands-on exhibit with its learning built in, designed around one science concept."
+        subtitle="A learning station is hands-on, has its learning built in, and is designed around one science concept."
         image="/photos/interactive-exhibits/AeroTower3.avif"
+        pattern
       />
 
       {/* --- Featured stations: turn on or off with SHOW_FEATURED_STATIONS --- */}
@@ -395,7 +453,7 @@ export default function LearningStations() {
 
 
       {/* Category Filters - only visible in EXHIBIT mode */}
-        {viewMode === "exhibit" && (
+        {SHOW_STATION_TAGS && viewMode === "exhibit" && (
           <div className="flex items-center gap-2 py-4 flex-wrap">
             <button
               onClick={() => setFilter(null)}
@@ -420,7 +478,7 @@ export default function LearningStations() {
           {viewMode === "exhibit" ? (
             <>
               {/* Exhibit Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredExhibits.map((ex) => (
                   <React.Fragment key={ex.id}>
                     <div
@@ -470,23 +528,27 @@ export default function LearningStations() {
                         </>
                       )}
 
-                      <p className="mt-3 text-sm text-body">
-                        <span className="font-semibold text-primary">Try: </span>
-                        {ex.tryIt}
-                      </p>
+                      {SHOW_TRY_LINE && (
+                        <p className="mt-3 text-sm text-body">
+                          <span className="font-semibold text-primary">Try: </span>
+                          {ex.tryIt}
+                        </p>
+                      )}
 
                       {/* Categories */}
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {ex.ageGroup && <span className="tag">{ex.ageGroup}</span>}
-                        {ex.categories.map((c) => (
-                          <span
-                            key={c}
-                            className="tag"
-                          >
-                            {c}
-                          </span>
-                        ))}
-                      </div>
+                      {SHOW_STATION_TAGS && (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {ex.ageGroup && <span className="tag">{ex.ageGroup}</span>}
+                          {ex.categories.map((c) => (
+                            <span
+                              key={c}
+                              className="tag"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
 
                       {/* Mobile Gallery Inline */}
                       <div className="block lg:hidden">
@@ -514,7 +576,9 @@ export default function LearningStations() {
                                 </div>
                                 <p className="text-xs text-body mb-3">{ex.long}</p>
                                 <TryNoticeWhy station={ex} />
+                                <StationDetails station={ex} />
 
+                                <div className={SHOW_EXTRA_PHOTOS ? "" : "hidden"}>
                                 <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
                                   {ex.gallery.map((g, i) => (
                                     <div
@@ -529,6 +593,7 @@ export default function LearningStations() {
                                     </div>
                                   ))}
                                 </div>
+                                </div>
                               </motion.div>
                             )}
                         </AnimatePresence>
@@ -536,6 +601,11 @@ export default function LearningStations() {
                     </div>
                   </React.Fragment>
                 ))}
+                {/* Loading stage, while stations added from the dev page arrive */}
+                {!content.loaded &&
+                  [0, 1, 2].map((i) => (
+                    <div key={i} aria-hidden className="surface-card h-36 animate-pulse bg-muted" />
+                  ))}
               </div>
 
               {/* Desktop Gallery Modal */}
@@ -635,6 +705,21 @@ export default function LearningStations() {
           )}
         </div>
       </section>
+
+      {/* Our own R&D and manufacturing */}
+      <section className="bg-muted px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="section-label mb-3">R&amp;D and Manufacturing</p>
+          <h2 className="heading-section mb-4">Designed and built in-house</h2>
+          <p className="max-w-3xl text-lg leading-relaxed text-body">
+            Our learning stations come from our own R&amp;D and manufacturing. We design and develop
+            the stations, worksheets and evaluation ourselves, so each one can be shaped around the
+            concept, the space and the children using it.
+          </p>
+          <PhotoGroup group="rnd" />
+        </div>
+      </section>
+
       <CtaSection />
     </div>
   );

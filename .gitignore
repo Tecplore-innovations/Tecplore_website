@@ -40,3 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env.local
+
+# site admin access key and live content
+/site-admin-setup/
+/public/site-api/admin-key.php
+/public/site-api/data/content.json
+/public/site-api/uploads/*
+!/public/site-api/uploads/.htaccess

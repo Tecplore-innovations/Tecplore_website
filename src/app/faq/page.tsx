@@ -1,13 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronRight, Mail } from "lucide-react";
+import { ChevronDown, Mail } from "lucide-react";
+import Confirm from "@/components/shared/Confirm";
 import PageHero from "@/components/shared/PageHero";
+import { SHOW_MAKER_SPACE } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 
 interface FAQ {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }
 
 interface Category {
@@ -15,14 +17,14 @@ interface Category {
   faqs: FAQ[];
 }
 
-const categories: Category[] = [
+const allCategories: Category[] = [
   {
     label: "About Tecplore",
     faqs: [
       {
         question: "What does Tecplore do?",
         answer:
-          "We design science learning experiences for NGO and CSR programmes, schools and public spaces across India. We bring together interactive exhibits, maker spaces and educator training, so children learn science by doing. Exhibits are the instrument; the learning is the product.",
+          "We design science learning experiences for NGOs, schools and science parks across India. We bring together learning stations and educator training, so children learn science by doing.",
       },
       {
         question: "Which cities does Tecplore operate in?",
@@ -40,54 +42,54 @@ const categories: Category[] = [
     label: "How It Works",
     faqs: [
       {
-        question: "What are Explore, Discover and Create?",
+        question: "What do guided and self-guided mean?",
         answer:
-          "They are our three ways of running a Tecplore space. Explore is self-guided, so the space itself does the teaching, and suits parks, malls and libraries. Discover is guided by teachers we train, and suits schools and learning centres. Create is a programme we design with you, run by trained facilitators, and suits NGOs and CSR teams. All three follow the same learning arc; what changes is who carries it.",
+          "They are our two ways of running a Tecplore space. Guided spaces are led by teachers or facilitators we train. Self-guided spaces do the teaching themselves, through their layout, panels and videos, and suit public science parks. Schools and NGOs can choose either. You bring the space and the context, and we translate it into a learning experience.",
       },
       {
-        question: "Do you work with NGOs and CSR programmes?",
+        question: "Do you work with NGOs?",
         answer:
-          "Yes. We start with a needs assessment covering age group, language, attendance and your funder's indicators, then co-design modules and train your facilitators, so the programme can continue without us on site.",
+          "Yes. We start with a needs assessment covering age group, language, attendance and your programme goals. We then provide an end-to-end solution and train your facilitators, so the programme can continue without us on site.",
       },
       {
         question: "We don't have anyone to run sessions. Can this still work?",
         answer:
-          "Yes. Explore needs no staff on your side. The exhibits come with their learning built in, through panels, challenge cards and videos, so the space teaches on its own.",
+          "Yes. A self-guided space needs no staff on your side. The learning stations come with their learning built in, through panels and videos, so the space teaches on its own.",
       },
       {
-        question: "Can we buy just the exhibits?",
+        question: "Can we buy just the learning stations?",
         answer:
-          "We don't send exhibits on their own, because an exhibit without its learning layer is soon left unused. Every Tecplore exhibit comes with interpretation, prompts and a way to capture what visitors learned. That layer can be light or deep, but it is never zero. Explore is our simplest option, and it still includes it.",
+          "We are not just a vendor who fabricates and installs models. A learning station without its learning layer is soon left unused, so every one comes with interpretation, prompts and a way to capture what visitors learned. That layer can be light or deep, but it is never zero. A self-guided space is our simplest option, and it still includes it.",
       },
       {
         question: "How will we know it worked?",
         answer:
-          "It depends on the model. Explore gives you footfall and dwell observations, question-board themes and QR scan counts. Discover gives you worksheet results, concept-check scores and teacher feedback. Create gives you an impact report for funders, with pre and post scores, attendance, stories and photos.",
+          "It depends on how the space runs. Guided spaces give you worksheet results, concept-check scores, attendance and teacher or facilitator feedback, with before-and-after scores and learner stories for structured programmes. Self-guided spaces give you footfall and dwell observations, question-board themes and QR scan counts.",
       },
     ],
   },
   {
-    label: "Interactive Exhibits",
+    label: "Learning Stations",
     faqs: [
       {
-        question: "What kinds of interactive exhibits does Tecplore offer?",
+        question: "What kinds of learning stations does Tecplore offer?",
         answer:
-          "Our exhibits span physics, chemistry, biology, space science, robotics, and environmental science. Each exhibit is designed around one concept, such as Bernoulli's principle or river erosion, so people can touch, experiment, and observe it for themselves rather than just read about it.",
+          "Our learning stations span physics, chemistry, biology, space science, robotics, and environmental science. Each one is designed around one concept, such as Bernoulli's principle or river erosion, so people can touch, experiment, and observe it for themselves rather than just read about it.",
       },
       {
-        question: "Can exhibits be customised for a specific curriculum or theme?",
+        question: "Can learning stations be customised for a specific curriculum or theme?",
         answer:
-          "Yes. We work closely with your institution to align exhibits with your academic curriculum, space constraints, age groups, and thematic goals. Custom branding and language options are also available.",
+          "Yes. We work closely with your institution to align learning stations with your academic curriculum, space constraints, age groups, and thematic goals. Custom branding and language options are also available.",
       },
       {
-        question: "Are the exhibits suitable for all age groups?",
+        question: "Are the learning stations suitable for all age groups?",
         answer:
-          "Our exhibits are designed for students from Class 6 to Class 12. Activity complexity and safety features are tailored to the target age group during the assessment phase.",
+          "Our learning stations are designed for students from Class 6 to Class 12. Activity complexity and safety features are tailored to the target age group during the assessment phase.",
       },
       {
-        question: "Can public spaces like parks, museums or malls install Tecplore exhibits?",
+        question: "Can public spaces like parks, museums or malls install Tecplore learning stations?",
         answer:
-          "Absolutely. We regularly work with libraries, science museums, community centres, and family entertainment venues. Our exhibits are built with durable materials for high-traffic environments, and we plan maintenance with you so the space stays in use year after year.",
+          "Absolutely. We regularly work with libraries, science museums, community centres, and family entertainment venues. Our learning stations are built with durable materials for high-traffic environments, and we plan maintenance with you so the space stays in use year after year.",
       },
     ],
   },
@@ -132,21 +134,29 @@ const categories: Category[] = [
       {
         question: "How do I start a partnership with Tecplore?",
         answer:
-          "The easiest first step is to book a 30-minute design call through our contact page, or email us at info@tecplore.com. We'll understand your needs and your space, and put together a tailored proposal with no commitment required at that stage.",
+          "The easiest first step is to book a 30-minute context-setting call through our contact page, or email us at info@tecplore.com. We'll understand your needs and your space, and put together a tailored proposal with no commitment required at that stage.",
       },
       {
         question: "Does Tecplore work with the school's existing curriculum?",
         answer:
-          "Yes. During the Assessment phase, our team maps your institution's current curriculum and learning objectives to our exhibit and activity library. We integrate rather than replace: our programmes are designed to complement classroom teaching.",
+          "Yes. During the Assessment phase, our team maps your institution's current curriculum and learning objectives to our learning station and activity library. We integrate rather than replace: our programmes are designed to complement classroom teaching.",
       },
       {
         question: "Are Tecplore's activities safe for young students?",
-        answer:
-          "Safety is built into every product and programme we design. All exhibits meet applicable safety standards, materials are age-appropriate, and our team trains educators on supervision protocols. For tool-based maker activities, safety gear and structured guidelines are always included.",
+        answer: (
+          <>
+            Safety is built into every product and programme we design.{" "}
+            <Confirm id="safety">All learning stations meet applicable safety standards</Confirm>,
+            materials are age-appropriate, and our team trains educators on supervision protocols.
+            For tool-based activities, safety gear and structured guidelines are always included.
+          </>
+        ),
       },
     ],
   },
 ];
+
+const categories = allCategories.filter((c) => SHOW_MAKER_SPACE || c.label !== "Maker Spaces");
 
 function FAQItem({ faq, open, onToggle }: { faq: FAQ; open: boolean; onToggle: () => void }) {
   return (
@@ -191,21 +201,14 @@ export default function FAQPage() {
       {/* Hero */}
       <PageHero
         title="Frequently Asked Questions"
-        subtitle="Everything you need to know about Tecplore's exhibits, maker spaces, and partnerships."
+        subtitle="Everything you need to know about Tecplore's learning stations and partnerships."
+        image="/photos/placeholders/students.jpg"
+        illustration
       />
-
-      {/* Breadcrumb */}
-      <div className="bg-muted border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground font-medium">FAQ</span>
-        </div>
-      </div>
 
       {/* Category Filter */}
       <div className="bg-background border-b border-border sticky top-16 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex flex-wrap gap-2">
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 py-3 flex flex-wrap gap-2">
           <button
             onClick={() => setActiveCategory(null)}
             className={activeCategory === null ? "chip-active" : "chip"}
@@ -225,7 +228,7 @@ export default function FAQPage() {
       </div>
 
       {/* FAQ Content */}
-      <div className="max-w-4xl mx-auto px-6 py-14">
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 py-14">
         <div className="space-y-12">
           {displayed.map((category, ci) => (
             <div key={ci}>

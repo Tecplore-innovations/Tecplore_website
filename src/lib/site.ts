@@ -2,29 +2,28 @@
 // menu, footer and page buttons stay in step.
 
 export const DESIGN_CALL = {
-  label: "Book a 30-minute design call",
-  shortLabel: "Book a Design Call",
+  label: "Book a 30-minute context-setting call",
+  shortLabel: "Book a Call",
   href: "/contact",
 };
 
-// In priority order: NGOs and CSR come first.
+// In priority order: NGOs come first.
 export const SOLUTION_LINKS = [
-  { name: "NGOs and CSR", href: "/solutions/ngos-csr" },
+  { name: "NGOs", href: "/solutions/ngos" },
   { name: "Schools", href: "/solutions/schools" },
-  { name: "Public Spaces", href: "/solutions/public-spaces" },
+  { name: "Science Parks", href: "/solutions/science-parks" },
 ];
 
+// Set to true to bring Maker Spaces back to the menu, footer, sitemap and FAQ.
+// The page and its code are kept. Its wording in site descriptions would also
+// need adding back.
+export const SHOW_MAKER_SPACE: boolean = false;
+
+// Teacher Resources is reached from the Schools page and the footer.
 export const NAV_LINKS = [
   { name: "Learning Stations", href: "/learning-stations" },
-  { name: "Maker Spaces", href: "/maker-space" },
-  { name: "Teacher Resources", href: "/teacher-resources" },
+  ...(SHOW_MAKER_SPACE ? [{ name: "Maker Spaces", href: "/maker-space" }] : []),
   { name: "About Us", href: "/about-us" },
   { name: "FAQ", href: "/faq" },
 ];
 
-// The core positioning, from the Tecplore Positioning & Proposal Framework.
-// Keep descriptions of Tecplore in step with these lines.
-export const POSITIONING = {
-  subhead:
-    "Children learn science by doing. We design the whole experience: the exhibits, what children try, and how you know it worked.",
-};

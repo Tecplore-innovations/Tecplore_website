@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Instagram, Linkedin, Youtube, ExternalLink } from "lucide-react";
-import { SOLUTION_LINKS } from "@/lib/site";
 
 const FISHLIFE_DESCRIPTION =
   "FishLife is an interactive educational experience that brings the underwater world to life. Explore diverse aquatic ecosystems, discover fascinating fish species, and learn about marine biology through engaging, immersive content designed for all ages.";
@@ -28,23 +27,6 @@ const linkClass = "text-footer-muted text-sm hover:text-footer-foreground transi
 const Footer = () => {
   const [fishlifeOpen, setFishlifeOpen] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
-
-  const whatWeDoLinks = [
-    ...SOLUTION_LINKS.flatMap((link) =>
-      link.href === "/solutions/schools"
-        ? [link, { name: "Teacher Resources", href: "/teacher-resources" }]
-        : [link]
-    ),
-    { name: "Learning Stations", href: "/learning-stations" },
-    { name: "Maker Spaces", href: "/maker-space" },
-  ];
-
-  const companyLinks = [
-    { name: "About Us", href: "/about-us" },
-    { name: "Join Our Team", href: "/careers" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Contact Us", href: "/contact" },
-  ];
 
   return (
     <footer className="bg-footer text-footer-foreground">
@@ -110,10 +92,10 @@ const Footer = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="py-12 lg:py-16">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
 
             {/* Tecplore logo + socials */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-1 order-last lg:order-first space-y-6 text-center sm:text-left">
+            <div className="col-span-2 lg:col-span-1 order-last lg:order-first space-y-6 text-center sm:text-left">
               <Link
                 href="/"
                 className="flex items-center justify-center sm:justify-start gap-3 hover:opacity-80 transition-opacity"
@@ -159,20 +141,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* What We Do */}
-            <div>
-              <h4 className={headingClass}>What We Do</h4>
-              <ul className="space-y-3">
-                {whatWeDoLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link href={link.href} className={linkClass}>
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Other Products: separate from the science learning work */}
             <div>
               <h4 className={headingClass}>Other Products</h4>
@@ -200,18 +168,12 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Company */}
+            {/* Join */}
             <div>
-              <h4 className={headingClass}>Company</h4>
-              <ul className="space-y-3">
-                {companyLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link href={link.href} className={linkClass}>
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <h4 className={headingClass}>Join Us</h4>
+              <Link href="/careers" className={linkClass}>
+                Join Our Team
+              </Link>
             </div>
 
           </div>

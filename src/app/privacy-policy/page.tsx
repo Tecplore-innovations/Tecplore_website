@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <p className="mb-6">
-          At <strong>Tecplore</strong>, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard information when you engage with our educational platforms, STEM exhibits, and interactive learning content.
+          At <strong>Tecplore</strong>, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard information when you engage with our educational platforms, STEM learning stations, and interactive learning content.
         </p>
 
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">Information We Collect</h2>
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
         <h2 className="font-semibold text-lg text-foreground mt-8 mb-2">How We Use Your Data</h2>
         <ul className="list-disc ml-6 space-y-2 mb-4">
           <li>Deliver STEM learning experiences</li>
-          <li>Improve interactive exhibits & learning content</li>
+          <li>Improve learning stations & learning content</li>
           <li>Communicate updates & education resources</li>
           <li>Enhance website performance & personalization</li>
         </ul>

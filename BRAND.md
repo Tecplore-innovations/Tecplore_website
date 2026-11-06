@@ -13,7 +13,6 @@ Canva and the website can't update each other automatically, so any change is ma
 2. Update the matching value in `src/app/globals.css`.
 3. Update the Tecplore Theme design and the brand kit in Canva.
 
-**Known difference:** the website footer is navy, but the Tecplore Theme design in Canva still shows the cardinal red footer. This is deliberate. The red footer values are kept, commented out, in `src/app/globals.css`, so the website can switch back.
 
 ## Colours
 
@@ -23,9 +22,8 @@ Canva and the website can't update each other automatically, so any change is ma
 | Tecplore Indigo | `#4F46E5` | `brand-indigo` | Small accents |
 | Tecplore Cyan | `#00C6FF` | `brand-cyan` | Small accents |
 | Sky | `#60A5FA` | `brand-sky` | Small accents |
-| Footer Navy | `#020617` | `footer` | Footer background |
-| Footer Text | `#CBD5E1` | `footer-muted` | Footer links, with white for headings |
-| Cardinal Red | `#8C1C1C` | none | Hero art only, in `public/photos/hero-art.svg` |
+| Footer Cardinal | `#8C1C1C` | `footer` | Footer background, and the red in illustrations |
+| Footer Text | `#F5DBDB` | `footer-muted` | Footer links, with white for headings |
 | Ink | `#020617` | `ink` | Dark overlays on photos and video |
 | Heading | `#0F172A` | `foreground` | Headings |
 | Body Text | `#475569` | `body` | Paragraphs |
@@ -38,15 +36,19 @@ Canva and the website can't update each other automatically, so any change is ma
 | Error | `#EF4444` | `destructive` | Form errors only |
 | White | `#FFFFFF` | `background`, `card` | Page and card backgrounds |
 
+## Dev-only highlights
+
+Yellow highlights and empty photo placeholders mark items waiting for confirmation. They are not part of the brand and must be off before going live. The master switch and list are in `src/lib/confirm.ts`.
+
 ## Colour rules
 
-Solid colours only. Tecplore does not use gradients or glow effects, on the website or in Canva.
+Solid colours only. Tecplore does not use gradients or glow effects, on the website or in Canva. The one exception is the recommendation star under How It Works on the homepage.
 
 ## Logo
 
 The logo's teal to purple colours are part of the logo, so the no-gradient rule does not apply to it. Never recolour the logo.
 
-Always place the logo on white or a light background so its colours stay clear. In the dark footer it sits on a white circle.
+Always place the logo on white or a light background so its colours stay clear. In the cardinal red footer it sits on a white circle.
 
 ## Type
 
@@ -70,4 +72,4 @@ The font is **Source Sans 3**.
 
 ## Layout
 
-Every page has a white menu and a white hero, followed by light sections that alternate between Soft Background and white, and ends with the dark footer.
+Every page has a white menu and a white hero, followed by light sections that alternate between Soft Background and white, and ends with the cardinal red footer.

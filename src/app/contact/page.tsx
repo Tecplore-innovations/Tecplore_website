@@ -16,10 +16,10 @@ const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwxY0TkY9a0CwjHBdIFbmedDCxhowbt3zpFpui1uJwz4eTQgslid1bw-w6nIdR5X-nw/exec";
 
 const BUYER_TYPES = [
-  "NGO or CSR programme",
+  "NGO",
   "School or college",
   "Learning centre",
-  "Public space or park",
+  "Science park or public space",
   "Something else",
 ];
 
@@ -117,7 +117,7 @@ const ContactPage = () => {
             variants={fadeIn}
           >
             <div className="surface-card shadow-sm p-10">
-              <h2 className="heading-section mb-2">Book a 30-minute design call</h2>
+              <h2 className="heading-section mb-2">Book a 30-minute context-setting call</h2>
               <p className="text-muted-foreground text-sm mb-8">
                 Share a few details and we&apos;ll get back to you within one business day.
               </p>
@@ -195,7 +195,7 @@ const ContactPage = () => {
                 </div>
 
                 <Button type="submit" disabled={loading} size="lg" className="w-full">
-                  {loading ? "Sending..." : "Request a Design Call"}
+                  {loading ? "Sending..." : "Request a Call"}
                 </Button>
 
                 {sendFailed && (

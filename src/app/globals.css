@@ -42,16 +42,16 @@
     --ink-foreground: 0 0% 100%;
     --ink-muted: 212.7 26.8% 83.9%;
 
-    /* Footer: navy, in use */
-    --footer: 228.6 84% 4.9%;       /* #020617 */
+    /* Footer: cardinal red, in use */
+    --footer: 0 66.7% 32.9%;        /* #8c1c1c */
     --footer-foreground: 0 0% 100%;
-    --footer-muted: 212.7 26.8% 83.9%;  /* #cbd5e1 */
+    --footer-muted: 0 56% 91%;      /* #f5dbdb */
 
-    /* Footer: cardinal red, kept for later.
-       To switch, comment out the navy lines above and uncomment these.
-    --footer: 0 66.7% 32.9%;        #8c1c1c
+    /* Footer: navy, kept for later.
+       To switch, comment out the red lines above and uncomment these.
+    --footer: 228.6 84% 4.9%;       #020617
     --footer-foreground: 0 0% 100%;
-    --footer-muted: 0 56% 91%;      #f5dbdb
+    --footer-muted: 212.7 26.8% 83.9%;  #cbd5e1
     */
 
     /* Actions */
@@ -83,6 +83,43 @@
 /* Shared styles. Use these instead of repeating utility classes on each page. */
 @layer components {
   /* Type */
+  /* Sparse line pattern, behind the Learning Stations page. */
+  .bg-lines {
+    background-image: url("/patterns/lines.svg");
+    background-size: 1400px 700px;
+  }
+
+  /* The recommendation star on the homepage. */
+  .star-glow {
+    color: #facc15;
+    fill: #facc15;
+    animation: star-glow 2.4s ease-in-out infinite;
+  }
+  @keyframes star-glow {
+    0%, 100% { filter: drop-shadow(0 0 3px #fde047); }
+    50% { filter: drop-shadow(0 0 10px #facc15); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .star-glow {
+      animation: none;
+      filter: drop-shadow(0 0 6px #facc15);
+    }
+  }
+
+  /* Text waiting for confirmation, and empty photo slots. See src/lib/confirm.ts. */
+  .needs-confirm {
+    @apply rounded-sm px-0.5 text-inherit;
+    background-color: #fef08a;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .photo-placeholder {
+    @apply relative overflow-hidden rounded-card border border-border bg-background;
+  }
+  .photo-placeholder-label {
+    @apply absolute inset-x-0 bottom-0 px-3 py-2 text-center text-sm font-semibold text-foreground;
+    background-color: #fef08a;
+  }
   .section-label {
     @apply text-sm font-semibold uppercase tracking-widest text-primary;
   }
