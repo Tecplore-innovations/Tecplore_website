@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Restore the Tecplore Website</title>
+<style>
+  :root { --ink:#0f172a; --body:#334155; --muted:#64748b; --line:#e2e8f0; --soft:#f1f5f9; --blue:#2563eb; --tint:#eff6ff; --red:#8c1c1c; --redtint:#fdf2f2; --yellow:#fef9c3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--body); font: 16px/1.65 "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
+  main { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { color: var(--ink); font-size: 32px; line-height: 1.2; margin: 0 0 8px; }
+  h2 { color: var(--ink); font-size: 22px; margin: 44px 0 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { color: var(--ink); font-size: 17px; margin: 24px 0 6px; }
+  a { color: var(--blue); }
+  code { background: var(--soft); border-radius: 4px; padding: 1px 5px; font: 14px Consolas, Menlo, monospace; color: var(--ink); overflow-wrap: anywhere; }
+  pre { background: var(--ink); color: #e2e8f0; border-radius: 10px; padding: 14px 16px; overflow-x: auto; font: 14px/1.5 Consolas, Menlo, monospace; }
+  pre code { background: none; color: inherit; padding: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); color: var(--ink); }
+  li { margin: 6px 0; }
+  .meta { color: var(--muted); font-size: 14px; }
+  .box { border-radius: 10px; padding: 12px 16px; margin: 14px 0; }
+  .warn { background: var(--redtint); border-left: 4px solid var(--red); }
+  .tip { background: var(--tint); border-left: 4px solid var(--blue); }
+  .update { background: var(--yellow); border-left: 4px solid #eab308; }
+  .box p { margin: 4px 0; }
+  ol.steps > li { margin: 12px 0; }
+  @media print { pre { white-space: pre-wrap; } }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Restore the Tecplore Website</h1>
+<p class="meta">Last updated: 6 November 2026. Keep this file up to date when anything below changes.</p>
+<p>This guide is for anyone looking after <strong>tecplore.com</strong> when the usual maintainer isn't available. You need access to GitHub and Hostinger, and to Cloudflare for domain problems. No coding is needed if you follow the steps in order.</p>
+
+<div class="box warn">
+  <p><strong>Three rules that prevent most damage</strong></p>
+  <p>1. Take a backup before you change anything (Part 2).</p>
+  <p>2. Never empty or delete the <code>main-website</code> folder. It holds files that are not in GitHub.</p>
+  <p>3. Leave <code>.htaccess</code> untouched.</p>
+</div>
+
+<h2>Where everything lives</h2>
+<table>
+  <tr><th>What</th><th>Where</th></tr>
+  <tr><td>Website code</td><td>GitHub: <a href="https://github.com/Tecplore-innovations/Tecplore_website">Tecplore-innovations/Tecplore_website</a></td></tr>
+  <tr><td>Live website files</td><td>Hostinger, <code>public_html/main-website</code></td></tr>
+  <tr><td>Preview website</td><td>Hostinger, <code>public_html/tpsite_dev</code>, shown at <code>tpsite-dev.tecplore.com</code></td></tr>
+  <tr><td>Domain and DNS</td><td>Cloudflare. The domain's nameservers point to Cloudflare, which sends visitors to Hostinger.</td></tr>
+  <tr><td>Teacher Resources data</td><td>A database on Hostinger, read by <code>main-website/api/get_resources.php</code></td></tr>
+  <tr><td>Contact form entries</td><td>A Google Sheet, through a Google Apps Script link in <code>src/app/contact/page.tsx</code></td></tr>
+</table>
+
+<div class="box update">
+  <p><strong>Which code is live?</strong> The new version of the site is on the <code>site_with_position</code> branch and is only on the preview. The live site still uses <code>main</code>. <strong>Update this note when the new version is merged.</strong> Until then, use <code>main</code> to restore the live site.</p>
+</div>
+
+<h3>Files on the server that are not in GitHub</h3>
+<p>A rebuild does not recreate these. Keep them, and include them in backups.</p>
+<table>
+  <tr><th>File or folder</th><th>What it is</th></tr>
+  <tr><td><code>.htaccess</code></td><td>Server rules for clean page links. A copy is in Part 7.</td></tr>
+  <tr><td><code>api/</code></td><td>Teacher Resources API, including the database password.</td></tr>
+  <tr><td><code>site-api/admin-key.php</code></td><td>Lock for the hidden <code>/site-admin</code> page. New version only.</td></tr>
+  <tr><td><code>site-api/data/</code></td><td>Station details, tags and added stations. New version only.</td></tr>
+  <tr><td><code>site-api/uploads/</code></td><td>Photos added from <code>/site-admin</code>. New version only.</td></tr>
+</table>
+
+<h2>Part 1: Find out what is wrong</h2>
+<p>Don't rebuild yet. A rebuild only fixes missing or broken website files.</p>
+<table>
+  <tr><th>What you see</th><th>Likely cause</th><th>What to do</th></tr>
+  <tr><td>Site won't open, "server not found"</td><td>Domain or DNS</td><td>Check the domain hasn't expired, then check the DNS records in Cloudflare.</td></tr>
+  <tr><td>Cloudflare error 521, 522 or 523</td><td>Hostinger is down or unreachable</td><td>Check the Hostinger status and that the hosting plan is active. Contact Hostinger support.</td></tr>
+  <tr><td>Cloudflare error 525 or 526</td><td>SSL certificate problem on Hostinger</td><td>See Part 6. Do not change Cloudflare's main SSL mode.</td></tr>
+  <tr><td>Hostinger "suspended" or "expired" page</td><td>Billing</td><td>Renew in Hostinger. No rebuild needed.</td></tr>
+  <tr><td>Blank page, missing pages, or broken layout</td><td>Website files missing or damaged</td><td>Go to Part 2, then Part 3.</td></tr>
+  <tr><td>Page links give "not found" but the homepage works</td><td><code>.htaccess</code> missing</td><td>See Part 7.</td></tr>
+  <tr><td>Site looks fine but Teacher Resources is empty</td><td>API or database</td><td>See Part 5.</td></tr>
+</table>
+
+<h2>Part 2: Take a backup</h2>
+<ol class="steps">
+  <li>Log in to Hostinger and open <strong>File Manager</strong>.</li>
+  <li>Go to <code>public_html</code>, then right-click <code>main-website</code> and choose <strong>Compress</strong>, as a zip.</li>
+  <li>Download that zip to your computer, then delete it from the server.</li>
+  <li>Also check <strong>Backups</strong> in Hostinger. If a recent backup of the files and database exists, restoring it may be the fastest fix of all.</li>
+</ol>
+
+<h2>Part 3: Build the website from GitHub</h2>
+
+<h3>One-time setup</h3>
+<ol class="steps">
+  <li>Install <a href="https://nodejs.org/">Node.js</a>, the LTS version. The site was last built with version 24.</li>
+  <li>Install <a href="https://git-scm.com/">Git</a>.</li>
+</ol>
+
+<h3>Get the code</h3>
+<ol class="steps">
+  <li>Open a terminal in a folder of your choice and run:
+<pre><code>git clone https://github.com/Tecplore-innovations/Tecplore_website.git
+cd Tecplore_website
+git checkout main</code></pre>
+    <p>Change <code>main</code> to the correct branch if the note above says so.</p>
+  </li>
+  <li>Install what the project needs:
+<pre><code>npm ci</code></pre>
+  </li>
+  <li>In the project folder, create a file named <code>.env.local</code> containing these two lines. Without them, Teacher Resources will be empty. They aren't secret, but the file is not kept in GitHub.
+<pre><code>NEXT_PUBLIC_API_BASE_URL=https://tecplore.com/main-website/api
+NEXT_PUBLIC_ASSET_BASE_URL=https://tecplore.com</code></pre>
+  </li>
+</ol>
+
+<h3>Build</h3>
+<div class="box tip"><p>If you run <code>npm run dev</code>, stop it first with Ctrl+C. Building beside it breaks it.</p></div>
+<ol class="steps">
+  <li>Run:
+<pre><code>npm run build</code></pre>
+    <p>It should end by listing the pages, and a folder named <code>out</code> appears. Warnings about <code>&lt;img&gt;</code> are normal.</p>
+  </li>
+  <li>If it fails with <strong>Failed to fetch Source Sans 3 from Google Fonts</strong>, this is a network problem, not a code problem. Force IPv4 and build again. In PowerShell:
+<pre><code>$env:NODE_OPTIONS = "--dns-result-order=ipv4first --no-network-family-autoselection"
+npm run build
+$env:NODE_OPTIONS = ""</code></pre>
+  </li>
+</ol>
+
+<h3>Zip it</h3>
+<ol class="steps">
+  <li>Open the <code>out</code> folder.</li>
+  <li>Select <strong>everything inside it</strong> and zip those files. Don't zip the <code>out</code> folder itself, or the files will land one level too deep. <code>index.html</code> must be at the top level of the zip.</li>
+  <li>New version of the site only: check that highlights are off for the live site. In <code>src/lib/confirm.ts</code>, <code>SHOW_CONFIRM_HIGHLIGHTS</code> must be <code>false</code>. If it isn't, change it and build again. If that file doesn't exist, skip this step.</li>
+</ol>
+
+<h2>Part 4: Upload to Hostinger</h2>
+<ol class="steps">
+  <li>In File Manager, open <code>public_html/main-website</code>.</li>
+  <li>Upload your zip into this folder.</li>
+  <li>Extract it here, and choose to <strong>overwrite</strong> existing files.</li>
+  <li><strong>Delete the zip</strong> from the server. Anyone could otherwise download it.</li>
+  <li>Do not delete anything else. The zip contains no <code>.htaccess</code>, so yours stays as it is.</li>
+</ol>
+
+<h3>Check it</h3>
+<ol class="steps">
+  <li>Open <a href="https://tecplore.com">tecplore.com</a> in a private window, which avoids old saved copies.</li>
+  <li>Open a few pages directly, for example <code>/about-us</code> and <code>/faq</code>, and refresh them.</li>
+  <li>Check that Teacher Resources shows its list.</li>
+  <li>Send one test message from the Contact page and confirm it reaches the Google Sheet.</li>
+  <li>If pages still look old, purge the cache in Cloudflare: <strong>Caching</strong>, then <strong>Purge Everything</strong>.</li>
+</ol>
+
+<h2>Part 5: If the whole folder was lost</h2>
+<p>First try <strong>Backups</strong> in Hostinger, as it restores everything in one go. If there is no backup:</p>
+<ol class="steps">
+  <li>Recreate <code>public_html/main-website</code> and follow Parts 3 and 4.</li>
+  <li>Recreate <code>.htaccess</code> from Part 7.</li>
+  <li><strong>Teacher Resources API:</strong> upload <code>server-api/get_resources.php</code> from the project to <code>main-website/api/</code>. Edit that server copy and fill in the database name, user and password. Find these under <strong>Databases</strong> in Hostinger, and reset the password there if nobody has it. Never put the real values in GitHub.</li>
+  <li><strong>Database:</strong> if it was lost too, restore it from Hostinger's database backups.</li>
+  <li><strong>Photos and station details from <code>/site-admin</code>:</strong> these can't be rebuilt from GitHub. Restore them from a backup, or add them again.</li>
+  <li><strong>New access key:</strong> see below.</li>
+</ol>
+
+<h3>Create a new key for /site-admin</h3>
+<p>The key is not in GitHub. If it's lost, make a new one. This only applies once the new version of the site is live. Run this in the project folder:</p>
+<pre><code>node -e "const c=require('crypto'),f=require('fs');const k=c.randomBytes(24).toString('base64url');f.mkdirSync('site-admin-setup',{recursive:true});f.writeFileSync('site-admin-setup/ACCESS-KEY-keep-private.txt',k+'\n');f.writeFileSync('site-admin-setup/admin-key.php','&lt;?php\nreturn [\'key_sha256\' =&gt; \''+c.createHash('sha256').update(k).digest('hex')+'\'];\n')"</code></pre>
+<ol class="steps">
+  <li>Upload <code>site-admin-setup/admin-key.php</code> to <code>main-website/site-api/</code>, replacing any old one.</li>
+  <li>Keep <code>ACCESS-KEY-keep-private.txt</code> somewhere safe. <strong>Never upload it.</strong> That one line is the password for <code>/site-admin</code>.</li>
+</ol>
+
+<h2>Part 6: SSL error 525</h2>
+<ol class="steps">
+  <li>In Hostinger, open <strong>SSL</strong> and check the domain shows <strong>Active</strong>. Install it if it doesn't.</li>
+  <li>If it gets stuck on Installing, go to Cloudflare, <strong>DNS</strong>, and set that record to <strong>DNS only</strong> (grey cloud).</li>
+  <li>Wait for <strong>Active</strong> in Hostinger, then set the record back to <strong>Proxied</strong> (orange cloud).</li>
+</ol>
+<p>Do not switch Cloudflare's SSL mode to Flexible. It weakens security for the whole site.</p>
+
+<h2>Part 7: Copy of .htaccess</h2>
+<p>Only use this if the file is missing. It goes in <code>public_html/main-website</code>, named exactly <code>.htaccess</code>. Turn on <strong>Show hidden files</strong> in File Manager to see it.</p>
+<div class="box update"><p>If the file on the server is ever changed, update this copy too.</p></div>
+<pre><code># Define media types
+AddType image/avif .avif
+AddType image/webp .webp
+AddType application/pdf .pdf
+
+# Remove the restrictive header first
+Header always unset X-Frame-Options
+
+# Allow the site to frame itself
+Header set X-Frame-Options "SAMEORIGIN"
+# Alternative for modern browsers
+Header set Content-Security-Policy "frame-ancestors 'self' https://tecplore.com https://www.tecplore.com"
+
+# Main website rules
+RewriteEngine On
+
+# Serve static files directly by extension, with no rewriting
+RewriteRule \.(pdf|avif|webp|jpg|jpeg|png|gif|ico|css|js|woff2|mp4|webm|txt)$ - [L]
+
+# Serve clean URLs for static .html pages
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
+
+# Redirect folders to their index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [L]
+
+# Fallback for client-side routes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]
+
+# Error handling
+ErrorDocument 404 /404.html
+
+# Cache static assets
+&lt;IfModule mod_expires.c&gt;
+  ExpiresActive On
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/x-javascript "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+&lt;/IfModule&gt;</code></pre>
+
+<h2>Keep these safe</h2>
+<ul>
+  <li>Logins for GitHub, Hostinger and Cloudflare, stored with more than one trusted person.</li>
+  <li>The <code>/site-admin</code> access key.</li>
+  <li>A regular download of <code>main-website</code> and the database.</li>
+</ul>
+
+</main>
+</body>
+</html>
